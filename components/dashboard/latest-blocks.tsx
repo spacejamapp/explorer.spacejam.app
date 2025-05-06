@@ -14,47 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-// Mock data for latest blocks
-const mockBlocks = [
-  {
-    slot: 12345678,
-    hash: "0x1a2b3c4d5e6f...",
-    timestamp: new Date(Date.now() - 30000), // 30 seconds ago
-    author: "Validator A",
-  },
-  {
-    slot: 12345677,
-    hash: "0xf6e5d4c3b2a1...",
-    timestamp: new Date(Date.now() - 45000), // 45 seconds ago
-    author: "Validator B",
-  },
-  {
-    slot: 12345676,
-    hash: "0x7a8b9c0d1e2f...",
-    timestamp: new Date(Date.now() - 60000), // 1 minute ago
-    author: "Validator C",
-  },
-  {
-    slot: 12345675,
-    hash: "0xe1d2c3b4a5f6...",
-    timestamp: new Date(Date.now() - 75000), // 1 minute 15 seconds ago
-    author: "Validator D",
-  },
-  {
-    slot: 12345674,
-    hash: "0x9f8e7d6c5b4a...",
-    timestamp: new Date(Date.now() - 90000), // 1 minute 30 seconds ago
-    author: "Validator E",
-  },
-];
+import { mockLatestBlocks } from "@/lib/mock/block";
 
 // Helper function to format time ago
-function timeAgo(date: Date): string {
-  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-
-  if (seconds < 60) return `${seconds} sec ago`;
-  const minutes = Math.floor(seconds / 60);
+function timeAgo(secondsAgo: number): string {
+  if (secondsAgo < 60) return `${secondsAgo} sec ago`;
+  const minutes = Math.floor(secondsAgo / 60);
   if (minutes < 60) return `${minutes} min ago`;
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours} hr ago`;
@@ -63,45 +28,69 @@ function timeAgo(date: Date): string {
 }
 
 export default function LatestBlocks() {
+  // Calculate age for display purposes
+  const blocksWithAge = mockLatestBlocks.map((block, index) => {
+    // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
+    const ageInSeconds = 30 + index * 15;
+
+    return {
+      block,
+      height: 12345678 - index, // Calculated height
+      hash: block.header.extrinsic_hash.substring(0, 16) + "...",
+      age: ageInSeconds,
+      transactions: block.extrinsic.count,
+      validator: `Validator ${String.fromCharCode(65 + index)}`, // A, B, C, etc.
+    };
+  });
+
   return (
     <Card>
       <CardHeader className="pb-2">
         <CardTitle>Latest Blocks</CardTitle>
         <CardDescription>
-          The most recent blocks on the JAM network
+          The most recent blocks on the SpaceJam network
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Slot</TableHead>
+              <TableHead>Height</TableHead>
               <TableHead>Hash</TableHead>
               <TableHead>Age</TableHead>
-              <TableHead>Author</TableHead>
+              <TableHead>Txs</TableHead>
+              <TableHead>Validator</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockBlocks.map((block) => (
-              <TableRow key={block.slot}>
+            {blocksWithAge.map((data) => (
+              <TableRow key={data.height}>
                 <TableCell className="font-medium">
                   <Link
-                    href={`/block/${block.slot}`}
+                    href={`/block/${data.height}`}
                     className="text-blue-600 hover:underline"
                   >
-                    {block.slot}
+                    {data.height}
                   </Link>
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/block/${block.hash}`}
+                    href={`/block/${data.hash}`}
                     className="text-blue-600 hover:underline"
                   >
-                    {block.hash}
+                    {data.hash}
                   </Link>
                 </TableCell>
-                <TableCell>{timeAgo(block.timestamp)}</TableCell>
-                <TableCell>{block.author}</TableCell>
+                <TableCell>{timeAgo(data.age)}</TableCell>
+                <TableCell>
+                  <Link
+                    href={`/txs?block=${data.height}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {data.transactions}
+                  </Link>
+                </TableCell>
+                <TableCell>{data.validator}</TableCell>
               </TableRow>
             ))}
           </TableBody>
