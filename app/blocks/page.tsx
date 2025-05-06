@@ -3,8 +3,8 @@ import { Suspense } from "react";
 
 export default function BlocksPage() {
   return (
-    <main className="h-page">
-      <h1 className="text-3xl font-bold">Blocks</h1>
+    <main className="container mx-auto py-8">
+      <h1 className="mx-auto text-xl font-bold">Blocks</h1>
       <Suspense>
         <Blocks />
       </Suspense>

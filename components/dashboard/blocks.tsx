@@ -1,7 +1,8 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -11,13 +12,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { getMockBlocks } from "@/lib/mock/block";
 import { formatHash } from "@/lib/utils";
 
@@ -33,9 +34,12 @@ function timeAgo(secondsAgo: number): string {
 }
 
 export default function BlocksPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page") || "1");
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState<number>(
+    Number(searchParams.get("rows") || "25")
+  );
 
   // Get all blocks from the mock data
   const allBlocks = getMockBlocks(100);
@@ -65,102 +69,156 @@ export default function BlocksPage() {
     };
   });
 
-  // Generate page links
-  const pageLinks = [];
-  const maxPageLinks = 5;
-  let startPage = Math.max(1, currentPage - Math.floor(maxPageLinks / 2));
-  const endPage = Math.min(totalPages, startPage + maxPageLinks - 1);
+  // Handle page size change
+  const handlePageSizeChange = (value: string) => {
+    const newSize = Number(value);
+    setPageSize(newSize);
 
-  if (endPage - startPage + 1 < maxPageLinks) {
-    startPage = Math.max(1, endPage - maxPageLinks + 1);
-  }
+    // Navigate to first page with new page size
+    router.push(`/blocks?page=1&rows=${newSize}`);
+  };
 
-  for (let i = startPage; i <= endPage; i++) {
-    pageLinks.push(i);
-  }
+  // Navigation handlers
+  const goToFirstPage = () => router.push(`/blocks?page=1&rows=${pageSize}`);
+  const goToPrevPage = () =>
+    router.push(
+      `/blocks?page=${Math.max(1, currentPage - 1)}&rows=${pageSize}`
+    );
+  const goToNextPage = () =>
+    router.push(
+      `/blocks?page=${Math.min(totalPages, currentPage + 1)}&rows=${pageSize}`
+    );
+  const goToLastPage = () =>
+    router.push(`/blocks?page=${totalPages}&rows=${pageSize}`);
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">Blocks</h1>
-
-      <div className="rounded-lg shadow overflow-hidden">
-        <div className="p-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Slot</TableHead>
-                <TableHead>Parent Hash</TableHead>
-                <TableHead>Extrinsic Hash</TableHead>
-                <TableHead>Age</TableHead>
-                <TableHead>Txs</TableHead>
-                <TableHead>Validator</TableHead>
+    <div className="rounded-lg shadow overflow-hidden">
+      <div className="p-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Slot</TableHead>
+              <TableHead>Parent Hash</TableHead>
+              <TableHead>Extrinsic Hash</TableHead>
+              <TableHead>Age</TableHead>
+              <TableHead>Txs</TableHead>
+              <TableHead>Validator</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {blocksWithAge.map((data) => (
+              <TableRow key={data.height}>
+                <TableCell className="font-medium">
+                  <Link
+                    href={`/block/${data.height}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {data.height}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link
+                    href={`/block/${data.block.header.parent}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {data.parentHash}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link
+                    href={`/block/${data.block.header.extrinsic_hash}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {data.extrinsicHash}
+                  </Link>
+                </TableCell>
+                <TableCell>{timeAgo(data.age)}</TableCell>
+                <TableCell>{data.transactions}</TableCell>
+                <TableCell>{data.validator}</TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {blocksWithAge.map((data) => (
-                <TableRow key={data.height}>
-                  <TableCell className="font-medium">
-                    <Link
-                      href={`/block/${data.height}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {data.height}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/block/${data.block.header.parent}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {data.parentHash}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      href={`/block/${data.block.header.extrinsic_hash}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {data.extrinsicHash}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{timeAgo(data.age)}</TableCell>
-                  <TableCell>{data.transactions}</TableCell>
-                  <TableCell>{data.validator}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="p-4 border-t flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">Show rows:</span>
+          <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
+            <SelectTrigger className="w-20">
+              <SelectValue placeholder="25" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="p-4 border-t">
-          <Pagination>
-            <PaginationContent>
-              {currentPage > 1 && (
-                <PaginationItem>
-                  <PaginationPrevious
-                    href={`/blocks?page=${currentPage - 1}`}
-                  />
-                </PaginationItem>
-              )}
-
-              {pageLinks.map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    href={`/blocks?page=${page}`}
-                    isActive={page === currentPage}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-
-              {currentPage < totalPages && (
-                <PaginationItem>
-                  <PaginationNext href={`/blocks?page=${currentPage + 1}`} />
-                </PaginationItem>
-              )}
-            </PaginationContent>
-          </Pagination>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToFirstPage}
+            disabled={currentPage === 1}
+            className="px-3"
+          >
+            First
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToPrevPage}
+            disabled={currentPage === 1}
+            className="px-3"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </Button>
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+            className="px-3"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+            >
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToLastPage}
+            disabled={currentPage === totalPages}
+            className="px-3"
+          >
+            Last
+          </Button>
         </div>
       </div>
     </div>
