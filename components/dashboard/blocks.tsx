@@ -21,6 +21,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { getMockBlocks } from "@/lib/mock/block";
 import { formatHash } from "@/lib/utils";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  Download,
+  MoveLeftIcon,
+} from "lucide-react";
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -33,6 +39,11 @@ function timeAgo(secondsAgo: number): string {
   return `${days} days ago`;
 }
 
+// Helper function to format numbers with commas
+function formatNumber(num: number): string {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export default function BlocksPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,6 +54,7 @@ export default function BlocksPage() {
 
   // Get all blocks from the mock data
   const allBlocks = getMockBlocks(100);
+  const totalBlocks = 22424442; // Mock total blocks count
 
   // Calculate total pages
   const totalPages = Math.ceil(allBlocks.length / pageSize);
@@ -51,6 +63,14 @@ export default function BlocksPage() {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentBlocks = allBlocks.slice(startIndex, endIndex);
+
+  // Calculate the first and last block numbers for the range
+  const firstBlockInView =
+    currentBlocks.length > 0 ? currentBlocks[0].header.slot : 0;
+  const lastBlockInView =
+    currentBlocks.length > 0
+      ? currentBlocks[currentBlocks.length - 1].header.slot
+      : 0;
 
   // Calculate age for display
   const blocksWithAge = currentBlocks.map((block, index) => {
@@ -91,9 +111,72 @@ export default function BlocksPage() {
   const goToLastPage = () =>
     router.push(`/blocks?page=${totalPages}&rows=${pageSize}`);
 
+  // Handler for download data
+  const handleDownload = () => {
+    // In a real implementation, this would generate and download data
+    console.log("Downloading page data");
+  };
+
   return (
     <div className="rounded-lg shadow overflow-hidden">
-      <div className="p-4">
+      <div className="p-4 border border-b-0 rounded-t-lg ">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-sm font-medium">
+              Total of {formatNumber(totalBlocks)} blocks
+            </h2>
+            <p className="text-sm text-gray-600">
+              (Showing blocks between #{firstBlockInView} to #{lastBlockInView})
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToFirstPage}
+                disabled={currentPage === 1}
+                className="px-3"
+              >
+                First
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToPrevPage}
+                disabled={currentPage === 1}
+                className="p-0 w-8 h-8"
+              >
+                <ArrowLeftIcon />
+              </Button>
+              <span className="text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+                className="p-0 w-8 h-8"
+              >
+                <ArrowRightIcon />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={goToLastPage}
+                disabled={currentPage === totalPages}
+                className="px-3"
+              >
+                Last
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-0 p-4 border-x">
         <Table>
           <TableHeader>
             <TableRow>
@@ -174,18 +257,7 @@ export default function BlocksPage() {
             disabled={currentPage === 1}
             className="px-3"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
+            <ArrowLeftIcon />
           </Button>
           <span className="text-sm">
             Page {currentPage} of {totalPages}
@@ -197,18 +269,7 @@ export default function BlocksPage() {
             disabled={currentPage === totalPages}
             className="px-3"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4"
-            >
-              <path d="M9 18l6-6-6-6" />
-            </svg>
+            <ArrowRightIcon />
           </Button>
           <Button
             variant="outline"
