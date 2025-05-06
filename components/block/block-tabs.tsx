@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,13 +9,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { Block } from "@/lib/types/block";
+import { Copy, Check } from "lucide-react";
 
 interface BlockTabsProps {
   block: Block;
 }
 
 export default function BlockTabs({ block }: BlockTabsProps) {
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = () => {
+    const blockData = JSON.stringify(block, null, 2);
+    navigator.clipboard.writeText(blockData).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
   return (
     <Tabs defaultValue="transactions">
       <TabsList className="grid grid-cols-4 mb-4">
@@ -131,11 +143,31 @@ export default function BlockTabs({ block }: BlockTabsProps) {
 
       <TabsContent value="raw" className="space-y-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Raw Block Data</CardTitle>
-            <CardDescription>
-              Complete block data in JSON format
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Raw Block Data</CardTitle>
+              <CardDescription>
+                Complete block data in JSON format
+              </CardDescription>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex items-center gap-1"
+              onClick={copyToClipboard}
+            >
+              {copied ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  <span>Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  <span>Copy Data</span>
+                </>
+              )}
+            </Button>
           </CardHeader>
           <CardContent>
             <pre className="p-4 rounded-lg overflow-auto max-h-[500px] text-xs">

@@ -64,6 +64,7 @@ export default async function BlockPage({
 
   return (
     <div className="container mx-auto py-8">
+      
       <div className="mb-6 flex items-center gap-2">
         <Button variant="outline" size="sm" asChild>
           <Link href="/blocks">
