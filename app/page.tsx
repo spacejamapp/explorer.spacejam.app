@@ -1,6 +1,5 @@
 // The home page of the SpaceJam project.
 
-import Link from "next/link";
 import LatestBlocks from "@/components/dashboard/latest-blocks";
 
 export default function Home() {

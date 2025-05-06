@@ -14,7 +14,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { mockLatestBlocks } from "@/lib/mock/block";
+import { getMockBlocks } from "@/lib/mock/block";
+import { Block } from "@/lib/types/block";
+import { formatHash } from "@/lib/utils";
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -27,21 +29,35 @@ function timeAgo(secondsAgo: number): string {
   return `${days} days ago`;
 }
 
-export default function LatestBlocks() {
-  // Calculate age for display purposes
-  const blocksWithAge = mockLatestBlocks.map((block, index) => {
-    // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
-    const ageInSeconds = 30 + index * 15;
+interface BlockWithDisplayData {
+  block: Block;
+  height: number;
+  hash: string;
+  age: number;
+  transactions: number;
+  validator: string;
+}
 
-    return {
-      block,
-      height: 12345678 - index, // Calculated height
-      hash: block.header.extrinsic_hash.substring(0, 16) + "...",
-      age: ageInSeconds,
-      transactions: block.extrinsic.count,
-      validator: `Validator ${String.fromCharCode(65 + index)}`, // A, B, C, etc.
-    };
-  });
+export default function LatestBlocks() {
+  // Get the latest 5 blocks from the mock data
+  const mockBlocks = getMockBlocks(5);
+
+  // Calculate age for display purposes
+  const blocksWithAge: BlockWithDisplayData[] = mockBlocks.map(
+    (block, index) => {
+      // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
+      const ageInSeconds = 30 + index * 15;
+
+      return {
+        block,
+        height: block.header.slot, // Use the slot as height
+        hash: formatHash(block.header.extrinsic_hash),
+        age: ageInSeconds,
+        transactions: block.extrinsic.count,
+        validator: block.header.author_index.toString(),
+      };
+    }
+  );
 
   return (
     <Card>
@@ -55,15 +71,13 @@ export default function LatestBlocks() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Height</TableHead>
-              <TableHead>Hash</TableHead>
+              <TableHead>Slot</TableHead>
               <TableHead>Age</TableHead>
-              <TableHead>Txs</TableHead>
               <TableHead>Validator</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {blocksWithAge.map((data) => (
+            {blocksWithAge.map((data: BlockWithDisplayData) => (
               <TableRow key={data.height}>
                 <TableCell className="font-medium">
                   <Link
@@ -73,23 +87,7 @@ export default function LatestBlocks() {
                     {data.height}
                   </Link>
                 </TableCell>
-                <TableCell>
-                  <Link
-                    href={`/block/${data.hash}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {data.hash}
-                  </Link>
-                </TableCell>
                 <TableCell>{timeAgo(data.age)}</TableCell>
-                <TableCell>
-                  <Link
-                    href={`/txs?block=${data.height}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {data.transactions}
-                  </Link>
-                </TableCell>
                 <TableCell>{data.validator}</TableCell>
               </TableRow>
             ))}

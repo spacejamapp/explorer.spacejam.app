@@ -1,10 +1,8 @@
-import { Block, Header, EpochMark, EpochValidator, TicketsMark, TicketBody } from "@/lib/types/block";
-import { Extrinsic, TicketEnvelope, Preimage, ReportGuarantee, Assurance } from "@/lib/types/extrinsic";
+import { Block, Header, EpochMark, EpochValidator, TicketsMark } from "@/lib/types/block";
+import { Extrinsic } from "@/lib/types/extrinsic";
 
 // Helper function to create a mock block
 export function createMockBlock(slot: number, parent: string): Block {
-  const hash = generateRandomHash();
-  
   const header: Header = {
     parent,
     parent_state_root: generateRandomHash(),
@@ -47,7 +45,7 @@ export function getMockBlocks(count: number = 25): Block[] {
 
 // Helper functions to generate mock data
 function generateRandomHash(): string {
-  return "0x" + Array.from({ length: 16 }, () => 
+  return "0x" + Array.from({ length: 64 }, () => 
     Math.floor(Math.random() * 16).toString(16)
   ).join("");
 }
