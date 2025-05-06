@@ -21,12 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { getMockBlocks } from "@/lib/mock/block";
 import { formatHash } from "@/lib/utils";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  Download,
-  MoveLeftIcon,
-} from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -110,12 +105,6 @@ export default function BlocksPage() {
     );
   const goToLastPage = () =>
     router.push(`/blocks?page=${totalPages}&rows=${pageSize}`);
-
-  // Handler for download data
-  const handleDownload = () => {
-    // In a real implementation, this would generate and download data
-    console.log("Downloading page data");
-  };
 
   return (
     <div className="rounded-lg shadow overflow-hidden">
