@@ -2,8 +2,14 @@
  * block related types
  */
 
+import { Extrinsic } from "./extrinsic";
 
 export type TicketsMark = TicketBody[];
+
+export interface Block {
+    header: Header;
+    extrinsic: Extrinsic;
+}
 
 export interface Header {
     parent: string;
@@ -33,3 +39,4 @@ export interface TicketBody {
     id: string;
     attempt: number;
 }
+
