@@ -5,9 +5,10 @@
 import { WorkReport } from "./work";
 
 export interface Extrinsic { 
-  hash: string;
-  size: number;
-  count: number;
+    tickets: TicketEnvelope[];
+    preimage: Preimage[];
+    guarantee: ReportGuarantee[];
+    assurance: Assurance[];
 }
 
 export interface TicketEnvelope {

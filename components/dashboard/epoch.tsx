@@ -73,7 +73,11 @@ function calculateEpochInfo(blocks: number) {
 function calculateBlockData(blocks: Block[]) {
   return blocks.map((block) => ({
     block: block.header.slot,
-    extrinsics: block.extrinsic.count,
+    extrinsics:
+      block.extrinsic.tickets.length +
+      block.extrinsic.preimage.length +
+      block.extrinsic.guarantee.length +
+      block.extrinsic.assurance.length,
   }));
 }
 
@@ -128,7 +132,7 @@ export default function Epoch({
             <CardTitle className="text-lg">
               Epoch{" "}
               <Link href={`/epoch/${epochNumber}`} className="underline">
-                #{epochNumber}
+                {epochNumber}
               </Link>
             </CardTitle>
             <div className="text-sm text-gray-500">
