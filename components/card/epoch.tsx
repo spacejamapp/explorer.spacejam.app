@@ -89,8 +89,8 @@ export default function EpochCard({ current }: EpochCardProps) {
   );
 
   return (
-    <Link href={`/epoch/${epochNumber}`}>
-      <Card className="w-fit border-pink-200/30">
+    <Card className="w-fit border-pink-300/30">
+      <Link href={`/epoch/${epochNumber}`}>
         <CardHeader className="py-3">
           <CardTitle className="flex flex-row items-end justify-between">
             <div className="text-lg flex flex-row items-end justify-between gap-2">
@@ -130,7 +130,7 @@ export default function EpochCard({ current }: EpochCardProps) {
             </TableBody>
           </Table>
         </CardContent>
-      </Card>
-    </Link>
+      </Link>
+    </Card>
   );
 }

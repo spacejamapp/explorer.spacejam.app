@@ -9,6 +9,7 @@ import { getMockServices } from "@/lib/mock/service";
 import EpochCard from "@/components/card/epoch";
 import HistoryCard from "@/components/card/history";
 import NetworkCard from "@/components/card/network";
+import ActiveCores from "@/components/dashboard/active-cores";
 
 export default function Home() {
   const blocks = getMockBlocks(20);
@@ -45,6 +46,10 @@ export default function Home() {
           }}
         />
         <HistoryCard blocks={blocks} />
+      </section>
+
+      <section>
+        <ActiveCores />
       </section>
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
