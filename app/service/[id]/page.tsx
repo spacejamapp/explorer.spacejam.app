@@ -119,10 +119,14 @@ export default async function ServicePage({
           <TabsContent value="preimages">
             <Card>
               <CardHeader>
-                <CardTitle>Preimages</CardTitle>
-                <CardDescription>
-                  List of preimage hashes associated with this service
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Preimages</CardTitle>
+                    <CardDescription>
+                      List of preimage hashes associated with this service
+                    </CardDescription>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 {preimages.length > 0 ? (
@@ -130,7 +134,11 @@ export default async function ServicePage({
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-12">#</TableHead>
-                        <TableHead>Preimage Hash</TableHead>
+                        <TableHead>
+                          <div className="flex items-center gap-1">
+                            Preimage Hash
+                          </div>
+                        </TableHead>
                         <TableHead className="text-right">Status</TableHead>
                       </TableRow>
                     </TableHeader>

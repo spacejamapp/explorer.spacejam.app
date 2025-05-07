@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -19,14 +19,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  ChevronDownIcon,
+} from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 // Helper function to format numbers with commas
 function formatNumber(num: number): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+// Sorting types
+type SortField = "service" | "balance" | "gasLimit" | "storage" | "items";
+type SortOrder = "asc" | "desc";
 
 export default function Services() {
   const router = useRouter();
@@ -36,17 +52,50 @@ export default function Services() {
     Number(searchParams.get("rows") || "10")
   );
 
+  // Sorting state
+  const [sortField, setSortField] = useState<SortField>("service");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+
   // Get all services from the mock data
   const allServices = getMockServices(40);
   const totalServices = 42; // Mock total services count
 
+  // Sort services
+  const sortedServices = useMemo(() => {
+    return [...allServices].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case "service":
+          comparison = a.service - b.service;
+          break;
+        case "balance":
+          comparison = a.data.service.balance - b.data.service.balance;
+          break;
+        case "gasLimit":
+          comparison = a.data.service.gas - b.data.service.gas;
+          break;
+        case "storage":
+          comparison = a.data.service.total - b.data.service.total;
+          break;
+        case "items":
+          comparison = a.data.service.items - b.data.service.items;
+          break;
+        default:
+          comparison = 0;
+      }
+
+      return sortOrder === "asc" ? comparison : -comparison;
+    });
+  }, [allServices, sortField, sortOrder]);
+
   // Calculate total pages
-  const totalPages = Math.ceil(allServices.length / pageSize);
+  const totalPages = Math.ceil(sortedServices.length / pageSize);
 
   // Get current page of services
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentServices = allServices.slice(startIndex, endIndex);
+  const currentServices = sortedServices.slice(startIndex, endIndex);
 
   // Handle page size change
   const handlePageSizeChange = (value: string) => {
@@ -55,6 +104,21 @@ export default function Services() {
 
     // Navigate to first page with new page size
     router.push(`/services?page=1&rows=${newSize}`);
+  };
+
+  // Toggle sort order
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
+
+  // Set sort field
+  const handleSortFieldChange = (field: SortField) => {
+    if (sortField === field) {
+      toggleSortOrder();
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
   };
 
   // Navigation handlers
@@ -80,12 +144,70 @@ export default function Services() {
             </h2>
             <p className="text-sm text-gray-600">
               (Showing services {startIndex + 1} to{" "}
-              {Math.min(endIndex, allServices.length)} of {allServices.length})
+              {Math.min(endIndex, sortedServices.length)} of{" "}
+              {sortedServices.length})
             </p>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    Sort by <ChevronDownIcon className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem
+                    onClick={() => handleSortFieldChange("service")}
+                  >
+                    Service
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>Code Hash</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleSortFieldChange("balance")}
+                  >
+                    Balance
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleSortFieldChange("gasLimit")}
+                  >
+                    Gas Limit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleSortFieldChange("storage")}
+                  >
+                    Storage
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleSortFieldChange("items")}
+                  >
+                    Items
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleSortOrder}
+                className="flex items-center gap-1"
+              >
+                {sortOrder === "asc" ? (
+                  <>
+                    <ArrowUpIcon className="h-4 w-4" /> Asc
+                  </>
+                ) : (
+                  <>
+                    <ArrowDownIcon className="h-4 w-4" /> Desc
+                  </>
+                )}
+              </Button>
+
               <Button
                 variant="outline"
                 size="sm"
@@ -134,21 +256,90 @@ export default function Services() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Service</TableHead>
-              <TableHead>Code Hash</TableHead>
-              <TableHead className="text-right">Balance</TableHead>
-              <TableHead className="text-right">Gas Limit</TableHead>
-              <TableHead className="text-right">Storage</TableHead>
-              <TableHead className="text-right">Items</TableHead>
+              <TableHead>
+                <div
+                  className="flex items-center gap-1 cursor-pointer"
+                  onClick={() => handleSortFieldChange("service")}
+                >
+                  Service
+                  {sortField === "service" &&
+                    (sortOrder === "asc" ? (
+                      <ArrowUpIcon className="h-3 w-3" />
+                    ) : (
+                      <ArrowDownIcon className="h-3 w-3" />
+                    ))}
+                </div>
+              </TableHead>
+              <TableHead>
+                <div className="flex items-center gap-1 cursor-pointer">
+                  Code Hash
+                </div>
+              </TableHead>
+              <TableHead className="text-right">
+                <div
+                  className="flex items-center gap-1 justify-end cursor-pointer"
+                  onClick={() => handleSortFieldChange("balance")}
+                >
+                  Balance
+                  {sortField === "balance" &&
+                    (sortOrder === "asc" ? (
+                      <ArrowUpIcon className="h-3 w-3" />
+                    ) : (
+                      <ArrowDownIcon className="h-3 w-3" />
+                    ))}
+                </div>
+              </TableHead>
+              <TableHead className="text-right">
+                <div
+                  className="flex items-center gap-1 justify-end cursor-pointer"
+                  onClick={() => handleSortFieldChange("gasLimit")}
+                >
+                  Gas Limit
+                  {sortField === "gasLimit" &&
+                    (sortOrder === "asc" ? (
+                      <ArrowUpIcon className="h-3 w-3" />
+                    ) : (
+                      <ArrowDownIcon className="h-3 w-3" />
+                    ))}
+                </div>
+              </TableHead>
+              <TableHead className="text-right">
+                <div
+                  className="flex items-center gap-1 justify-end cursor-pointer"
+                  onClick={() => handleSortFieldChange("storage")}
+                >
+                  Storage
+                  {sortField === "storage" &&
+                    (sortOrder === "asc" ? (
+                      <ArrowUpIcon className="h-3 w-3" />
+                    ) : (
+                      <ArrowDownIcon className="h-3 w-3" />
+                    ))}
+                </div>
+              </TableHead>
+              <TableHead className="text-right">
+                <div
+                  className="flex items-center gap-1 justify-end cursor-pointer"
+                  onClick={() => handleSortFieldChange("items")}
+                >
+                  Items
+                  {sortField === "items" &&
+                    (sortOrder === "asc" ? (
+                      <ArrowUpIcon className="h-3 w-3" />
+                    ) : (
+                      <ArrowDownIcon className="h-3 w-3" />
+                    ))}
+                </div>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {currentServices.map((serviceItem, i) => (
               <TableRow key={i}>
-                <TableCell className="font-mono text-xs">
+                <TableCell>
                   <Link
                     href={`/service/${serviceItem.service}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-pink-300 hover:underline"
                   >
                     {serviceItem.service}
                   </Link>
@@ -157,7 +348,7 @@ export default function Services() {
                   {formatHash(serviceItem.data.service.code)}
                 </TableCell>
                 <TableCell className="text-right">
-                  {serviceItem.data.service.balance.toLocaleString()} JAM
+                  {serviceItem.data.service.balance.toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
                   {serviceItem.data.service.gas.toLocaleString()}
