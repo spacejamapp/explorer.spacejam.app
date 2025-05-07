@@ -1,7 +1,6 @@
 // The home page of the SpaceJam project.
 
 import LatestBlocks from "@/components/dashboard/latest-blocks";
-import Epoch from "@/components/dashboard/epoch";
 import Link from "next/link";
 import { getMockBlocks } from "@/lib/mock/block";
 import { mockStatistics } from "@/lib/mock/statistics";
@@ -19,7 +18,7 @@ export default function Home() {
         <div>
           Note that the JAM network is still under heavy development by the
           implementers, and the data on this site is not yet fully accurate, but
-          still, it's our pleasure to share you the data of the testnet!
+          still, it&apos;s our pleasure to share you the data of the testnet!
         </div>
         <div className="w-1/3 text-right">
           powered by

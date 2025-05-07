@@ -9,8 +9,6 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ZoomIn, ZoomOut, RefreshCw } from "lucide-react";
 import type { Validator } from "@/lib/types/network";
 import { validatorCoordinates } from "@/lib/mock/validator";
 
@@ -21,13 +19,21 @@ interface ValidatorsMapProps {
   validators?: Validator[];
 }
 
+interface MapPosition {
+  coordinates: [number, number];
+  zoom: number;
+}
+
 export default function ValidatorsMap({ validators }: ValidatorsMapProps) {
   // State for position and zoom
-  const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
+  const [position, setPosition] = useState<MapPosition>({
+    coordinates: [0, 0],
+    zoom: 1,
+  });
   const mapRef = useRef<HTMLDivElement>(null);
 
   // Handle position changes from ZoomableGroup
-  const handleMoveEnd = useCallback((position: any) => {
+  const handleMoveEnd = useCallback((position: MapPosition) => {
     setPosition(position);
   }, []);
 
@@ -48,7 +54,7 @@ export default function ValidatorsMap({ validators }: ValidatorsMapProps) {
     <Card className="overflow-hidden">
       <CardHeader className="pb-2 flex flex-row justify-between items-center">
         <div className="flex justify-between items-center">
-          <CardTitle>Validators World Map</CardTitle>
+          <CardTitle>Earth</CardTitle>
         </div>
         <div className="text-xs text-gray-500">
           {validators?.length} active validators
@@ -68,9 +74,9 @@ export default function ValidatorsMap({ validators }: ValidatorsMapProps) {
           >
             <ZoomableGroup
               zoom={position.zoom}
-              center={position.coordinates as [number, number]}
+              center={position.coordinates}
               onMoveEnd={handleMoveEnd}
-              filterZoomEvent={(evt) => {
+              filterZoomEvent={() => {
                 // Allow wheel/trackpad zoom events but prevent them from scrolling the page
                 // Return true = enable zoom, false = disable zoom
                 return true;

@@ -30,12 +30,6 @@ export default function BlockTabs({ block }: BlockTabsProps) {
     });
   };
 
-  const totalExtrinsics =
-    block.extrinsic.tickets.length +
-    block.extrinsic.preimage.length +
-    block.extrinsic.guarantee.length +
-    block.extrinsic.assurance.length;
-
   return (
     <div className="space-y-4">
       <Tabs defaultValue="tickets" className="w-full">

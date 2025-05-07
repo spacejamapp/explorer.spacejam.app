@@ -1,15 +1,8 @@
 import { notFound } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getMockBlocks } from "@/lib/mock/block";
 import { formatHash } from "@/lib/utils";
 import BlockTabs from "@/components/block/block-tabs";
-import ExtrinsicsList from "@/components/block/extrinsics-list";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";

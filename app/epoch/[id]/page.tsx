@@ -2,7 +2,7 @@ import ActivityDashboard from "@/components/dashboard/activity";
 import CoreDashboard from "@/components/dashboard/core";
 import { Button } from "@/components/ui/button";
 import { mockStatistics } from "@/lib/mock/statistics";
-import { ArrowLeftIcon, ArrowRightIcon, MoveLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -12,7 +12,7 @@ export default async function EpochPage({
   params: Promise<{ id: number }>;
 }) {
   const { id } = await params;
-  const { cores, vals_current, vals_latest } = mockStatistics;
+  const { cores, vals_current } = mockStatistics;
 
   // TODO: we need to know the latest epoch
 
@@ -36,7 +36,7 @@ export default async function EpochPage({
       <Suspense>
         <section className="space-y-8">
           <CoreDashboard cores={cores} />
-          <ActivityDashboard current={vals_current} latest={vals_latest} />
+          <ActivityDashboard current={vals_current} />
         </section>
       </Suspense>
     </main>

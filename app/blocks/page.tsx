@@ -1,7 +1,4 @@
 import Blocks from "@/components/dashboard/blocks";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
-import Link from "next/link";
 import { Suspense } from "react";
 
 export default function BlocksPage() {
