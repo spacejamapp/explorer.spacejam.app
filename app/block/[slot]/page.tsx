@@ -1,17 +1,11 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getMockBlocks } from "@/lib/mock/block";
 import { formatHash } from "@/lib/utils";
 import BlockTabs from "@/components/block/block-tabs";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -56,29 +50,40 @@ export default async function BlockPage({
     parentHash: formatHash(block.header.parent || ""),
     parentStateRoot: formatHash(block.header.parent_state_root || ""),
     validator: block.header.author_index,
-    transactionCount: block.extrinsic.count,
-    blockSize: block.extrinsic.size,
+    transactionCount:
+      block.extrinsic.tickets.length +
+      block.extrinsic.preimage.length +
+      block.extrinsic.guarantee.length +
+      block.extrinsic.assurance.length,
     entropySource: formatHash(block.header.entropy_source || ""),
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <main className="container mx-auto py-8">
+      <section className="mb-4 flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center gap-2">
+          <div className="text-xl font-bold">Block {blockData.slot}</div>
+          <Link href={`/block/${Number(slotId) - 1}`}>
+            <Button variant="outline" size="sm">
+              <ArrowLeftIcon className="h-4 w-4" />
+            </Button>
+          </Link>
+          <Link href={`/block/${Number(slotId) + 1}`}>
+            <Button variant="outline" size="sm">
+              <ArrowRightIcon className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+
+        <div className="text-sm text-gray-500">
+          {timeAgo(blockAge)} (
+          {new Date(Date.now() - blockAge * 1000).toLocaleString()})
+        </div>
+      </section>
       <div className="grid grid-cols-1 gap-6">
         {/* Block Header Information */}
         <Card>
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle className="text-xl mb-1">
-                  Block #{blockData.slot}
-                </CardTitle>
-                <CardDescription>
-                  {timeAgo(blockAge)} (
-                  {new Date(Date.now() - blockAge * 1000).toLocaleString()})
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
+          <CardHeader className="pb-2"></CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -122,20 +127,6 @@ export default async function BlockPage({
                     {block.header.entropy_source}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-sm font-medium text-gray-500">
-                      Extrinsics
-                    </div>
-                    <div className="text-sm">{block.extrinsic.count}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-500">
-                      Size
-                    </div>
-                    <div className="text-sm">{block.extrinsic.size} bytes</div>
-                  </div>
-                </div>
               </div>
             </div>
           </CardContent>
@@ -144,6 +135,6 @@ export default async function BlockPage({
         {/* Tabs section - moved to client component */}
         <BlockTabs block={block} />
       </div>
-    </div>
+    </main>
   );
 }

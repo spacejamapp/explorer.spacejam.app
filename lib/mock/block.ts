@@ -17,9 +17,68 @@ export function createMockBlock(slot: number, parent: string): Block {
   };
 
   const extrinsic: Extrinsic = {
-    hash: generateRandomHash(),
-    size: Math.floor(Math.random() * 1000) + 500,
-    count: Math.floor(Math.random() * 150) + 50
+    tickets: Array.from({ length: Math.floor(Math.random() * 5) + 1 }, (_, i) => ({
+      attempt: i + 1,
+      signature: generateRandomHash()
+    })),
+    preimage: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => ({
+      requester: Math.floor(Math.random() * 100),
+      blob: generateRandomHash()
+    })),
+    guarantee: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => ({
+      report: {
+        spec: {
+          hash: generateRandomHash(),
+          length: Math.floor(Math.random() * 1000),
+          erasure_root: generateRandomHash(),
+          exports_root: generateRandomHash(),
+          exports_count: Math.floor(Math.random() * 10)
+        },
+        context: {
+          anchor: generateRandomHash(),
+          state_root: generateRandomHash(),
+          beefy_root: generateRandomHash(),
+          loookup_anchor: generateRandomHash(),
+          lookup_anchor_slot: Math.floor(Math.random() * 1000),
+          prerequisites: [generateRandomHash()],
+          authorizer_hash: generateRandomHash(),
+          auth_output: generateRandomHash(),
+          lookup: [{
+            hash: generateRandomHash(),
+            exports_root: generateRandomHash()
+          }],
+          results: [{
+            service_id: Math.floor(Math.random() * 100),
+            code_hash: generateRandomHash(),
+            payload_hash: generateRandomHash(),
+            acccumulate_gas: Math.floor(Math.random() * 1000),
+            result: { ok: generateRandomHash() },
+            refine_load: {
+              gas_used: Math.floor(Math.random() * 1000),
+              imports: [Math.floor(Math.random() * 100)],
+              extrinsic_count: Math.floor(Math.random() * 10),
+              extrinsic_size: Math.floor(Math.random() * 1000),
+              exports: Math.floor(Math.random() * 10)
+            }
+          }],
+          auth_gas_used: Math.floor(Math.random() * 1000)
+        },
+        core_index: Math.floor(Math.random() * 10),
+        authorizer_hash: generateRandomHash(),
+        auth_output: generateRandomHash()
+      },
+      slot: Math.floor(Math.random() * 1000),
+      signatures: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => ({
+        validator_index: Math.floor(Math.random() * 100),
+        signature: generateRandomHash()
+      }))
+    })),
+    assurance: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => ({
+      anchor: generateRandomHash(),
+      bitfield: Array.from({ length: 8 }, () => Math.floor(Math.random() * 2)),
+      validator_index: Math.floor(Math.random() * 100),
+      signature: generateRandomHash()
+    }))
   };
 
   return {

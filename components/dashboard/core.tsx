@@ -26,6 +26,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { CoreActivityRecord } from "@/lib/types/statistic";
+import Link from "next/link";
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -84,8 +85,8 @@ export default function CoreDashboard({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-lg shadow overflow-hidden">
-            <div className="pt-0 p-4 border-x border-t rounded-t-lg">
+          <div className="space-y-4">
+            <div className="border rounded-t-lg">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -103,8 +104,10 @@ export default function CoreDashboard({
                     const coreIndex = startIndex + index;
                     return (
                       <TableRow key={coreIndex}>
-                        <TableCell className="font-medium">
-                          Core #{coreIndex + 1}
+                        <TableCell className="font-medium text-blue-500 hover:underline">
+                          <Link href={`/core/${coreIndex + 1}`}>
+                            {coreIndex + 1}
+                          </Link>
                         </TableCell>
                         <TableCell>{formatNumber(core.gas_used)}</TableCell>
                         <TableCell>
@@ -124,7 +127,7 @@ export default function CoreDashboard({
               </Table>
             </div>
 
-            <div className="p-4 border-t flex items-center justify-between">
+            <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Show rows:</span>
                 <Select

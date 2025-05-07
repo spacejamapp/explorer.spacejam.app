@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import type { ActivityRecord } from "@/lib/types/statistic";
+import Link from "next/link";
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -43,36 +44,11 @@ function formatBytes(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
-// Calculate percentage change
-function calculateChange(current: number, previous: number): number {
-  if (previous === 0) return 0;
-  return ((current - previous) / previous) * 100;
-}
-
-// Display change with arrow and color
-function ChangeIndicator({ change }: { change: number }) {
-  if (change === 0) {
-    return <span className="text-gray-500">0%</span>;
-  }
-
-  const isPositive = change > 0;
-  const className = isPositive ? "text-green-500" : "text-red-500";
-  const arrow = isPositive ? "↑" : "↓";
-
-  return (
-    <span className={className}>
-      {arrow} {Math.abs(change).toFixed(2)}%
-    </span>
-  );
-}
-
 // Activity Records comparison component
 export default function ActivityDashboard({
   current,
-  latest,
 }: {
   current: ActivityRecord[];
-  latest: ActivityRecord[];
 }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(6);
@@ -126,12 +102,13 @@ export default function ActivityDashboard({
               <TableBody>
                 {currentValidators.map((validator, index) => {
                   const validatorIndex = startIndex + index;
-                  const latestValidator = latest[validatorIndex];
 
                   return (
                     <TableRow key={validatorIndex}>
                       <TableCell className="font-medium">
-                        Validator #{validatorIndex + 1}
+                        <Link href={`/validator/${validatorIndex + 1}`}>
+                          Validator #{validatorIndex + 1}
+                        </Link>
                       </TableCell>
                       <TableCell>{formatNumber(validator.blocks)}</TableCell>
                       <TableCell>{formatNumber(validator.tickets)}</TableCell>
