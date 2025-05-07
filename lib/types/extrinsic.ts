@@ -4,7 +4,7 @@
 
 import { WorkReport } from "./work";
 
-export interface Extrinsic {
+export interface Extrinsic { 
   hash: string;
   size: number;
   count: number;

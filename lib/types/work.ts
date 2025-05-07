@@ -8,7 +8,6 @@ export interface WorkReport {
     core_index: number;
     authorizer_hash: string;
     auth_output: string;
-    
 }
 
 export interface WorkPackageSpec {

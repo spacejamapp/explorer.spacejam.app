@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { getMockBlocks } from "@/lib/mock/block";
 import { formatHash } from "@/lib/utils";
-import { Block } from "@/lib/types/block";
 import BlockTabs from "@/components/block/block-tabs";
 
 // Helper function to format time ago
@@ -33,7 +32,7 @@ function getRandomBlockAge(): number {
 export default async function BlockPage({
   params,
 }: {
-  params: { slot: string };
+  params: Promise<{ slot: string }>;
 }) {
   // Server-side data fetching
   const slotId = (await params).slot;
@@ -64,16 +63,6 @@ export default async function BlockPage({
 
   return (
     <div className="container mx-auto py-8">
-      
-      <div className="mb-6 flex items-center gap-2">
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/blocks">
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Blocks
-          </Link>
-        </Button>
-      </div>
-
       <div className="grid grid-cols-1 gap-6">
         {/* Block Header Information */}
         <Card>
