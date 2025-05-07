@@ -105,9 +105,9 @@ export default function ActivityDashboard({
 
                   return (
                     <TableRow key={validatorIndex}>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium text-pink-300 hover:underline">
                         <Link href={`/validator/${validatorIndex + 1}`}>
-                          Validator #{validatorIndex + 1}
+                          {validatorIndex + 1}
                         </Link>
                       </TableCell>
                       <TableCell>{formatNumber(validator.blocks)}</TableCell>

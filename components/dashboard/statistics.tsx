@@ -86,10 +86,7 @@ export default function Statistics() {
             </TabsList>
 
             <TabsContent value="activity" className="space-y-4">
-              <ActivityDashboard
-                current={stats.vals_current[0]}
-                latest={stats.vals_latest[0]}
-              />
+              <ActivityDashboard current={stats.vals_current} />
             </TabsContent>
 
             <TabsContent value="cores">

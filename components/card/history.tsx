@@ -89,7 +89,7 @@ export default function HistoryCard({ blocks }: HistoryCardProps) {
               <Line
                 type="monotone"
                 dataKey="extrinsics"
-                stroke="#3b82f6"
+                stroke="#f9a8d4"
                 strokeWidth={2}
                 dot={false}
               />

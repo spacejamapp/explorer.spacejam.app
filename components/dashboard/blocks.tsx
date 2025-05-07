@@ -44,7 +44,7 @@ export default function BlocksPage() {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page") || "1");
   const [pageSize, setPageSize] = useState<number>(
-    Number(searchParams.get("rows") || "25")
+    Number(searchParams.get("rows") || "10")
   );
 
   // Get all blocks from the mock data
@@ -79,7 +79,11 @@ export default function BlocksPage() {
       extrinsicHash: formatHash(block.header.extrinsic_hash),
       parentHash: formatHash(block.header.parent),
       age: ageInSeconds,
-      transactions: block.extrinsic.count,
+      transactions:
+        block.extrinsic.assurance.length +
+        block.extrinsic.guarantee.length +
+        block.extrinsic.preimage.length +
+        block.extrinsic.tickets.length,
       validator: block.header.author_index.toString(),
     };
   });
@@ -183,7 +187,7 @@ export default function BlocksPage() {
                 <TableCell className="font-medium">
                   <Link
                     href={`/block/${data.height}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-pink-300 hover:underline"
                   >
                     {data.height}
                   </Link>
@@ -191,19 +195,12 @@ export default function BlocksPage() {
                 <TableCell>
                   <Link
                     href={`/block/${data.block.header.parent}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-pink-300 hover:underline"
                   >
                     {data.parentHash}
                   </Link>
                 </TableCell>
-                <TableCell>
-                  <Link
-                    href={`/block/${data.block.header.extrinsic_hash}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {data.extrinsicHash}
-                  </Link>
-                </TableCell>
+                <TableCell>{data.extrinsicHash}</TableCell>
                 <TableCell>{timeAgo(data.age)}</TableCell>
                 <TableCell>{data.transactions}</TableCell>
                 <TableCell>{data.validator}</TableCell>
@@ -218,7 +215,7 @@ export default function BlocksPage() {
           <span className="text-sm text-gray-600">Show rows:</span>
           <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
             <SelectTrigger className="w-20">
-              <SelectValue placeholder="25" />
+              <SelectValue placeholder="10" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="10">10</SelectItem>
