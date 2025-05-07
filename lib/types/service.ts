@@ -15,3 +15,14 @@ export interface Service {
     // the number of items in storage
     items: number;
 }
+
+export interface ServiceData {
+    service: Service,
+    // an array of preimage hashes
+    preimages: string[];
+}
+
+export interface ServiceItem {
+    service: number;
+    data: ServiceData;
+}

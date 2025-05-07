@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Service } from "@/lib/types/service";
+import { ServiceItem } from "@/lib/types/service";
 import {
   Table,
   TableBody,
@@ -18,9 +18,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { formatHash } from "@/lib/utils";
 
 interface TopServicesProps {
-  services: Service[];
+  services: ServiceItem[];
 }
 
 export default function TopServices({ services }: TopServicesProps) {
@@ -45,7 +46,7 @@ export default function TopServices({ services }: TopServicesProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Code Hash</TableHead>
+              <TableHead>Service</TableHead>
               <TableHead className="text-right">Balance</TableHead>
               <TableHead className="text-right">Gas Limit</TableHead>
               <TableHead className="text-right">Storage</TableHead>
@@ -53,21 +54,23 @@ export default function TopServices({ services }: TopServicesProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {services.map((service, i) => (
+            {services.map((serviceItem, i) => (
               <TableRow key={i}>
                 <TableCell className="font-mono text-xs">
-                  {service.code.substring(0, 10)}...
+                  {serviceItem.service}
                 </TableCell>
                 <TableCell className="text-right">
-                  {service.balance.toLocaleString()} JAM
+                  {serviceItem.data.service.balance.toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
-                  {service.gas.toLocaleString()}
+                  {serviceItem.data.service.gas.toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
-                  {formatBytes(service.total)}
+                  {formatBytes(serviceItem.data.service.total)}
                 </TableCell>
-                <TableCell className="text-right">{service.items}</TableCell>
+                <TableCell className="text-right">
+                  {serviceItem.data.service.items}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
