@@ -54,7 +54,7 @@ export default function ValidatorsMap({ validators }: ValidatorsMapProps) {
     <Card className="overflow-hidden">
       <CardHeader className="pb-2 flex flex-row justify-between items-center">
         <div className="flex justify-between items-center">
-          <CardTitle>Earth</CardTitle>
+          <CardTitle>JAM on Earth</CardTitle>
         </div>
         <div className="text-xs text-gray-500">
           {validators?.length} active validators

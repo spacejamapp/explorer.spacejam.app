@@ -1,9 +1,11 @@
 // The home page of the SpaceJam project.
 
 import LatestBlocks from "@/components/dashboard/latest-blocks";
+import TopServices from "@/components/dashboard/top-services";
 import Link from "next/link";
 import { getMockBlocks } from "@/lib/mock/block";
 import { mockStatistics } from "@/lib/mock/statistics";
+import { getMockServices } from "@/lib/mock/service";
 import EpochCard from "@/components/card/epoch";
 import HistoryCard from "@/components/card/history";
 import NetworkCard from "@/components/card/network";
@@ -11,6 +13,7 @@ import NetworkCard from "@/components/card/network";
 export default function Home() {
   const blocks = getMockBlocks(20);
   const stats = mockStatistics;
+  const services = getMockServices(5);
 
   return (
     <main className="container mx-auto py-6 space-y-8">
@@ -44,7 +47,10 @@ export default function Home() {
         <HistoryCard blocks={blocks} />
       </section>
 
-      <LatestBlocks />
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <LatestBlocks />
+        <TopServices services={services} />
+      </section>
     </main>
   );
 }
