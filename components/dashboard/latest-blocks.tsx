@@ -93,7 +93,14 @@ export default function LatestBlocks() {
                   </Link>
                 </TableCell>
                 <TableCell>{timeAgo(data.age)}</TableCell>
-                <TableCell>{data.validator}</TableCell>
+                <TableCell>
+                  <Link
+                    href={`/validator/${data.validator}`}
+                    className="hover:underline text-pink-300"
+                  >
+                    {data.validator}
+                  </Link>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -187,7 +187,7 @@ export default function BlocksPage() {
                 <TableCell className="font-medium">
                   <Link
                     href={`/block/${data.height}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-pink-300 hover:underline"
                   >
                     {data.height}
                   </Link>
@@ -195,19 +195,12 @@ export default function BlocksPage() {
                 <TableCell>
                   <Link
                     href={`/block/${data.block.header.parent}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-pink-300 hover:underline"
                   >
                     {data.parentHash}
                   </Link>
                 </TableCell>
-                <TableCell>
-                  <Link
-                    href={`/block/${data.block.header.extrinsic_hash}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {data.extrinsicHash}
-                  </Link>
-                </TableCell>
+                <TableCell>{data.extrinsicHash}</TableCell>
                 <TableCell>{timeAgo(data.age)}</TableCell>
                 <TableCell>{data.transactions}</TableCell>
                 <TableCell>{data.validator}</TableCell>

@@ -10,6 +10,7 @@ import EpochCard from "@/components/card/epoch";
 import HistoryCard from "@/components/card/history";
 import NetworkCard from "@/components/card/network";
 import ActiveCores from "@/components/dashboard/active-cores";
+import SearchComponent from "@/components/search";
 
 export default function Home() {
   const blocks = getMockBlocks(20);
@@ -28,12 +29,16 @@ export default function Home() {
           powered by
           <Link
             href="https://spacejam.app"
-            className="font-bold text-foreground"
+            className="font-bold text-foreground text-pink-300"
           >
             {" "}
             SpaceJam
           </Link>
         </div>
+      </section>
+
+      <section>
+        <SearchComponent />
       </section>
 
       <section className="flex gap-4">

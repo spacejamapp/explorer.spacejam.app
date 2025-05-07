@@ -165,7 +165,7 @@ export default function Services() {
                 <TableCell className="">
                   <Link
                     href={`/service/${serviceItem.service}`}
-                    className="text-pink-500 hover:underline"
+                    className="text-pink-300 hover:underline"
                   >
                     {serviceItem.service}
                   </Link>

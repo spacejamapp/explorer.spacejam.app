@@ -12,59 +12,23 @@ export interface NavSection {
 }
 
 export const navSections: NavSection[] = [
-  /*  {
-    title: "Builder",
+  {
+    title: "Resources",
     items: [
       {
-        title: "Build my App",
-        href: "/stf",
-        description: "Write JAM program in Zink",
-      },
-      {
-        title: "JSON-RPC API",
-        href: "/jamnp",
-        description: "JSON-RPC API for JAM program",
-      },
-      // {
-      //   title: "Index my App",
-      //   href: "/jamnp",
-      //   description: "Index JAM program with Endex",
-      // },
-    ],
-  }, */
-  /* {
-    title: "Validator",
-    items: [
-      {
-        title: "Standard",
-        href: "https://docs.spacejam.app/validator#standard",
-        description: "Run a full validator node",
+        title: "GrayPaper",
+        href: "https://graypaper.com",
+        description: "The site of the graypaper.",
         target: "_blank",
       },
       {
-        title: "Customized",
-        href: "https://docs.spacejam.app/validator#customized",
-        description: "Customize with SpaceJam Hooks",
+        title: "JAM",
+        href: "https://jam.web3.foundation",
+        description: "The JAM prize",
         target: "_blank",
       },
     ],
-    annotated: true,
-  }, */
-  /*   {
-    title: "Conformance",
-    items: [
-      {
-        title: "STF",
-        href: "/stf",
-        description: "State transition functions",
-      },
-      {
-        title: "JAMSNP",
-        href: "/jamnp",
-        description: "JAM simple network protocol",
-      },
-    ],
-  }, */
+  },
   {
     title: "About",
     items: [

@@ -103,8 +103,8 @@ export default function ServicePage({ params }: ServicePageProps) {
             <TabsTrigger value="preimages">
               Preimages ({preimages.length})
             </TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
             <TabsTrigger value="storage">Storage</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
           <TabsContent value="preimages">
@@ -151,7 +151,7 @@ export default function ServicePage({ params }: ServicePageProps) {
               <CardHeader>
                 <CardTitle>Reports</CardTitle>
                 <CardDescription>
-                  Recent work reports for this service
+                  Recent work reports for this service / TODO: mb add reports
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -167,7 +167,8 @@ export default function ServicePage({ params }: ServicePageProps) {
               <CardHeader>
                 <CardTitle>Storage</CardTitle>
                 <CardDescription>
-                  Storage details for this service
+                  Storage details for this service / TODO: inspect the storage
+                  details
                 </CardDescription>
               </CardHeader>
               <CardContent>

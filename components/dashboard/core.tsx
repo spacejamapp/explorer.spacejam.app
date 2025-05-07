@@ -104,7 +104,7 @@ export default function CoreDashboard({
                     const coreIndex = startIndex + index;
                     return (
                       <TableRow key={coreIndex}>
-                        <TableCell className="font-medium text-blue-500 hover:underline">
+                        <TableCell className="font-medium text-pink-300 hover:underline">
                           <Link href={`/core/${coreIndex + 1}`}>
                             {coreIndex + 1}
                           </Link>
