@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import type { ActivityRecord } from "@/lib/types/statistic";
+import Link from "next/link";
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -105,7 +106,9 @@ export default function ActivityDashboard({
                   return (
                     <TableRow key={validatorIndex}>
                       <TableCell className="font-medium">
-                        Validator #{validatorIndex + 1}
+                        <Link href={`/validator/${validatorIndex + 1}`}>
+                          Validator #{validatorIndex + 1}
+                        </Link>
                       </TableCell>
                       <TableCell>{formatNumber(validator.blocks)}</TableCell>
                       <TableCell>{formatNumber(validator.tickets)}</TableCell>
