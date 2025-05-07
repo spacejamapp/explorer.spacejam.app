@@ -85,61 +85,7 @@ export default function CoreDashboard({
         </CardHeader>
         <CardContent>
           <div className="rounded-lg shadow overflow-hidden">
-            <div className="p-4 border border-b-0 rounded-t-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-sm font-medium">
-                    Total of {totalCores} execution cores
-                  </h2>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToFirstPage}
-                      disabled={currentPage === 1}
-                      className="px-3"
-                    >
-                      First
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToPrevPage}
-                      disabled={currentPage === 1}
-                      className="p-0 w-8 h-8"
-                    >
-                      <ArrowLeftIcon />
-                    </Button>
-                    <span className="text-sm">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToNextPage}
-                      disabled={currentPage === totalPages}
-                      className="p-0 w-8 h-8"
-                    >
-                      <ArrowRightIcon />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={goToLastPage}
-                      disabled={currentPage === totalPages}
-                      className="px-3"
-                    >
-                      Last
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-0 p-4 border-x">
+            <div className="pt-0 p-4 border-x border-t rounded-t-lg">
               <Table>
                 <TableHeader>
                   <TableRow>

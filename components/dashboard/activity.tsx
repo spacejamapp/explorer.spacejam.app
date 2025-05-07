@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -98,46 +104,55 @@ export default function ActivityDashboard({
     <Card>
       <CardHeader>
         <CardTitle>Validator Activities</CardTitle>
+        <CardDescription>
+          Detailed statistics for validators in the epoch
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Validator</TableHead>
-                <TableHead>Blocks</TableHead>
-                <TableHead>Tickets</TableHead>
-                <TableHead>Preimages</TableHead>
-                <TableHead>Preimage Size</TableHead>
-                <TableHead>Guarantees</TableHead>
-                <TableHead>Assurances</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentValidators.map((validator, index) => {
-                const validatorIndex = startIndex + index;
-                const latestValidator = latest[validatorIndex];
+          <div className="border rounded-t-lg">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Validator</TableHead>
+                  <TableHead>Blocks</TableHead>
+                  <TableHead>Tickets</TableHead>
+                  <TableHead>Preimages</TableHead>
+                  <TableHead>Preimage Size</TableHead>
+                  <TableHead>Guarantees</TableHead>
+                  <TableHead>Assurances</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {currentValidators.map((validator, index) => {
+                  const validatorIndex = startIndex + index;
+                  const latestValidator = latest[validatorIndex];
 
-                return (
-                  <TableRow key={validatorIndex}>
-                    <TableCell className="font-medium">
-                      Validator #{validatorIndex + 1}
-                    </TableCell>
-                    <TableCell>{formatNumber(validator.blocks)}</TableCell>
-                    <TableCell>{formatNumber(validator.tickets)}</TableCell>
-                    <TableCell>{formatNumber(validator.preimages)}</TableCell>
-                    <TableCell>
-                      {formatBytes(validator.preimages_size)}
-                    </TableCell>
-                    <TableCell>{formatNumber(validator.guarantees)}</TableCell>
-                    <TableCell>{formatNumber(validator.assurances)}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                  return (
+                    <TableRow key={validatorIndex}>
+                      <TableCell className="font-medium">
+                        Validator #{validatorIndex + 1}
+                      </TableCell>
+                      <TableCell>{formatNumber(validator.blocks)}</TableCell>
+                      <TableCell>{formatNumber(validator.tickets)}</TableCell>
+                      <TableCell>{formatNumber(validator.preimages)}</TableCell>
+                      <TableCell>
+                        {formatBytes(validator.preimages_size)}
+                      </TableCell>
+                      <TableCell>
+                        {formatNumber(validator.guarantees)}
+                      </TableCell>
+                      <TableCell>
+                        {formatNumber(validator.assurances)}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
 
-          <div className="p-4 border-t flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Show rows:</span>
               <Select

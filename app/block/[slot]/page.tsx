@@ -63,15 +63,6 @@ export default async function BlockPage({
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-6 flex items-center gap-2">
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/blocks">
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Blocks
-          </Link>
-        </Button>
-      </div>
-
       <div className="grid grid-cols-1 gap-6">
         {/* Block Header Information */}
         <Card>
