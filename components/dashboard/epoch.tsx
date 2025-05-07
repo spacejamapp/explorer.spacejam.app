@@ -29,6 +29,7 @@ import type { ActivityRecord } from "@/lib/types/statistic";
 import type { Block } from "@/lib/types/block";
 import { EPOCH_LENGTH, SLOT_PERIOD } from "@/lib/params";
 import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -68,30 +69,6 @@ function calculateEpochInfo(blocks: number) {
   };
 }
 
-// Extrinsics cell with hover details
-function ExtrinsicsCell({ record }: { record: ActivityRecord }) {
-  const totalExtrinsics =
-    record.tickets + record.preimages + record.guarantees + record.assurances;
-
-  return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <TableCell className="cursor-help">
-            {formatNumber(totalExtrinsics)}
-          </TableCell>
-        </TooltipTrigger>
-        <TooltipContent className="space-y-1">
-          <p>Tickets: {formatNumber(record.tickets)}</p>
-          <p>Preimages: {formatNumber(record.preimages)}</p>
-          <p>Guarantees: {formatNumber(record.guarantees)}</p>
-          <p>Assurances: {formatNumber(record.assurances)}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-}
-
 // Calculate data from blocks
 function calculateBlockData(blocks: Block[]) {
   return blocks.map((block) => ({
@@ -101,7 +78,7 @@ function calculateBlockData(blocks: Block[]) {
 }
 
 // Epoch Activities Dashboard component
-export default function EpochActivitiesDashboard({
+export default function Epoch({
   current,
   latest,
   blocks,
@@ -148,7 +125,12 @@ export default function EpochActivitiesDashboard({
       <Card className="w-fit">
         <CardHeader className="py-3">
           <div className="flex items-center gap-4 justify-between">
-            <CardTitle className="text-lg">Epoch #{epochNumber}</CardTitle>
+            <CardTitle className="text-lg">
+              Epoch{" "}
+              <Link href={`/epoch/${epochNumber}`} className="underline">
+                #{epochNumber}
+              </Link>
+            </CardTitle>
             <div className="text-sm text-gray-500">
               remaining: {formatTimeRemaining(remainingTime)}
             </div>
@@ -185,29 +167,35 @@ export default function EpochActivitiesDashboard({
         </CardContent>
       </Card>
 
-      <Card className="flex-1 min-w-[400px]">
+      <Card className="flex-1 min-w-[200px]">
         <CardHeader className="py-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">Extrinsic History</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="py-2">
-          <div className="h-[200px]">
+          <div className="h-[120px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={blockData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                {/* <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" /> */}
                 <XAxis
                   dataKey="block"
                   stroke="#6b7280"
                   tick={{ fontSize: 12 }}
                   tickFormatter={(value) => `Block ${value}`}
-                  tickCount={3}
-                  interval="preserveStartEnd"
+                  tickLine={false}
+                  axisLine={false}
+                  // interval="preserveStartEnd"
+                  interval={8}
                 />
                 <YAxis
                   stroke="#6b7280"
+                  tickLine={false}
+                  axisLine={false}
                   tick={{ fontSize: 12 }}
-                  tickFormatter={(value) => formatNumber(value)}
+                  tickFormatter={(value) =>
+                    value == 0 ? "" : formatNumber(value)
+                  }
                 />
                 <RechartsTooltip
                   content={({ active, payload }) => {

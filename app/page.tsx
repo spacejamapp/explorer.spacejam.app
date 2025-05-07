@@ -1,16 +1,14 @@
 // The home page of the SpaceJam project.
 
-import ActivityDashboard from "@/components/dashboard/activity";
-import CoreDashboard from "@/components/dashboard/core";
 import LatestBlocks from "@/components/dashboard/latest-blocks";
-import EpochActivitiesDashboard from "@/components/dashboard/epoch-activities";
-import { mockStatistics } from "@/lib/mock/statistics";
+import Epoch from "@/components/dashboard/epoch";
 import Link from "next/link";
 import { getMockBlocks } from "@/lib/mock/block";
+import { mockStatistics } from "@/lib/mock/statistics";
 
 export default function Home() {
-  const stats = mockStatistics;
   const blocks = getMockBlocks(20);
+  const stats = mockStatistics;
 
   return (
     <main className="container mx-auto py-6 space-y-8">
@@ -21,20 +19,13 @@ export default function Home() {
         </Link>
       </div>
 
-      <EpochActivitiesDashboard
+      <Epoch
         current={stats.vals_current}
         latest={stats.vals_latest}
         blocks={blocks}
       />
 
       <LatestBlocks />
-
-      <CoreDashboard cores={stats.cores} />
-
-      <ActivityDashboard
-        current={stats.vals_current}
-        latest={stats.vals_latest}
-      />
     </main>
   );
 }
