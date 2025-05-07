@@ -121,14 +121,5 @@ export const mockStatistics: Statistics = {
         da_load: 65,
         popularity: 88,
       },
-      {
-        gas_used: 28976543,
-        imports: 876,
-        extrinsic_count: 3456,
-        exports: 2345,
-        bundle_size: 7654321,
-        da_load: 54,
-        popularity: 76,
-      },
     ],
   };

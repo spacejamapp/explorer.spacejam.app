@@ -69,7 +69,7 @@ export default function ActivityDashboard({
   latest: ActivityRecord[];
 }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(6);
 
   // Calculate total pages
   const totalValidators = current.length;
@@ -97,7 +97,7 @@ export default function ActivityDashboard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Validator Activity</CardTitle>
+        <CardTitle>Validator Activities</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -145,7 +145,7 @@ export default function ActivityDashboard({
                 onValueChange={handlePageSizeChange}
               >
                 <SelectTrigger className="w-20">
-                  <SelectValue placeholder="5" />
+                  <SelectValue placeholder="6" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="6">6</SelectItem>

@@ -7,14 +7,7 @@ import { Suspense } from "react";
 export default function BlocksPage() {
   return (
     <main className="container mx-auto py-8">
-      <section className="mb-8">
-        <Button variant="outline" size="sm" asChild>
-          <Link href="/">
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Home
-          </Link>
-        </Button>
-      </section>
+      <section className="mb-8 font-bold">Blocks</section>
       <Suspense>
         <Blocks />
       </Suspense>
