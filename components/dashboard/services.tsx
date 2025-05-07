@@ -29,6 +29,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
 // Helper function to format numbers with commas
 function formatNumber(num: number): string {
@@ -161,14 +162,19 @@ export default function Services() {
           <TableBody>
             {currentServices.map((serviceItem, i) => (
               <TableRow key={i}>
-                <TableCell className="font-mono text-xs">
-                  {serviceItem.service}
+                <TableCell className="">
+                  <Link
+                    href={`/service/${serviceItem.service}`}
+                    className="text-pink-500 hover:underline"
+                  >
+                    {serviceItem.service}
+                  </Link>
                 </TableCell>
                 <TableCell className="font-mono text-xs">
                   {formatHash(serviceItem.data.service.code)}
                 </TableCell>
                 <TableCell className="text-right">
-                  {serviceItem.data.service.balance.toLocaleString()} JAM
+                  {serviceItem.data.service.balance.toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
                   {serviceItem.data.service.gas.toLocaleString()}

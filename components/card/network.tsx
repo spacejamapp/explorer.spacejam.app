@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import type { Network } from "@/lib/types/network";
+import { Button } from "@/components/ui/button";
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -30,12 +31,11 @@ export default function NetworkCard({ network }: NetworkCardProps) {
           <div className="font-bold">{formatNumber(network.finalized)}</div>
         </div>
         <div className="mt-4 text-end">
-          <Link
-            href="/network"
-            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            View live stats →
-          </Link>
+          <Button variant="link">
+            <Link href="/network" className="text-sm hover:underline">
+              View live stats →
+            </Link>
+          </Button>
         </div>
       </CardContent>
     </Card>

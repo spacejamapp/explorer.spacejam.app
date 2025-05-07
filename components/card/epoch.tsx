@@ -89,48 +89,48 @@ export default function EpochCard({ current }: EpochCardProps) {
   );
 
   return (
-    <Card className="w-fit">
-      <CardHeader className="py-3">
-        <div className="flex items-center gap-4 justify-between">
-          <CardTitle className="text-lg">
-            Epoch{" "}
-            <Link href={`/epoch/${epochNumber}`} className="underline">
+    <Link href={`/epoch/${epochNumber}`}>
+      <Card className="w-fit border-pink-200/30">
+        <CardHeader className="py-3">
+          <CardTitle className="flex flex-row items-end justify-between">
+            <div className="text-lg flex flex-row items-end justify-between gap-2">
+              <div className="">Epoch </div>
               {epochNumber}
-            </Link>
+            </div>
+            <div className="text-sm text-gray-500 text-center">
+              remaining: {formatTimeRemaining(remainingTime)}
+            </div>
           </CardTitle>
-          <div className="text-sm text-gray-500">
-            remaining: {formatTimeRemaining(remainingTime)}
+          <div className="mt-2 flex flex-row items-center justify-between gap-4">
+            <Progress value={progress} className="h-2 w-full" />
+            <div>{progress.toFixed(0)}%</div>
           </div>
-        </div>
-        <div className="mt-2 flex flex-row items-center justify-between gap-4">
-          <Progress value={progress} className="h-2 w-full" />
-          <div>{progress.toFixed(0)}%</div>
-        </div>
-      </CardHeader>
-      <CardContent className="py-2">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="py-2">Blocks</TableHead>
-              <TableHead className="py-2">Extrinsics</TableHead>
-              <TableHead className="py-2">Preimage</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow className="hover:bg-transparent">
-              <TableCell className="py-2">
-                {formatNumber(currentAggregate.blocks)}
-              </TableCell>
-              <TableCell className="py-2">
-                {formatNumber(totalExtrinsics)}
-              </TableCell>
-              <TableCell className="py-2">
-                {formatBytes(currentAggregate.preimages_size)}
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+        </CardHeader>
+        <CardContent className="py-4 border-t">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="py-2">Blocks</TableHead>
+                <TableHead className="py-2">Extrinsics</TableHead>
+                <TableHead className="py-2">Preimage</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="hover:bg-transparent">
+                <TableCell className="py-2">
+                  {formatNumber(currentAggregate.blocks)}
+                </TableCell>
+                <TableCell className="py-2">
+                  {formatNumber(totalExtrinsics)}
+                </TableCell>
+                <TableCell className="py-2">
+                  {formatBytes(currentAggregate.preimages_size)}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

@@ -17,6 +17,7 @@ import {
 import { getMockBlocks } from "@/lib/mock/block";
 import { Block } from "@/lib/types/block";
 import { formatHash } from "@/lib/utils";
+import { Button } from "../ui/button";
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -31,7 +32,7 @@ function timeAgo(secondsAgo: number): string {
 
 interface BlockWithDisplayData {
   block: Block;
-  height: number;
+  slot: number;
   hash: string;
   age: number;
   transactions: number;
@@ -50,10 +51,14 @@ export default function LatestBlocks() {
 
       return {
         block,
-        height: block.header.slot, // Use the slot as height
+        slot: block.header.slot, // Use the slot as height
         hash: formatHash(block.header.extrinsic_hash),
         age: ageInSeconds,
-        transactions: block.extrinsic.count,
+        transactions:
+          block.extrinsic.assurance.length +
+          block.extrinsic.guarantee.length +
+          block.extrinsic.preimage.length +
+          block.extrinsic.tickets.length,
         validator: block.header.author_index.toString(),
       };
     }
@@ -61,7 +66,7 @@ export default function LatestBlocks() {
 
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader>
         <CardTitle>Latest Blocks</CardTitle>
         <CardDescription>
           The most recent blocks on the SpaceJam network
@@ -78,13 +83,13 @@ export default function LatestBlocks() {
           </TableHeader>
           <TableBody>
             {blocksWithAge.map((data: BlockWithDisplayData) => (
-              <TableRow key={data.height}>
+              <TableRow key={data.slot}>
                 <TableCell className="font-medium">
                   <Link
-                    href={`/block/${data.height}`}
-                    className="text-blue-600 hover:underline"
+                    href={`/block/${data.slot}`}
+                    className="hover:underline text-pink-300"
                   >
-                    {data.height}
+                    {data.slot}
                   </Link>
                 </TableCell>
                 <TableCell>{timeAgo(data.age)}</TableCell>
@@ -94,9 +99,9 @@ export default function LatestBlocks() {
           </TableBody>
         </Table>
         <div className="mt-4 text-right">
-          <Link href="/blocks" className="text-blue-600 hover:underline">
-            View all blocks →
-          </Link>
+          <Button variant="link">
+            <Link href="/blocks">View all blocks →</Link>
+          </Button>
         </div>
       </CardContent>
     </Card>

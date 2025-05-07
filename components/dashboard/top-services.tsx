@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
-import { formatHash } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface TopServicesProps {
   services: ServiceItem[];
@@ -56,8 +56,13 @@ export default function TopServices({ services }: TopServicesProps) {
           <TableBody>
             {services.map((serviceItem, i) => (
               <TableRow key={i}>
-                <TableCell className="font-mono text-xs">
-                  {serviceItem.service}
+                <TableCell className="">
+                  <Link
+                    href={`/service/${serviceItem.service}`}
+                    className="hover:underline text-pink-300"
+                  >
+                    {serviceItem.service}
+                  </Link>
                 </TableCell>
                 <TableCell className="text-right">
                   {serviceItem.data.service.balance.toLocaleString()}
@@ -75,8 +80,10 @@ export default function TopServices({ services }: TopServicesProps) {
             ))}
           </TableBody>
         </Table>
-        <div className="text-right text-blue-500">
-          <Link href="/services">View all services →</Link>
+        <div className="mt-4 text-right">
+          <Button variant="link">
+            <Link href="/services">View all services →</Link>
+          </Button>
         </div>
       </CardContent>
     </Card>

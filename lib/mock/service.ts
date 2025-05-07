@@ -27,7 +27,7 @@ export function getMockServices(count: number = 5): ServiceItem[] {
 
     const serviceData: ServiceData = {
       service,
-      preimages: generatePreimageHashes(Math.floor(Math.random() * 10) + 1), // 1-10 preimages
+      preimages: generatePreimageHashes(Math.floor(Math.random() * 3) + 1), // 1-3 preimages
     };
 
     serviceItems.push({
