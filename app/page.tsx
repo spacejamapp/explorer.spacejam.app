@@ -7,6 +7,7 @@ import { getMockBlocks } from "@/lib/mock/block";
 import { mockStatistics } from "@/lib/mock/statistics";
 import EpochCard from "@/components/card/epoch";
 import HistoryCard from "@/components/card/history";
+import NetworkCard from "@/components/card/network";
 
 export default function Home() {
   const blocks = getMockBlocks(20);
@@ -14,15 +15,33 @@ export default function Home() {
 
   return (
     <main className="container mx-auto py-6 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Jamscan</h1> -- powered by{" "}
-        <Link href="https://spacejam.app" className="font-bold">
-          spacejam
-        </Link>
-      </div>
+      <section className="text-sm py-2 text-gray-500 flex flex-row justify-between items-end">
+        <div>
+          Note that the JAM network is still under heavy development by the
+          implementers, and the data on this site is not yet fully accurate, but
+          still, it's our pleasure to share you the data of the testnet!
+        </div>
+        <div className="w-1/3 text-right">
+          powered by
+          <Link
+            href="https://spacejam.app"
+            className="font-bold text-foreground"
+          >
+            {" "}
+            SpaceJam
+          </Link>
+        </div>
+      </section>
 
       <section className="flex gap-4">
         <EpochCard current={stats.vals_current} />
+        <NetworkCard
+          network={{
+            finalized: 12345678,
+            extrinsics: 123456788,
+            services: 42,
+          }}
+        />
         <HistoryCard blocks={blocks} />
       </section>
 
