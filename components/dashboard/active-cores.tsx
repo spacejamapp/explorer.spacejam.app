@@ -51,11 +51,6 @@ export default function ActiveCores({
     return () => clearInterval(interval);
   }, []);
 
-  // Calculate grid dimensions for reasonable layout
-  // Adjust columns based on screen size
-  const cols = 50;
-  const rows = Math.ceil(totalCores / cols);
-
   // Create array of core elements
   const cores = Array.from({ length: totalCores }).map((_, index) => {
     const isHighlighted = highlightedCores.includes(index);

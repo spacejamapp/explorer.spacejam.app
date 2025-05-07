@@ -15,9 +15,7 @@ export default function SearchComponent() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const [searchType, setSearchType] = useState<
-    "block" | "validator" | "work" | null
-  >(null);
+  const [searchType] = useState<"block" | "validator" | "work" | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Set up keyboard shortcut (cmd+k)

@@ -7,13 +7,15 @@ import { mockValidators } from "@/lib/mock/validator";
 import ValidatorTabs from "./tabs";
 
 interface PageProps {
-  params: {
-    hash: string;
-  };
+  hash: string;
 }
 
-export default async function ValidatorDetailsPage({ params }: PageProps) {
-  const validatorHash = parseInt(params.hash, 10);
+export default async function ValidatorDetailsPage({
+  params,
+}: {
+  params: Promise<PageProps>;
+}) {
+  const validatorHash = parseInt((await params).hash, 10);
 
   // Find the validator in our mock data
   const validator = mockValidators.find(

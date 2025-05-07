@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getMockServices } from "@/lib/mock/service";
+import { formatBytes } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -17,15 +18,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  CoinsIcon,
+  FlameIcon,
+  DatabaseIcon,
+  LayersIcon,
+  ClockIcon,
+} from "lucide-react";
 
 interface ServicePageProps {
-  params: {
-    id: string;
-  };
+  id: string;
 }
 
-export default function ServicePage({ params }: ServicePageProps) {
-  const serviceId = parseInt(params.id, 10);
+export default async function ServicePage({
+  params,
+}: {
+  params: Promise<ServicePageProps>;
+}) {
+  const serviceId = parseInt((await params).id, 10);
 
   // Get the service data from our mock services
   const allServices = getMockServices(40);
@@ -39,21 +49,12 @@ export default function ServicePage({ params }: ServicePageProps) {
   const { data } = serviceItem;
   const { service, preimages } = data;
 
-  // Format bytes to readable format
-  const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
   return (
     <main className="container mx-auto py-8">
       <div className="mb-8">
         <div className="flex flex-row items-center justify-between">
           <h1 className="text-2xl font-bold mb-2">Service #{serviceId}</h1>
-          <p className="text-xs break-all p-3 rounded-md">0x{service.code}</p>
+          <p className="break-all p-3 rounded-md">0x{service.code}</p>
         </div>
 
         <p className="text-muted-foreground mb-2">
@@ -64,36 +65,44 @@ export default function ServicePage({ params }: ServicePageProps) {
       <div className="grid gap-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Balance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">
-                {service.balance.toLocaleString()}
-              </p>
+            <CardContent className="p-4 flex flex-row items-center gap-4">
+              <div className="bg-amber-100 dark:bg-amber-950 p-3 rounded-lg">
+                <CoinsIcon className="h-6 w-6 text-amber-500" />
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">Balance</div>
+                <div className="text-2xl font-bold">
+                  {service.balance.toLocaleString()}
+                </div>
+              </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Gas Limit</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">
-                {service.gas.toLocaleString()}
-              </p>
+            <CardContent className="p-4 flex flex-row items-center gap-4">
+              <div className="bg-red-100 dark:bg-red-950 p-3 rounded-lg">
+                <FlameIcon className="h-6 w-6 text-red-500" />
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">Gas Limit</div>
+                <div className="text-2xl font-bold">
+                  {service.gas.toLocaleString()}
+                </div>
+              </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Storage</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{formatBytes(service.total)}</p>
-              <p className="text-xs text-muted-foreground">
-                {service.items} items
-              </p>
+            <CardContent className="p-4 flex flex-row items-center gap-4">
+              <div className="bg-blue-100 dark:bg-blue-950 p-3 rounded-lg">
+                <DatabaseIcon className="h-6 w-6 text-blue-500" />
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">Storage</div>
+                <div className="text-2xl font-bold">
+                  {formatBytes(service.total)}
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -151,7 +160,7 @@ export default function ServicePage({ params }: ServicePageProps) {
               <CardHeader>
                 <CardTitle>Reports</CardTitle>
                 <CardDescription>
-                  Recent work reports for this service / TODO: mb add reports
+                  Recent work reports for this service
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -167,48 +176,56 @@ export default function ServicePage({ params }: ServicePageProps) {
               <CardHeader>
                 <CardTitle>Storage</CardTitle>
                 <CardDescription>
-                  Storage details for this service / TODO: inspect the storage
-                  details
+                  Storage details for this service
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Card className="border shadow-sm">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Total Storage Used
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-xl font-semibold">
-                        {formatBytes(service.total)}
-                      </p>
+                    <CardContent className="p-4 flex flex-row items-center gap-4">
+                      <div className="bg-blue-100 dark:bg-blue-950 p-3 rounded-lg">
+                        <DatabaseIcon className="h-6 w-6 text-blue-500" />
+                      </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground">
+                          Total Storage
+                        </div>
+                        <div className="text-xl font-bold">
+                          {formatBytes(service.total)}
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
 
                   <Card className="border shadow-sm">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Items in Storage
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-xl font-semibold">{service.items}</p>
+                    <CardContent className="p-4 flex flex-row items-center gap-4">
+                      <div className="bg-purple-100 dark:bg-purple-950 p-3 rounded-lg">
+                        <LayersIcon className="h-6 w-6 text-purple-500" />
+                      </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground">
+                          Items
+                        </div>
+                        <div className="text-xl font-bold">{service.items}</div>
+                      </div>
                     </CardContent>
                   </Card>
 
                   <Card className="border shadow-sm">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Average Item Size
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-xl font-semibold">
-                        {service.items > 0
-                          ? formatBytes(service.total / service.items)
-                          : "0 Bytes"}
-                      </p>
+                    <CardContent className="p-4 flex flex-row items-center gap-4">
+                      <div className="bg-green-100 dark:bg-green-950 p-3 rounded-lg">
+                        <ClockIcon className="h-6 w-6 text-green-500" />
+                      </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground">
+                          Average Size
+                        </div>
+                        <div className="text-xl font-bold">
+                          {service.items > 0
+                            ? formatBytes(service.total / service.items)
+                            : "0 Bytes"}
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 </div>

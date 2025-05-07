@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockStatistics } from "@/lib/mock/statistics";
+import { formatBytes } from "@/lib/utils";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  PieChartIcon,
   ServerIcon,
   ActivityIcon,
   BarChart4Icon,
@@ -26,19 +26,6 @@ export default async function EpochPage({
 
   // Calculate some stats from the mock data
   const totalBlocks = vals_current.reduce((sum, val) => sum + val.blocks, 0);
-  const totalTickets = vals_current.reduce((sum, val) => sum + val.tickets, 0);
-  const totalPreimages = vals_current.reduce(
-    (sum, val) => sum + val.preimages,
-    0
-  );
-  const totalGuarantees = vals_current.reduce(
-    (sum, val) => sum + val.guarantees,
-    0
-  );
-  const totalAssurances = vals_current.reduce(
-    (sum, val) => sum + val.assurances,
-    0
-  );
   const totalGasUsed = cores.reduce((sum, core) => sum + core.gas_used, 0);
   const totalExtrinsics = cores.reduce(
     (sum, core) => sum + core.extrinsic_count,
@@ -48,15 +35,6 @@ export default async function EpochPage({
     (sum, core) => sum + core.bundle_size,
     0
   );
-
-  // Format bytes to readable format
-  const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
 
   return (
     <main className="container mx-auto py-8">

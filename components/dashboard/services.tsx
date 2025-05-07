@@ -2,14 +2,6 @@
 
 import React, { useState } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ServiceItem } from "@/lib/types/service";
-import {
   Table,
   TableBody,
   TableCell,
@@ -18,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getMockServices } from "@/lib/mock/service";
-import { formatHash } from "@/lib/utils";
+import { formatHash, formatBytes } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -55,15 +47,6 @@ export default function Services() {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const currentServices = allServices.slice(startIndex, endIndex);
-
-  // Format bytes to readable format
-  const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
 
   // Handle page size change
   const handlePageSizeChange = (value: string) => {
@@ -162,10 +145,10 @@ export default function Services() {
           <TableBody>
             {currentServices.map((serviceItem, i) => (
               <TableRow key={i}>
-                <TableCell className="">
+                <TableCell className="font-mono text-xs">
                   <Link
                     href={`/service/${serviceItem.service}`}
-                    className="text-pink-300 hover:underline"
+                    className="text-blue-600 hover:underline"
                   >
                     {serviceItem.service}
                   </Link>
@@ -174,7 +157,7 @@ export default function Services() {
                   {formatHash(serviceItem.data.service.code)}
                 </TableCell>
                 <TableCell className="text-right">
-                  {serviceItem.data.service.balance.toLocaleString()}
+                  {serviceItem.data.service.balance.toLocaleString()} JAM
                 </TableCell>
                 <TableCell className="text-right">
                   {serviceItem.data.service.gas.toLocaleString()}

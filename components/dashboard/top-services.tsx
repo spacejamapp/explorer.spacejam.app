@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { formatBytes } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface TopServicesProps {
@@ -25,15 +26,6 @@ interface TopServicesProps {
 }
 
 export default function TopServices({ services }: TopServicesProps) {
-  // Format bytes to readable format
-  const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-  };
-
   return (
     <Card className="h-full">
       <CardHeader>
@@ -59,7 +51,7 @@ export default function TopServices({ services }: TopServicesProps) {
                 <TableCell className="">
                   <Link
                     href={`/service/${serviceItem.service}`}
-                    className="hover:underline text-pink-300"
+                    className="text-pink-300 hover:underline"
                   >
                     {serviceItem.service}
                   </Link>

@@ -4,7 +4,6 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import type { Network } from "@/lib/types/network";
-import { Button } from "@/components/ui/button";
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
