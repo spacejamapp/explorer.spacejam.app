@@ -11,26 +11,26 @@ import HistoryCard from '@/components/card/history';
 import NetworkCard from '@/components/card/network';
 import ActiveCores from '@/components/dashboard/active-cores';
 import SearchComponent from '@/components/search';
-import { gql } from '@apollo/client';
 import { query } from '@/lib/apollo';
+import { GET_SPACEJAM } from '@/lib/graphql/queries/spacejam';
+import { GET_BLOCKS } from '@/lib/graphql/queries/block';
 
 export default async function Home() {
   const blocks = getMockBlocks(20);
   const stats = mockStatistics;
   const services = getMockServices(5);
-
-  const { data } = await query({
-    query: gql`
-      query QueryRoot {
-        spacejam {
-          finalized
-          extrinsic
-        }
-      }
-    `,
+  const { data: blocksData } = await query({
+    query: GET_BLOCKS,
+    variables: {
+      from: 1,
+      to: 21,
+    },
+  });
+  const { data: spacejamData } = await query({
+    query: GET_SPACEJAM,
   });
 
-  console.log(data);
+  // console.log(blocksData);
 
   return (
     <main className='container mx-auto py-6 space-y-8'>
@@ -60,8 +60,8 @@ export default async function Home() {
         <EpochCard current={stats.vals_current} />
         <NetworkCard
           network={{
-            finalized: 12345678,
-            extrinsics: 123456788,
+            finalized: spacejamData?.spacejam.finalized,
+            extrinsics: spacejamData?.spacejam.extrinsic,
             services: 42,
           }}
         />

@@ -1,11 +1,11 @@
-import Link from "next/link";
+import Link from 'next/link';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -13,11 +13,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getMockBlocks } from "@/lib/mock/block";
-import { Block } from "@/lib/types/block";
-import { formatHash } from "@/lib/utils";
-import { Button } from "../ui/button";
+} from '@/components/ui/table';
+import { Block } from '@/lib/types/block';
+import { Button } from '../ui/button';
+import { GET_BLOCKS } from '@/lib/graphql/queries/block';
+import { query } from '@/lib/apollo';
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -39,30 +39,14 @@ interface BlockWithDisplayData {
   validator: string;
 }
 
-export default function LatestBlocks() {
-  // Get the latest 5 blocks from the mock data
-  const mockBlocks = getMockBlocks(5);
-
-  // Calculate age for display purposes
-  const blocksWithAge: BlockWithDisplayData[] = mockBlocks.map(
-    (block, index) => {
-      // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
-      const ageInSeconds = 30 + index * 15;
-
-      return {
-        block,
-        slot: block.header.slot, // Use the slot as height
-        hash: formatHash(block.header.extrinsic_hash),
-        age: ageInSeconds,
-        transactions:
-          block.extrinsic.assurance.length +
-          block.extrinsic.guarantee.length +
-          block.extrinsic.preimage.length +
-          block.extrinsic.tickets.length,
-        validator: block.header.author_index.toString(),
-      };
-    }
-  );
+export default async function LatestBlocks() {
+  const { data: blocksData } = await query({
+    query: GET_BLOCKS,
+    variables: {
+      from: 1,
+      to: 6,
+    },
+  });
 
   return (
     <Card>
@@ -82,21 +66,21 @@ export default function LatestBlocks() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {blocksWithAge.map((data: BlockWithDisplayData) => (
+            {blocksData.blocks.map((data: BlockWithDisplayData) => (
               <TableRow key={data.slot}>
-                <TableCell className="font-medium">
+                <TableCell className='font-medium'>
                   <Link
                     href={`/block/${data.slot}`}
-                    className="hover:underline text-pink-300"
+                    className='hover:underline text-pink-300'
                   >
                     {data.slot}
                   </Link>
                 </TableCell>
-                <TableCell>{timeAgo(data.age)}</TableCell>
+                <TableCell>{data.age ? timeAgo(data.age) : ''}</TableCell>
                 <TableCell>
                   <Link
                     href={`/validator/${data.validator}`}
-                    className="hover:underline text-pink-300"
+                    className='hover:underline text-pink-300'
                   >
                     {data.validator}
                   </Link>
@@ -105,9 +89,9 @@ export default function LatestBlocks() {
             ))}
           </TableBody>
         </Table>
-        <div className="mt-4 text-right">
-          <Button variant="link">
-            <Link href="/blocks">View all blocks →</Link>
+        <div className='mt-4 text-right'>
+          <Button variant='link'>
+            <Link href='/blocks'>View all blocks →</Link>
           </Button>
         </div>
       </CardContent>
