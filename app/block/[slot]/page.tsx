@@ -31,13 +31,17 @@ export default async function BlockPage({
   params: Promise<{ slot: string }>;
 }) {
   // Server-side data fetching
-  const slotId = (await params).slot;
+  const slotId = Number((await params).slot);
+
+  if (slotId == undefined || isNaN(slotId)) {
+    notFound();
+  }
 
   const {
     data: { block },
   } = await query<{ block: BlockDetails }, GetBlockVariables>({
     query: GET_BLOCK,
-    variables: { slot: Number(slotId) },
+    variables: { slot: slotId },
   });
 
   // If block isn't found, show 404
