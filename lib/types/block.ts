@@ -1,42 +1,46 @@
-/** 
+/**
  * block related types
  */
 
-import { Extrinsic } from "./extrinsic";
+import { Extrinsic } from './extrinsic';
 
 export type TicketsMark = TicketBody[];
 
 export interface Block {
-    header: Header;
-    extrinsic: Extrinsic;
+  header: Header;
+  extrinsic: Extrinsic;
 }
 
 export interface Header {
-    parent: string;
-    parent_state_root: string;
-    extrinsic_hash: string;
-    slot: number;
-    epoch_mark?: EpochMark;
-    tickets_mark?: TicketsMark;
-    offeners_mark: string[];
-    author_index: number;
-    entropy_source: string;
-    seal: string;
+  parent: string;
+  parent_state_root: string;
+  extrinsic_hash: string;
+  slot: number;
+  epoch_mark?: EpochMark;
+  tickets_mark?: TicketsMark;
+  offeners_mark: string[];
+  author_index: number;
+  entropy_source: string;
+  seal: string;
 }
 
 export interface EpochMark {
-    entropy: string;
-    tickets_entropy: string;
-    validators: EpochValidator[];
+  entropy: string;
+  tickets_entropy: string;
+  validators: EpochValidator[];
 }
 
 export interface EpochValidator {
-    bandersnatch: string;
-    ed25519: string;
+  bandersnatch: string;
+  ed25519: string;
 }
 
 export interface TicketBody {
-    id: string;
-    attempt: number;
+  id: string;
+  attempt: number;
 }
 
+export interface Spacejam {
+  finalized: number;
+  extrinsic: number;
+}

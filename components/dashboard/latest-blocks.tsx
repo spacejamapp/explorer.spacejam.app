@@ -14,10 +14,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Block } from '@/lib/types/block';
+import { Header } from '@/lib/types/block';
 import { Button } from '../ui/button';
 import { GET_BLOCKS } from '@/lib/graphql/queries/block';
 import { query } from '@/lib/apollo';
+import { formatHash } from '@/lib/utils';
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -30,22 +31,26 @@ function timeAgo(secondsAgo: number): string {
   return `${days} days ago`;
 }
 
-interface BlockWithDisplayData {
-  block: Block;
-  slot: number;
-  hash: string;
-  age: number;
-  transactions: number;
-  validator: string;
-}
-
 export default async function LatestBlocks() {
-  const { data: blocksData } = await query({
+  const {
+    data: { blocks },
+  } = await query<{ blocks: Header[] }>({
     query: GET_BLOCKS,
     variables: {
       from: 1,
       to: 6,
     },
+  });
+
+  const blocksWithAge = blocks.map((block, index) => {
+    // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
+    const ageInSeconds = 30 + index * 15;
+
+    return {
+      hash: formatHash(block.extrinsic_hash),
+      age: ageInSeconds, // TODO: calculate age
+      ...block,
+    };
   });
 
   return (
@@ -66,7 +71,7 @@ export default async function LatestBlocks() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {blocksData.blocks.map((data: BlockWithDisplayData) => (
+            {blocksWithAge.map((data) => (
               <TableRow key={data.slot}>
                 <TableCell className='font-medium'>
                   <Link
@@ -79,10 +84,10 @@ export default async function LatestBlocks() {
                 <TableCell>{data.age ? timeAgo(data.age) : ''}</TableCell>
                 <TableCell>
                   <Link
-                    href={`/validator/${data.validator}`}
+                    href={`/validator/${data.author_index}`}
                     className='hover:underline text-pink-300'
                   >
-                    {data.validator}
+                    {data.author_index}
                   </Link>
                 </TableCell>
               </TableRow>

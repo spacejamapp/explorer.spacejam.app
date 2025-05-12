@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   LineChart,
   Line,
@@ -9,8 +9,8 @@ import {
   YAxis,
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
-} from "recharts";
-import type { Block } from "@/lib/types/block";
+} from 'recharts';
+import type { Header } from '@/lib/types/block';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -18,19 +18,21 @@ function formatNumber(num: number): string {
 }
 
 // Calculate data from blocks
-function calculateBlockData(blocks: Block[]) {
+function calculateBlockData(blocks: Header[]) {
   return blocks.map((block) => ({
-    block: block.header.slot,
-    extrinsics:
-      block.extrinsic.tickets.length +
-      block.extrinsic.preimage.length +
-      block.extrinsic.guarantee.length +
-      block.extrinsic.assurance.length,
+    block: block.slot,
+    extrinsics: Math.floor(Math.random() * 1000), // TODO: calculate extrinsics
+    // block: block.header.slot,
+    // extrinsics:
+    //   block.extrinsic.tickets.length +
+    //   block.extrinsic.preimage.length +
+    //   block.extrinsic.guarantee.length +
+    //   block.extrinsic.assurance.length,
   }));
 }
 
 interface HistoryCardProps {
-  blocks: Block[];
+  blocks: Header[];
 }
 
 export default function HistoryCard({ blocks }: HistoryCardProps) {
@@ -38,19 +40,19 @@ export default function HistoryCard({ blocks }: HistoryCardProps) {
   const blockData = calculateBlockData(blocks);
 
   return (
-    <Card className="flex-1 min-w-[200px]">
-      <CardHeader className="py-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Extrinsic History</CardTitle>
+    <Card className='flex-1 min-w-[200px]'>
+      <CardHeader className='py-3'>
+        <div className='flex items-center justify-between'>
+          <CardTitle className='text-lg'>Extrinsic History</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="py-2">
-        <div className="h-[120px]">
-          <ResponsiveContainer width="100%" height="100%">
+      <CardContent className='py-2'>
+        <div className='h-[120px]'>
+          <ResponsiveContainer width='100%' height='100%'>
             <LineChart data={blockData}>
               <XAxis
-                dataKey="block"
-                stroke="#6b7280"
+                dataKey='block'
+                stroke='#6b7280'
                 tick={{ fontSize: 12 }}
                 tickFormatter={(value) => `Block ${value}`}
                 tickLine={false}
@@ -58,12 +60,12 @@ export default function HistoryCard({ blocks }: HistoryCardProps) {
                 interval={8}
               />
               <YAxis
-                stroke="#6b7280"
+                stroke='#6b7280'
                 tickLine={false}
                 axisLine={false}
                 tick={{ fontSize: 12 }}
                 tickFormatter={(value) =>
-                  value == 0 ? "" : formatNumber(value)
+                  value == 0 ? '' : formatNumber(value)
                 }
               />
               <RechartsTooltip
@@ -72,13 +74,13 @@ export default function HistoryCard({ blocks }: HistoryCardProps) {
                     const value = payload[0].value;
                     const block = payload[0].payload.block;
                     return (
-                      <div className="p-2 border rounded shadow-sm">
-                        <p className="text-sm">Block {block}</p>
-                        <p className="text-sm font-medium">
+                      <div className='p-2 border rounded shadow-sm'>
+                        <p className='text-sm'>Block {block}</p>
+                        <p className='text-sm font-medium'>
                           Extrinsics:
-                          {typeof value === "number"
+                          {typeof value === 'number'
                             ? formatNumber(value)
-                            : value}{" "}
+                            : value}{' '}
                         </p>
                       </div>
                     );
@@ -87,9 +89,9 @@ export default function HistoryCard({ blocks }: HistoryCardProps) {
                 }}
               />
               <Line
-                type="monotone"
-                dataKey="extrinsics"
-                stroke="#f9a8d4"
+                type='monotone'
+                dataKey='extrinsics'
+                stroke='#f9a8d4'
                 strokeWidth={2}
                 dot={false}
               />

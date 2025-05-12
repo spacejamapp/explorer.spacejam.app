@@ -3,7 +3,6 @@
 import LatestBlocks from '@/components/dashboard/latest-blocks';
 import TopServices from '@/components/dashboard/top-services';
 import Link from 'next/link';
-import { getMockBlocks } from '@/lib/mock/block';
 import { mockStatistics } from '@/lib/mock/statistics';
 import { getMockServices } from '@/lib/mock/service';
 import EpochCard from '@/components/card/epoch';
@@ -14,23 +13,25 @@ import SearchComponent from '@/components/search';
 import { query } from '@/lib/apollo';
 import { GET_SPACEJAM } from '@/lib/graphql/queries/spacejam';
 import { GET_BLOCKS } from '@/lib/graphql/queries/block';
+import { Header, Spacejam } from '@/lib/types';
 
 export default async function Home() {
-  const blocks = getMockBlocks(20);
   const stats = mockStatistics;
   const services = getMockServices(5);
-  const { data: blocksData } = await query({
+  const {
+    data: { blocks },
+  } = await query<{ blocks: Header[] }>({
     query: GET_BLOCKS,
     variables: {
       from: 1,
       to: 21,
     },
   });
-  const { data: spacejamData } = await query({
+  const {
+    data: { spacejam },
+  } = await query<{ spacejam: Spacejam }>({
     query: GET_SPACEJAM,
   });
-
-  // console.log(blocksData);
 
   return (
     <main className='container mx-auto py-6 space-y-8'>
@@ -60,8 +61,8 @@ export default async function Home() {
         <EpochCard current={stats.vals_current} />
         <NetworkCard
           network={{
-            finalized: spacejamData?.spacejam.finalized,
-            extrinsics: spacejamData?.spacejam.extrinsic,
+            finalized: spacejam.finalized,
+            extrinsics: spacejam.extrinsic,
             services: 42,
           }}
         />
