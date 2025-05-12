@@ -13,14 +13,14 @@ import SearchComponent from '@/components/search';
 import { query } from '@/lib/apollo';
 import { GET_SPACEJAM } from '@/lib/graphql/queries/spacejam';
 import { GET_BLOCKS } from '@/lib/graphql/queries/block';
-import { Header, Spacejam } from '@/lib/types';
+import { Header, Spacejam, GET_BLOCKS_VARIABLES } from '@/lib/types';
 
 export default async function Home() {
   const stats = mockStatistics;
   const services = getMockServices(5);
   const {
     data: { blocks },
-  } = await query<{ blocks: Header[] }>({
+  } = await query<{ blocks: Header[] }, GET_BLOCKS_VARIABLES>({
     query: GET_BLOCKS,
     variables: {
       from: 1,

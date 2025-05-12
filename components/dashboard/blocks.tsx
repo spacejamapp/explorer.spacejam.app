@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button';
 import { formatHash } from '@/lib/utils';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { useQuery } from '@apollo/client';
-import { Header } from '@/lib/types';
+import { GET_BLOCKS_VARIABLES, Header } from '@/lib/types';
 import { GET_BLOCKS } from '@/lib/graphql/queries/block';
 
 // Helper function to format time ago
@@ -54,9 +54,12 @@ export default function BlocksPage() {
   const endIndex = startIndex + pageSize;
 
   // Get all blocks from the mock data
-  const { data: { blocks } = { blocks: [] }, loading } = useQuery<{
-    blocks: Header[];
-  }>(GET_BLOCKS, {
+  const { data: { blocks } = { blocks: [] }, loading } = useQuery<
+    {
+      blocks: Header[];
+    },
+    GET_BLOCKS_VARIABLES
+  >(GET_BLOCKS, {
     variables: {
       from: startIndex,
       to: endIndex,

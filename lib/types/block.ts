@@ -44,3 +44,12 @@ export interface Spacejam {
   finalized: number;
   extrinsic: number;
 }
+
+export interface GET_BLOCK_VARIABLES {
+  slot: number;
+}
+
+export interface GET_BLOCKS_VARIABLES {
+  from: number;
+  to: number;
+}
