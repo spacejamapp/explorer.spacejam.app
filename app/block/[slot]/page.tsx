@@ -1,11 +1,13 @@
-import { notFound } from "next/navigation";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { getMockBlocks } from "@/lib/mock/block";
-import { formatHash } from "@/lib/utils";
-import BlockTabs from "@/components/block/block-tabs";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { notFound } from 'next/navigation';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { formatHash } from '@/lib/utils';
+import BlockTabs from '@/components/block/block-tabs';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { query } from '@/lib/apollo';
+import { GET_BLOCK } from '@/lib/graphql/queries/block';
+import { BlockDetails, GetBlockVariables } from '@/lib/types/block';
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -31,99 +33,102 @@ export default async function BlockPage({
   // Server-side data fetching
   const slotId = (await params).slot;
 
-  // Get all blocks and find the one with matching slot
-  const allBlocks = getMockBlocks(100);
-  const block = allBlocks.find((b) => b.header.slot.toString() === slotId);
-
-  // Calculate the block age
-  const blockAge = getRandomBlockAge();
+  const {
+    data: { block },
+  } = await query<{ block: BlockDetails }, GetBlockVariables>({
+    query: GET_BLOCK,
+    variables: { slot: Number(slotId) },
+  });
 
   // If block isn't found, show 404
   if (!block) {
     notFound();
   }
 
+  // TODO Calculate the block age
+  const blockAge = getRandomBlockAge();
+
   // Extract data for display
   const blockData = {
     slot: block.header.slot,
-    extrinsicHash: formatHash(block.header.extrinsic_hash || ""),
-    parentHash: formatHash(block.header.parent || ""),
-    parentStateRoot: formatHash(block.header.parent_state_root || ""),
+    extrinsicHash: formatHash(block.header.extrinsic_hash || ''),
+    parentHash: formatHash(block.header.parent || ''),
+    parentStateRoot: formatHash(block.header.parent_state_root || ''),
     validator: block.header.author_index,
     transactionCount:
       block.extrinsic.tickets.length +
-      block.extrinsic.preimage.length +
-      block.extrinsic.guarantee.length +
-      block.extrinsic.assurance.length,
-    entropySource: formatHash(block.header.entropy_source || ""),
+      block.extrinsic.preimages.length +
+      block.extrinsic.guarantees.length +
+      block.extrinsic.assurances.length,
+    entropySource: formatHash(block.header.entropy_source || ''),
   };
 
   return (
-    <main className="container mx-auto py-8">
-      <section className="mb-4 flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-2">
-          <div className="text-xl font-bold">Block {blockData.slot}</div>
+    <main className='container mx-auto py-8'>
+      <section className='mb-4 flex flex-row items-center justify-between'>
+        <div className='flex flex-row items-center gap-2'>
+          <div className='text-xl font-bold'>Block {blockData.slot}</div>
           <Link href={`/block/${Number(slotId) - 1}`}>
-            <Button variant="outline" size="sm">
-              <ArrowLeftIcon className="h-4 w-4" />
+            <Button variant='outline' size='sm'>
+              <ArrowLeftIcon className='h-4 w-4' />
             </Button>
           </Link>
           <Link href={`/block/${Number(slotId) + 1}`}>
-            <Button variant="outline" size="sm">
-              <ArrowRightIcon className="h-4 w-4" />
+            <Button variant='outline' size='sm'>
+              <ArrowRightIcon className='h-4 w-4' />
             </Button>
           </Link>
         </div>
 
-        <div className="text-sm text-gray-500">
+        <div className='text-sm text-gray-500'>
           {timeAgo(blockAge)} (
           {new Date(Date.now() - blockAge * 1000).toLocaleString()})
         </div>
       </section>
-      <div className="grid grid-cols-1 gap-6">
+      <div className='grid grid-cols-1 gap-6'>
         {/* Block Header Information */}
         <Card>
-          <CardHeader className="pb-2"></CardHeader>
+          <CardHeader className='pb-2'></CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              <div className='space-y-2'>
                 <div>
-                  <div className="text-sm font-medium text-gray-500">
+                  <div className='text-sm font-medium text-gray-500'>
                     Extrinsic Hash
                   </div>
-                  <div className="font-mono break-all text-sm">
+                  <div className='font-mono break-all text-sm'>
                     {block.header.extrinsic_hash}
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-gray-500">
+                  <div className='text-sm font-medium text-gray-500'>
                     Parent Hash
                   </div>
-                  <div className="font-mono break-all text-sm">
+                  <div className='font-mono break-all text-sm'>
                     {block.header.parent}
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-gray-500">
+                  <div className='text-sm font-medium text-gray-500'>
                     Parent State Root
                   </div>
-                  <div className="font-mono break-all text-sm">
+                  <div className='font-mono break-all text-sm'>
                     {block.header.parent_state_root}
                   </div>
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className='space-y-2'>
                 <div>
-                  <div className="text-sm font-medium text-gray-500">
+                  <div className='text-sm font-medium text-gray-500'>
                     Validator
                   </div>
-                  <div className="text-sm">{block.header.author_index}</div>
+                  <div className='text-sm'>{block.header.author_index}</div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-gray-500">
+                  <div className='text-sm font-medium text-gray-500'>
                     Entropy Source
                   </div>
-                  <div className="font-mono break-all text-sm">
+                  <div className='font-mono break-all text-sm'>
                     {block.header.entropy_source}
                   </div>
                 </div>

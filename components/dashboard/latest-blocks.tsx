@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Header, GET_BLOCKS_VARIABLES } from '@/lib/types/block';
+import { Header, GetBlocksVariables } from '@/lib/types/block';
 import { Button } from '../ui/button';
 import { GET_BLOCKS } from '@/lib/graphql/queries/block';
 import { query } from '@/lib/apollo';
@@ -34,7 +34,7 @@ function timeAgo(secondsAgo: number): string {
 export default async function LatestBlocks() {
   const {
     data: { blocks },
-  } = await query<{ blocks: Header[] }, GET_BLOCKS_VARIABLES>({
+  } = await query<{ blocks: Header[] }, GetBlocksVariables>({
     query: GET_BLOCKS,
     variables: {
       from: 1,

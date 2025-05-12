@@ -1,5 +1,5 @@
-import { Extrinsic } from "@/lib/types/extrinsic";
-import { formatHash } from "@/lib/utils";
+import { Extrinsic } from '@/lib/types/extrinsic';
+import { formatHash } from '@/lib/utils';
 import {
   Table,
   TableBody,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
 interface ExtrinsicsListProps {
   extrinsics: Extrinsic;
@@ -15,7 +15,7 @@ interface ExtrinsicsListProps {
 
 export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
   return (
-    <div className="space-y-6">
+    <div className='space-y-6'>
       {/* Tickets Table */}
       {extrinsics.tickets.length > 0 && (
         <div>
@@ -30,7 +30,7 @@ export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
               {extrinsics.tickets.map((ticket, index) => (
                 <TableRow key={index}>
                   <TableCell>{ticket.attempt}</TableCell>
-                  <TableCell className="font-mono text-sm">
+                  <TableCell className='font-mono text-sm'>
                     {formatHash(ticket.signature)}
                   </TableCell>
                 </TableRow>
@@ -41,7 +41,7 @@ export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
       )}
 
       {/* Preimage Table */}
-      {extrinsics.preimage.length > 0 && (
+      {extrinsics.preimages.length > 0 && (
         <div>
           <Table>
             <TableHeader>
@@ -51,10 +51,10 @@ export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {extrinsics.preimage.map((preimage, index) => (
+              {extrinsics.preimages.map((preimage, index) => (
                 <TableRow key={index}>
                   <TableCell>{preimage.requester}</TableCell>
-                  <TableCell className="font-mono text-sm">
+                  <TableCell className='font-mono text-sm'>
                     {formatHash(preimage.blob)}
                   </TableCell>
                 </TableRow>
@@ -65,7 +65,7 @@ export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
       )}
 
       {/* Guarantee Table */}
-      {extrinsics.guarantee.length > 0 && (
+      {extrinsics.guarantees.length > 0 && (
         <div>
           <Table>
             <TableHeader>
@@ -76,18 +76,20 @@ export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {extrinsics.guarantee.map((guarantee, index) => (
+              {extrinsics.guarantees.map((guarantee, index) => (
                 <TableRow key={index}>
                   <TableCell>{guarantee.slot}</TableCell>
-                  <TableCell className="font-mono text-sm">
-                    {formatHash(guarantee.report.spec.hash)}
+                  <TableCell className='font-mono text-sm'>
+                    {/* TODO: Add work package hash */}
+                    {/* {formatHash(guarantee.report.spec.hash)} */}
                   </TableCell>
                   <TableCell>
-                    <div className="space-y-1">
+                    <div className='space-y-1'>
                       {guarantee.signatures.map((sig, sigIndex) => (
-                        <div key={sigIndex} className="text-xs">
-                          Validator {sig.validator_index}:{" "}
-                          {formatHash(sig.signature)}
+                        <div key={sigIndex} className='text-xs'>
+                          {/* TODO: Add validator index */}
+                          {/* Validator {sig.validator_index}:{' '}
+                          {formatHash(sig.signature)} */}
                         </div>
                       ))}
                     </div>
@@ -100,7 +102,7 @@ export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
       )}
 
       {/* Assurance Table */}
-      {extrinsics.assurance.length > 0 && (
+      {extrinsics.assurances.length > 0 && (
         <div>
           <Table>
             <TableHeader>
@@ -112,16 +114,17 @@ export default function ExtrinsicsList({ extrinsics }: ExtrinsicsListProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {extrinsics.assurance.map((assurance, index) => (
+              {extrinsics.assurances.map((assurance, index) => (
                 <TableRow key={index}>
                   <TableCell>{assurance.validator_index}</TableCell>
-                  <TableCell className="font-mono text-sm">
+                  <TableCell className='font-mono text-sm'>
                     {formatHash(assurance.anchor)}
                   </TableCell>
-                  <TableCell className="font-mono">
-                    {assurance.bitfield.join("")}
+                  <TableCell className='font-mono'>
+                    {/* TODO: Add bitfield */}
+                    {assurance.bitfield}
                   </TableCell>
-                  <TableCell className="font-mono text-sm">
+                  <TableCell className='font-mono text-sm'>
                     {formatHash(assurance.signature)}
                   </TableCell>
                 </TableRow>

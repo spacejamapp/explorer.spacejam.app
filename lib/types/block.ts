@@ -25,9 +25,12 @@ export interface Header {
 }
 
 export interface EpochMark {
+  id: number;
+  block: number;
   entropy: string;
   tickets_entropy: string;
-  validators: EpochValidator[];
+  validators: string[];
+  validators_bandersnatches: string[];
 }
 
 export interface EpochValidator {
@@ -38,6 +41,18 @@ export interface EpochValidator {
 export interface TicketBody {
   id: string;
   attempt: number;
+  block: number;
+  ticket_id: string;
+}
+
+export interface BlockDetails {
+  slot: number;
+  raw: string;
+  header: Header & {
+    epoch_mark: EpochMark;
+    tickets_mark: TicketsMark;
+  };
+  extrinsic: Extrinsic;
 }
 
 export interface Spacejam {
@@ -45,11 +60,11 @@ export interface Spacejam {
   extrinsic: number;
 }
 
-export interface GET_BLOCK_VARIABLES {
+export interface GetBlockVariables {
   slot: number;
 }
 
-export interface GET_BLOCKS_VARIABLES {
+export interface GetBlocksVariables {
   from: number;
   to: number;
 }

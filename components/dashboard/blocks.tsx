@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/button';
 import { formatHash } from '@/lib/utils';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { useQuery } from '@apollo/client';
-import { GET_BLOCKS_VARIABLES, Header } from '@/lib/types';
+import { GetBlocksVariables, Header } from '@/lib/types';
 import { GET_BLOCKS } from '@/lib/graphql/queries/block';
 
 // Helper function to format time ago
@@ -58,7 +58,7 @@ export default function BlocksPage() {
     {
       blocks: Header[];
     },
-    GET_BLOCKS_VARIABLES
+    GetBlocksVariables
   >(GET_BLOCKS, {
     variables: {
       from: startIndex,
