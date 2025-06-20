@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Block } from '@/lib/types/block';
+import { Block } from '@/types/block';
 
 import ExtrinsicsList from './extrinsics-list';
 

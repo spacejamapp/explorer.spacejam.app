@@ -15,9 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { query } from '@/lib/apollo';
-import { GET_BLOCKS } from '@/lib/graphql/queries/block';
-import { GetBlocksVariables, Header } from '@/lib/types/block';
+import { serverFetchBlocks } from '@/hooks/graphql';
+import { Header } from '@/lib/types';
 import { formatHash } from '@/lib/utils';
 
 import { Button } from '../ui/button';
@@ -34,15 +33,7 @@ function timeAgo(secondsAgo: number): string {
 }
 
 export default async function LatestBlocks() {
-  const {
-    data: { blocks },
-  } = await query<{ blocks: Header[] }, GetBlocksVariables>({
-    query: GET_BLOCKS,
-    variables: {
-      from: 1,
-      to: 6,
-    },
-  });
+  const { blocks } = (await serverFetchBlocks(1, 6)) as { blocks: Header[] };
 
   const blocksWithAge = blocks.map((block, index) => {
     // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older

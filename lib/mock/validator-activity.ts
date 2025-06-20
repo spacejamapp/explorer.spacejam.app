@@ -1,4 +1,4 @@
-import { ActivityRecord } from '@/lib/types/statistic';
+import { ActivityRecord } from '@/types/statistic';
 
 // Generate realistic random data for validator activity
 export function generateValidatorActivityMock(

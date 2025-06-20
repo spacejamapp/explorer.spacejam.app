@@ -12,7 +12,7 @@ import {
 import React from 'react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { Header } from '@/lib/types/block';
+import type { Header } from '@/types/block';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {

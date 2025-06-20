@@ -1,6 +1,5 @@
 'use client';
 
-import { useQuery } from '@apollo/client';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
 import { useState } from 'react';
@@ -24,8 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { GET_BLOCKS } from '@/lib/graphql/queries/block';
-import { GetBlocksVariables, Header } from '@/lib/types';
+import { useBlocks } from '@/hooks/graphql';
 import { formatHash } from '@/lib/utils';
 
 // Helper function to format time ago
@@ -57,19 +55,17 @@ export default function BlocksPage() {
   const endIndex = startIndex + pageSize;
 
   // Get all blocks from the mock data
-  const { data: { blocks } = { blocks: [] }, loading } = useQuery<
-    {
-      blocks: Header[];
-    },
-    GetBlocksVariables
-  >(GET_BLOCKS, {
-    variables: {
-      from: startIndex,
-      to: endIndex,
-    },
+  const {
+    data: { blocks } = { blocks: [] },
+    isLoading,
+    error,
+  } = useBlocks({
+    from: startIndex,
+    to: endIndex,
   });
 
-  if (loading) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   const totalBlocks = 22424442; // TODO Mock total blocks count
   const totalPages = 100; // TODO Mock total pages

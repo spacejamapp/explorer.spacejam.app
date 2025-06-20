@@ -1,4 +1,4 @@
-import { CoreActivityRecord } from '@/lib/types/statistic';
+import { CoreActivityRecord } from '@/types/statistic';
 
 // Generate realistic random data for core activity
 export function generateCoreActivityMock(

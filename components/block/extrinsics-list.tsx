@@ -6,8 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Extrinsic } from '@/lib/types/extrinsic';
 import { formatHash } from '@/lib/utils';
+import { Extrinsic } from '@/types/extrinsic';
 
 interface ExtrinsicsListProps {
   extrinsics: Extrinsic;

@@ -15,7 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { EPOCH_LENGTH, SLOT_PERIOD } from '@/lib/params';
-import { ActivityRecord } from '@/lib/types/statistic';
+import { ActivityRecord } from '@/types/statistic';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {

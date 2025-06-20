@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import ApolloProvider from '@/components/apollo-provider';
 import { Footer } from '@/components/footer';
 import Header from '@/components/header';
+import QueryProvider from '@/components/query-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 
 import './globals.css';
@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} min-h-screen bg-background font-sans antialiased`}
       >
-        <ApolloProvider>
+        <QueryProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -41,7 +41,7 @@ export default function RootLayout({
               <Footer />
             </div>
           </ThemeProvider>
-        </ApolloProvider>
+        </QueryProvider>
       </body>
     </html>
   );

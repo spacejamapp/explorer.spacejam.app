@@ -20,8 +20,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ServiceItem } from '@/lib/types/service';
 import { formatBytes } from '@/lib/utils';
+import { ServiceItem } from '@/types/service';
 
 interface TopServicesProps {
   services: ServiceItem[];

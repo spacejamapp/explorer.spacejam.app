@@ -6,10 +6,9 @@ import { notFound } from 'next/navigation';
 import BlockTabs from '@/components/block/block-tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { query } from '@/lib/apollo';
-import { GET_BLOCK } from '@/lib/graphql/queries/block';
-import { BlockDetails, GetBlockVariables } from '@/lib/types/block';
+import { fetchBlock } from '@/lib/graphql';
 import { formatHash } from '@/lib/utils';
+import { BlockDetails } from '@/types';
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -34,19 +33,11 @@ export default async function BlockPage({
 }) {
   // Server-side data fetching
   const slotId = Number((await params).slot);
-
   if (slotId == undefined || isNaN(slotId)) {
     notFound();
   }
 
-  const {
-    data: { block },
-  } = await query<{ block: BlockDetails }, GetBlockVariables>({
-    query: GET_BLOCK,
-    variables: { slot: slotId },
-  });
-
-  // If block isn't found, show 404
+  const { block } = (await fetchBlock(slotId)) as { block: BlockDetails };
   if (!block) {
     notFound();
   }

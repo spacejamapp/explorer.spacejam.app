@@ -25,7 +25,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CoreActivityRecord } from '@/lib/types/statistic';
+import { CoreActivityRecord } from '@/types/statistic';
 
 interface CoreTabsProps {
   coreId: number;

@@ -11,7 +11,7 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { validatorCoordinates } from '@/lib/mock/validator';
-import type { Validator } from '@/lib/types/network';
+import type { Validator } from '@/types/network';
 
 // World map GeoJSON
 const geoUrl = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';

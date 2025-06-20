@@ -1,4 +1,4 @@
-import { Service, ServiceData, ServiceItem } from '@/lib/types/service';
+import { Service, ServiceData, ServiceItem } from '@/types/service';
 
 // Generate a random code hash
 function generateCodeHash(): string {

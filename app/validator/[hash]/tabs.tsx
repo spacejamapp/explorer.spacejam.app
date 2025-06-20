@@ -26,8 +26,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Validator } from '@/lib/types/network';
-import { ActivityRecord } from '@/lib/types/statistic';
+import { Validator } from '@/types/network';
+import { ActivityRecord } from '@/types/statistic';
 
 interface ValidatorTabsProps {
   validator: Validator;

@@ -4,8 +4,8 @@ import {
   EpochValidator,
   Header,
   TicketsMark,
-} from '@/lib/types/block';
-import { Extrinsic } from '@/lib/types/extrinsic';
+} from '@/types/block';
+import { Extrinsic } from '@/types/extrinsic';
 
 // Helper function to create a mock block
 export function createMockBlock(slot: number, parent: string): Block {

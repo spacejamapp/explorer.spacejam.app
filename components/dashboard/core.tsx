@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { CoreActivityRecord } from '@/lib/types/statistic';
+import type { CoreActivityRecord } from '@/types/statistic';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {

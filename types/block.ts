@@ -1,7 +1,7 @@
 /**
  * block related types
  */
-import { Extrinsic } from './extrinsic';
+import { Extrinsic } from '@/types/extrinsic';
 
 export type TicketsMark = TicketBody[];
 

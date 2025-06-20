@@ -8,30 +8,16 @@ import ActiveCores from '@/components/dashboard/active-cores';
 import LatestBlocks from '@/components/dashboard/latest-blocks';
 import TopServices from '@/components/dashboard/top-services';
 import SearchComponent from '@/components/search';
-import { query } from '@/lib/apollo';
-import { GET_BLOCKS } from '@/lib/graphql/queries/block';
-import { GET_SPACEJAM } from '@/lib/graphql/queries/spacejam';
+import { serverFetchBlocks, serverFetchSpacejam } from '@/hooks/graphql';
 import { getMockServices } from '@/lib/mock/service';
 import { mockStatistics } from '@/lib/mock/statistics';
-import { GetBlocksVariables, Header, Spacejam } from '@/lib/types';
+import { Header, Spacejam } from '@/lib/types';
 
 export default async function Home() {
   const stats = mockStatistics;
   const services = getMockServices(5);
-  const {
-    data: { blocks },
-  } = await query<{ blocks: Header[] }, GetBlocksVariables>({
-    query: GET_BLOCKS,
-    variables: {
-      from: 1,
-      to: 21,
-    },
-  });
-  const {
-    data: { spacejam },
-  } = await query<{ spacejam: Spacejam }>({
-    query: GET_SPACEJAM,
-  });
+  const { blocks } = (await serverFetchBlocks(1, 21)) as { blocks: Header[] };
+  const { spacejam } = (await serverFetchSpacejam()) as { spacejam: Spacejam };
 
   return (
     <main className="container mx-auto py-6 space-y-8">

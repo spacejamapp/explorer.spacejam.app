@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client';
+import { query } from "@/lib/graphql";
 
-export const GET_BLOCKS = gql`
+export const GET_BLOCKS_QUERY = `
   query QueryRoot($from: Int, $to: Int) {
     blocks(from: $from, to: $to) {
       slot
@@ -17,7 +17,7 @@ export const GET_BLOCKS = gql`
   }
 `;
 
-export const GET_BLOCK = gql`
+export const GET_BLOCK_QUERY = `
   query QueryRoot($slot: Int) {
     block(slot: $slot) {
       header {
@@ -103,3 +103,10 @@ export const GET_BLOCK = gql`
     }
   }
 `;
+
+export const fetchBlocks = (from: number, to: number) =>
+    query<any>(GET_BLOCKS_QUERY, { from, to });
+  
+  export const fetchBlock = (slot: number) =>
+    query<any>(GET_BLOCK_QUERY, { slot });
+  

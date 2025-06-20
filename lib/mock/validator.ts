@@ -1,4 +1,4 @@
-import { Validator } from '../types/network';
+import { Validator } from '../../types/network';
 
 // Sample coordinates for validators
 export const validatorCoordinates: Record<number, [number, number]> = {
