@@ -1,19 +1,20 @@
-"use client";
+'use client';
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from 'react';
 import {
   ComposableMap,
   Geographies,
   Geography,
   Marker,
   ZoomableGroup,
-} from "react-simple-maps";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import type { Validator } from "@/lib/types/network";
-import { validatorCoordinates } from "@/lib/mock/validator";
+} from 'react-simple-maps';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { validatorCoordinates } from '@/lib/mock/validator';
+import type { Validator } from '@/lib/types/network';
 
 // World map GeoJSON
-const geoUrl = "https://unpkg.com/world-atlas@2.0.2/countries-110m.json";
+const geoUrl = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
 
 interface ValidatorsMapProps {
   validators?: Validator[];
@@ -70,7 +71,7 @@ export default function ValidatorsMap({ validators }: ValidatorsMapProps) {
             projection="geoEqualEarth"
             width={1000}
             height={500}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: '100%', height: '100%' }}
           >
             <ZoomableGroup
               zoom={position.zoom}
@@ -100,9 +101,9 @@ export default function ValidatorsMap({ validators }: ValidatorsMapProps) {
                       stroke="#334155"
                       strokeWidth={0.5}
                       style={{
-                        default: { outline: "none" },
-                        hover: { outline: "none" },
-                        pressed: { outline: "none" },
+                        default: { outline: 'none' },
+                        hover: { outline: 'none' },
+                        pressed: { outline: 'none' },
                       }}
                     />
                   ))
@@ -132,11 +133,11 @@ export default function ValidatorsMap({ validators }: ValidatorsMapProps) {
                         textAnchor="middle"
                         y={-8 * scale}
                         style={{
-                          fontFamily: "system-ui",
-                          fill: "#fff",
+                          fontFamily: 'system-ui',
+                          fill: '#fff',
                           fontSize: `${10 * scale}px`,
-                          fontWeight: "bold",
-                          textShadow: "0px 0px 3px #000",
+                          fontWeight: 'bold',
+                          textShadow: '0px 0px 3px #000',
                         }}
                       >
                         {validator.name || validator.bandersnatch}

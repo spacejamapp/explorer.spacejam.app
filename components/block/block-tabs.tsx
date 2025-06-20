@@ -1,6 +1,10 @@
 'use client';
 
+import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react';
+
 import React, { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,9 +13,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
 import { Block } from '@/lib/types/block';
-import { Copy, Check, ChevronDown, ChevronRight } from 'lucide-react';
+
 import ExtrinsicsList from './extrinsics-list';
 
 interface BlockTabsProps {
@@ -31,16 +34,16 @@ export default function BlockTabs({ block }: BlockTabsProps) {
   };
 
   return (
-    <div className='space-y-4'>
-      <Tabs defaultValue='tickets' className='w-full'>
-        <TabsList className='grid grid-cols-4 mb-4'>
-          <TabsTrigger value='tickets'>Tickets</TabsTrigger>
-          <TabsTrigger value='preimage'>Preimages</TabsTrigger>
-          <TabsTrigger value='guarantee'>Guarantees</TabsTrigger>
-          <TabsTrigger value='assurance'>Assurances</TabsTrigger>
+    <div className="space-y-4">
+      <Tabs defaultValue="tickets" className="w-full">
+        <TabsList className="grid grid-cols-4 mb-4">
+          <TabsTrigger value="tickets">Tickets</TabsTrigger>
+          <TabsTrigger value="preimage">Preimages</TabsTrigger>
+          <TabsTrigger value="guarantee">Guarantees</TabsTrigger>
+          <TabsTrigger value="assurance">Assurances</TabsTrigger>
         </TabsList>
 
-        <TabsContent value='tickets' className='space-y-4'>
+        <TabsContent value="tickets" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Tickets</CardTitle>
@@ -61,7 +64,7 @@ export default function BlockTabs({ block }: BlockTabsProps) {
           </Card>
         </TabsContent>
 
-        <TabsContent value='preimage' className='space-y-4'>
+        <TabsContent value="preimage" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Preimages</CardTitle>
@@ -82,7 +85,7 @@ export default function BlockTabs({ block }: BlockTabsProps) {
           </Card>
         </TabsContent>
 
-        <TabsContent value='guarantee' className='space-y-4'>
+        <TabsContent value="guarantee" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Guarantees</CardTitle>
@@ -103,7 +106,7 @@ export default function BlockTabs({ block }: BlockTabsProps) {
           </Card>
         </TabsContent>
 
-        <TabsContent value='assurance' className='space-y-4'>
+        <TabsContent value="assurance" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Assurances</CardTitle>
@@ -127,26 +130,26 @@ export default function BlockTabs({ block }: BlockTabsProps) {
 
       {/* Raw Data Section */}
       <Card>
-        <CardHeader className='py-3 px-4'>
+        <CardHeader className="py-3 px-4">
           <Button
-            variant='ghost'
-            className='w-full flex items-center justify-between p-0 hover:bg-transparent hover:cursor-pointer'
+            variant="ghost"
+            className="w-full flex items-center justify-between p-0 hover:bg-transparent hover:cursor-pointer"
             onClick={() => setIsRawDataExpanded(!isRawDataExpanded)}
             asChild
           >
-            <div className='flex items-center justify-between w-full'>
-              <div className='flex items-center gap-2'>
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-2">
                 {isRawDataExpanded ? (
-                  <ChevronDown className='h-4 w-4' />
+                  <ChevronDown className="h-4 w-4" />
                 ) : (
-                  <ChevronRight className='h-4 w-4' />
+                  <ChevronRight className="h-4 w-4" />
                 )}
-                <CardTitle className='text-base'>Raw Block Data</CardTitle>
+                <CardTitle className="text-base">Raw Block Data</CardTitle>
               </div>
               <Button
-                size='sm'
-                variant='outline'
-                className='flex items-center gap-1'
+                size="sm"
+                variant="outline"
+                className="flex items-center gap-1"
                 onClick={(e) => {
                   e.stopPropagation();
                   copyToClipboard();
@@ -154,12 +157,12 @@ export default function BlockTabs({ block }: BlockTabsProps) {
               >
                 {copied ? (
                   <>
-                    <Check className='h-4 w-4' />
+                    <Check className="h-4 w-4" />
                     <span>Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className='h-4 w-4' />
+                    <Copy className="h-4 w-4" />
                     <span>Copy Data</span>
                   </>
                 )}
@@ -168,8 +171,8 @@ export default function BlockTabs({ block }: BlockTabsProps) {
           </Button>
         </CardHeader>
         {isRawDataExpanded && (
-          <CardContent className='pt-0 px-4 pb-4'>
-            <pre className='p-4 rounded-lg overflow-auto max-h-[500px] text-xs'>
+          <CardContent className="pt-0 px-4 pb-4">
+            <pre className="p-4 rounded-lg overflow-auto max-h-[500px] text-xs">
               {JSON.stringify(block, null, 2)}
             </pre>
           </CardContent>

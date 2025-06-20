@@ -1,6 +1,8 @@
-import React from "react";
-import { getMockCoreActivity } from "@/lib/mock/core";
-import CoreTabs from "./tabs";
+import React from 'react';
+
+import { getMockCoreActivity } from '@/lib/mock/core';
+
+import CoreTabs from './tabs';
 
 interface PageProps {
   id: string;

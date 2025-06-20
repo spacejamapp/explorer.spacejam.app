@@ -1,14 +1,21 @@
-import { notFound } from "next/navigation";
+import {
+  ClockIcon,
+  CoinsIcon,
+  DatabaseIcon,
+  FlameIcon,
+  LayersIcon,
+} from 'lucide-react';
+
+import { notFound } from 'next/navigation';
+
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { getMockServices } from "@/lib/mock/service";
-import { formatBytes } from "@/lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -16,15 +23,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
-  CoinsIcon,
-  FlameIcon,
-  DatabaseIcon,
-  LayersIcon,
-  ClockIcon,
-} from "lucide-react";
+} from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getMockServices } from '@/lib/mock/service';
+import { formatBytes } from '@/lib/utils';
 
 interface ServicePageProps {
   id: string;
@@ -231,7 +233,7 @@ export default async function ServicePage({
                         <div className="text-xl font-bold">
                           {service.items > 0
                             ? formatBytes(service.total / service.items)
-                            : "0 Bytes"}
+                            : '0 Bytes'}
                         </div>
                       </div>
                     </CardContent>

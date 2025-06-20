@@ -1,31 +1,33 @@
-"use client";
+'use client';
 
-import React from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
+import React from 'react';
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
-import { ActivityRecord } from "@/lib/types/statistic";
-import { Validator } from "@/lib/types/network";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Validator } from '@/lib/types/network';
+import { ActivityRecord } from '@/lib/types/statistic';
 
 interface ValidatorTabsProps {
   validator: Validator;
@@ -44,21 +46,21 @@ export default function ValidatorTabs({
 
   // Colors for pie chart
   const COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28",
-    "#FF8042",
-    "#8884d8",
-    "#82ca9d",
+    '#0088FE',
+    '#00C49F',
+    '#FFBB28',
+    '#FF8042',
+    '#8884d8',
+    '#82ca9d',
   ];
 
   // Prepare data for pie chart
   const pieData = [
-    { name: "Blocks", value: activityData[0]?.blocks || 0 },
-    { name: "Tickets", value: activityData[0]?.tickets || 0 },
-    { name: "Preimages", value: activityData[0]?.preimages || 0 },
-    { name: "Guarantees", value: activityData[0]?.guarantees || 0 },
-    { name: "Assurances", value: activityData[0]?.assurances || 0 },
+    { name: 'Blocks', value: activityData[0]?.blocks || 0 },
+    { name: 'Tickets', value: activityData[0]?.tickets || 0 },
+    { name: 'Preimages', value: activityData[0]?.preimages || 0 },
+    { name: 'Guarantees', value: activityData[0]?.guarantees || 0 },
+    { name: 'Assurances', value: activityData[0]?.assurances || 0 },
   ];
 
   // Format large numbers with commas
@@ -68,11 +70,11 @@ export default function ValidatorTabs({
 
   // Format bytes to readable format
   const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
+    if (bytes === 0) return '0 Bytes';
     const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   return (
@@ -88,7 +90,7 @@ export default function ValidatorTabs({
           <CardHeader>
             <CardTitle>Validator Overview</CardTitle>
             <CardDescription>
-              Activity distribution for validator{" "}
+              Activity distribution for validator{' '}
               {validator.name || validator.bandersnatch}
             </CardDescription>
           </CardHeader>
@@ -228,23 +230,23 @@ export default function ValidatorTabs({
                 <YAxis
                   yAxisId="left"
                   label={{
-                    value: "Count",
+                    value: 'Count',
                     angle: -90,
-                    position: "insideLeft",
+                    position: 'insideLeft',
                   }}
                 />
                 <YAxis
                   yAxisId="right"
                   orientation="right"
                   label={{
-                    value: "Size (bytes)",
+                    value: 'Size (bytes)',
                     angle: 90,
-                    position: "insideRight",
+                    position: 'insideRight',
                   }}
                 />
                 <Tooltip
                   formatter={(value, name) => {
-                    if (name === "Preimage Size") {
+                    if (name === 'Preimage Size') {
                       return formatBytes(value as number);
                     }
                     return formatNumber(value as number);

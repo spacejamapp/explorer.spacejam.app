@@ -1,7 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from 'react';
+
+import Link from 'next/link';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   Table,
   TableBody,
@@ -9,11 +13,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
-import Link from "next/link";
-import { ActivityRecord } from "@/lib/types/statistic";
-import { EPOCH_LENGTH, SLOT_PERIOD } from "@/lib/params";
+} from '@/components/ui/table';
+import { EPOCH_LENGTH, SLOT_PERIOD } from '@/lib/params';
+import { ActivityRecord } from '@/lib/types/statistic';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -22,13 +24,13 @@ function formatNumber(num: number): string {
 
 // Format bytes to readable format
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 Bytes";
+  if (bytes === 0) return '0 Bytes';
 
   const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 // Format time remaining in minutes and seconds

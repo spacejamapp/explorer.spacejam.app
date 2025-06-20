@@ -1,10 +1,10 @@
-import { Service, ServiceData, ServiceItem } from "@/lib/types/service";
+import { Service, ServiceData, ServiceItem } from '@/lib/types/service';
 
 // Generate a random code hash
 function generateCodeHash(): string {
   return Array.from({ length: 64 }, () =>
     Math.floor(Math.random() * 16).toString(16)
-  ).join("");
+  ).join('');
 }
 
 // Generate random preimage hashes
@@ -37,5 +37,7 @@ export function getMockServices(count: number = 5): ServiceItem[] {
   }
 
   // Sort by balance (highest first)
-  return serviceItems.sort((a, b) => b.data.service.balance - a.data.service.balance);
-} 
+  return serviceItems.sort(
+    (a, b) => b.data.service.balance - a.data.service.balance
+  );
+}

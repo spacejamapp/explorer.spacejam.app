@@ -1,20 +1,23 @@
-import ActivityDashboard from "@/components/dashboard/activity";
-import CoreDashboard from "@/components/dashboard/core";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockStatistics } from "@/lib/mock/statistics";
-import { formatBytes } from "@/lib/utils";
 import {
+  ActivityIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
-  ServerIcon,
-  ActivityIcon,
   BarChart4Icon,
   PackageIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
+  ServerIcon,
+} from 'lucide-react';
+
+import { Suspense } from 'react';
+
+import Link from 'next/link';
+
+import ActivityDashboard from '@/components/dashboard/activity';
+import CoreDashboard from '@/components/dashboard/core';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { mockStatistics } from '@/lib/mock/statistics';
+import { formatBytes } from '@/lib/utils';
 
 export default async function EpochPage({
   params,

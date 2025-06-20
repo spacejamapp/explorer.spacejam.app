@@ -1,8 +1,21 @@
 'use client';
 
+import { useQuery } from '@apollo/client';
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+
 import { useState } from 'react';
+
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -11,19 +24,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { formatHash } from '@/lib/utils';
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-import { useQuery } from '@apollo/client';
-import { GetBlocksVariables, Header } from '@/lib/types';
 import { GET_BLOCKS } from '@/lib/graphql/queries/block';
+import { GetBlocksVariables, Header } from '@/lib/types';
+import { formatHash } from '@/lib/utils';
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -46,7 +49,7 @@ export default function BlocksPage() {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page') || '1');
   const [pageSize, setPageSize] = useState<number>(
-    Number(searchParams.get('rows') || '10'),
+    Number(searchParams.get('rows') || '10')
   );
 
   // Get current page of blocks
@@ -109,66 +112,66 @@ export default function BlocksPage() {
   const goToFirstPage = () => router.push(`/blocks?page=1&rows=${pageSize}`);
   const goToPrevPage = () =>
     router.push(
-      `/blocks?page=${Math.max(1, currentPage - 1)}&rows=${pageSize}`,
+      `/blocks?page=${Math.max(1, currentPage - 1)}&rows=${pageSize}`
     );
   const goToNextPage = () =>
     router.push(
-      `/blocks?page=${Math.min(totalPages, currentPage + 1)}&rows=${pageSize}`,
+      `/blocks?page=${Math.min(totalPages, currentPage + 1)}&rows=${pageSize}`
     );
   const goToLastPage = () =>
     router.push(`/blocks?page=${totalPages}&rows=${pageSize}`);
 
   return (
-    <div className='rounded-lg shadow overflow-hidden'>
-      <div className='p-4 border border-b-0 rounded-t-lg '>
-        <div className='flex items-center justify-between'>
+    <div className="rounded-lg shadow overflow-hidden">
+      <div className="p-4 border border-b-0 rounded-t-lg ">
+        <div className="flex items-center justify-between">
           <div>
-            <h2 className='text-sm font-medium'>
+            <h2 className="text-sm font-medium">
               Total of {formatNumber(totalBlocks)} blocks
             </h2>
-            <p className='text-sm text-gray-600'>
+            <p className="text-sm text-gray-600">
               (Showing blocks between #{firstBlockInView} to #{lastBlockInView})
             </p>
           </div>
 
-          <div className='flex items-center gap-4'>
-            <div className='flex items-center gap-2'>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <Button
-                variant='outline'
-                size='sm'
+                variant="outline"
+                size="sm"
                 onClick={goToFirstPage}
                 disabled={currentPage === 1}
-                className='px-3'
+                className="px-3"
               >
                 First
               </Button>
               <Button
-                variant='outline'
-                size='sm'
+                variant="outline"
+                size="sm"
                 onClick={goToPrevPage}
                 disabled={currentPage === 1}
-                className='p-0 w-8 h-8'
+                className="p-0 w-8 h-8"
               >
                 <ArrowLeftIcon />
               </Button>
-              <span className='text-sm'>
+              <span className="text-sm">
                 Page {currentPage} of {totalPages}
               </span>
               <Button
-                variant='outline'
-                size='sm'
+                variant="outline"
+                size="sm"
                 onClick={goToNextPage}
                 disabled={currentPage === totalPages}
-                className='p-0 w-8 h-8'
+                className="p-0 w-8 h-8"
               >
                 <ArrowRightIcon />
               </Button>
               <Button
-                variant='outline'
-                size='sm'
+                variant="outline"
+                size="sm"
                 onClick={goToLastPage}
                 disabled={currentPage === totalPages}
-                className='px-3'
+                className="px-3"
               >
                 Last
               </Button>
@@ -177,7 +180,7 @@ export default function BlocksPage() {
         </div>
       </div>
 
-      <div className='pt-0 p-4 border-x'>
+      <div className="pt-0 p-4 border-x">
         <Table>
           <TableHeader>
             <TableRow>
@@ -192,10 +195,10 @@ export default function BlocksPage() {
           <TableBody>
             {blocksWithAge.map((data) => (
               <TableRow key={data.slot}>
-                <TableCell className='font-medium'>
+                <TableCell className="font-medium">
                   <Link
                     href={`/block/${data.slot}`}
-                    className='text-pink-300 hover:underline'
+                    className="text-pink-300 hover:underline"
                   >
                     {data.slot}
                   </Link>
@@ -203,7 +206,7 @@ export default function BlocksPage() {
                 <TableCell>
                   <Link
                     href={`/block/${data.parent}`}
-                    className='text-pink-300 hover:underline'
+                    className="text-pink-300 hover:underline"
                   >
                     {data.parent}
                   </Link>
@@ -218,59 +221,59 @@ export default function BlocksPage() {
         </Table>
       </div>
 
-      <div className='p-4 border-t flex items-center justify-between'>
-        <div className='flex items-center gap-2'>
-          <span className='text-sm text-gray-600'>Show rows:</span>
+      <div className="p-4 border-t flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600">Show rows:</span>
           <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
-            <SelectTrigger className='w-20'>
-              <SelectValue placeholder='10' />
+            <SelectTrigger className="w-20">
+              <SelectValue placeholder="10" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='10'>10</SelectItem>
-              <SelectItem value='25'>25</SelectItem>
-              <SelectItem value='50'>50</SelectItem>
-              <SelectItem value='100'>100</SelectItem>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        <div className='flex items-center gap-2'>
+        <div className="flex items-center gap-2">
           <Button
-            variant='outline'
-            size='sm'
+            variant="outline"
+            size="sm"
             onClick={goToFirstPage}
             disabled={currentPage === 1}
-            className='px-3'
+            className="px-3"
           >
             First
           </Button>
           <Button
-            variant='outline'
-            size='sm'
+            variant="outline"
+            size="sm"
             onClick={goToPrevPage}
             disabled={currentPage === 1}
-            className='px-3'
+            className="px-3"
           >
             <ArrowLeftIcon />
           </Button>
-          <span className='text-sm'>
+          <span className="text-sm">
             Page {currentPage} of {totalPages}
           </span>
           <Button
-            variant='outline'
-            size='sm'
+            variant="outline"
+            size="sm"
             onClick={goToNextPage}
             disabled={currentPage === totalPages}
-            className='px-3'
+            className="px-3"
           >
             <ArrowRightIcon />
           </Button>
           <Button
-            variant='outline'
-            size='sm'
+            variant="outline"
+            size="sm"
             onClick={goToLastPage}
             disabled={currentPage === totalPages}
-            className='px-3'
+            className="px-3"
           >
             Last
           </Button>

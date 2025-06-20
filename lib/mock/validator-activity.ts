@@ -1,7 +1,10 @@
-import { ActivityRecord } from "@/lib/types/statistic";
+import { ActivityRecord } from '@/lib/types/statistic';
 
 // Generate realistic random data for validator activity
-export function generateValidatorActivityMock(validatorHash: number, count: number = 30): ActivityRecord[] {
+export function generateValidatorActivityMock(
+  validatorHash: number,
+  count: number = 30
+): ActivityRecord[] {
   const records: ActivityRecord[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -12,7 +15,7 @@ export function generateValidatorActivityMock(validatorHash: number, count: numb
       preimages: Math.floor(Math.random() * 50) + 10,
       preimages_size: Math.floor(Math.random() * 1024 * 1024 * 5) + 1024 * 500, // 500KB to 5.5MB
       guarantees: Math.floor(Math.random() * 40) + 10,
-      assurances: Math.floor(Math.random() * 35) + 5
+      assurances: Math.floor(Math.random() * 35) + 5,
     });
   }
 
@@ -20,7 +23,10 @@ export function generateValidatorActivityMock(validatorHash: number, count: numb
 }
 
 // Get mock data for a specific validator
-export function getMockValidatorActivity(validatorHash: number, count: number = 30): ActivityRecord[] {
+export function getMockValidatorActivity(
+  validatorHash: number,
+  count: number = 30
+): ActivityRecord[] {
   return generateValidatorActivityMock(validatorHash, count);
 }
 
@@ -34,4 +40,4 @@ export function getMockValidatorDetails(validatorHash: number) {
     commission: Math.random() * 10, // 0-10% commission
     delegators: Math.floor(Math.random() * 100) + 10, // 10-110 delegators
   };
-} 
+}

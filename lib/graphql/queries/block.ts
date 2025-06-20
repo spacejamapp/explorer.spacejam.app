@@ -20,8 +20,6 @@ export const GET_BLOCKS = gql`
 export const GET_BLOCK = gql`
   query QueryRoot($slot: Int) {
     block(slot: $slot) {
-      slot
-      raw
       header {
         slot
         hash

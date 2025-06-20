@@ -1,5 +1,5 @@
-import ValidatorsMap from "@/components/network/validators-map";
-import { mockValidators } from "@/lib/mock/validator";
+import ValidatorsMap from '@/components/network/validators-map';
+import { mockValidators } from '@/lib/mock/validator';
 
 export default function NetworkPage() {
   return (

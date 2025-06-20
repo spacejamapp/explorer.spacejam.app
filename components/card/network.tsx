@@ -1,9 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import type { Network } from "@/lib/types/network";
+import React from 'react';
+
+import Link from 'next/link';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Network } from '@/lib/types/network';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {

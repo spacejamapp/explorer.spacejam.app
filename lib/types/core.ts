@@ -33,4 +33,4 @@ export interface CoreSummary {
   name: string;
   type: string;
   status: string;
-} 
+}

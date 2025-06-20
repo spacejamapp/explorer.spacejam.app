@@ -1,7 +1,8 @@
 'use client';
 
-import { makeClient } from '@/lib/apollo/config';
 import { ApolloNextAppProvider } from '@apollo/client-integration-nextjs';
+
+import { makeClient } from '@/lib/apollo/config';
 
 export default function ApolloProvider({ children }: React.PropsWithChildren) {
   return (

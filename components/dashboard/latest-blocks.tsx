@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import {
   Card,
   CardContent,
@@ -14,11 +15,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Header, GetBlocksVariables } from '@/lib/types/block';
-import { Button } from '../ui/button';
-import { GET_BLOCKS } from '@/lib/graphql/queries/block';
 import { query } from '@/lib/apollo';
+import { GET_BLOCKS } from '@/lib/graphql/queries/block';
+import { GetBlocksVariables, Header } from '@/lib/types/block';
 import { formatHash } from '@/lib/utils';
+
+import { Button } from '../ui/button';
 
 // Helper function to format time ago
 function timeAgo(secondsAgo: number): string {
@@ -73,10 +75,10 @@ export default async function LatestBlocks() {
           <TableBody>
             {blocksWithAge.map((data) => (
               <TableRow key={data.slot}>
-                <TableCell className='font-medium'>
+                <TableCell className="font-medium">
                   <Link
                     href={`/block/${data.slot}`}
-                    className='hover:underline text-pink-300'
+                    className="hover:underline text-pink-300"
                   >
                     {data.slot}
                   </Link>
@@ -85,7 +87,7 @@ export default async function LatestBlocks() {
                 <TableCell>
                   <Link
                     href={`/validator/${data.author_index}`}
-                    className='hover:underline text-pink-300'
+                    className="hover:underline text-pink-300"
                   >
                     {data.author_index}
                   </Link>
@@ -94,9 +96,9 @@ export default async function LatestBlocks() {
             ))}
           </TableBody>
         </Table>
-        <div className='mt-4 text-right'>
-          <Button variant='link'>
-            <Link href='/blocks'>View all blocks →</Link>
+        <div className="mt-4 text-right">
+          <Button variant="link">
+            <Link href="/blocks">View all blocks →</Link>
           </Button>
         </div>
       </CardContent>

@@ -1,27 +1,30 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { Command as CommandIcon, Search, X } from 'lucide-react';
+
+import React, { useEffect, useRef, useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Search, X, Command as CommandIcon } from "lucide-react";
+} from '@/components/ui/popover';
 
 export default function SearchComponent() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
-  const [searchType] = useState<"block" | "validator" | "work" | null>(null);
+  const [value, setValue] = useState('');
+  const [searchType] = useState<'block' | 'validator' | 'work' | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Set up keyboard shortcut (cmd+k)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         if (inputRef.current) {
           inputRef.current.focus();
@@ -30,8 +33,8 @@ export default function SearchComponent() {
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   // Handle search submission
@@ -48,41 +51,41 @@ export default function SearchComponent() {
     // For a real implementation, you might want to check hash formats or call an API
 
     // For demonstration, we'll just use the first part of the hash to determine type
-    if (value.startsWith("0x")) {
+    if (value.startsWith('0x')) {
       // Hex hash is likely a block
-      navigateToResult("block", value);
+      navigateToResult('block', value);
     } else if (!isNaN(Number(value))) {
       // Numeric ID is likely a validator
-      navigateToResult("validator", value);
+      navigateToResult('validator', value);
     } else {
       // Otherwise assume it's a work package
-      navigateToResult("work", value);
+      navigateToResult('work', value);
     }
   };
 
   // Navigate to the correct result page
   const navigateToResult = (
-    type: "block" | "validator" | "work",
+    type: 'block' | 'validator' | 'work',
     hash: string
   ) => {
     switch (type) {
-      case "block":
+      case 'block':
         router.push(`/block/${hash}`);
         break;
-      case "validator":
+      case 'validator':
         router.push(`/validator/${hash}`);
         break;
-      case "work":
+      case 'work':
         router.push(`/work/${hash}`);
         break;
     }
-    setValue("");
+    setValue('');
     setOpen(false);
   };
 
   // Clear search
   const clearSearch = () => {
-    setValue("");
+    setValue('');
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -102,7 +105,7 @@ export default function SearchComponent() {
             setValue(e.target.value)
           }
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === "Enter") {
+            if (e.key === 'Enter') {
               handleSearch();
             }
           }}

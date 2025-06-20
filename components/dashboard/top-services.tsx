@@ -1,14 +1,17 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
+
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { ServiceItem } from "@/lib/types/service";
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -16,10 +19,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import Link from "next/link";
-import { formatBytes } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/table';
+import { ServiceItem } from '@/lib/types/service';
+import { formatBytes } from '@/lib/utils';
 
 interface TopServicesProps {
   services: ServiceItem[];
