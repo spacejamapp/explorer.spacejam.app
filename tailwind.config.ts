@@ -19,7 +19,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)'],
+        sans: ['Inter', 'sans-serif'],
       },
       height: {
         header: '4rem',

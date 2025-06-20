@@ -1,5 +1,4 @@
-import { query } from "@/lib/graphql";
-
+import { query } from '@/lib/graphql';
 
 // Query definitions (converted from GraphQL gql tagged templates)
 export const GET_SPACEJAM_QUERY = `

@@ -15,9 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { serverFetchBlocks } from '@/hooks/graphql';
-import { Header } from '@/lib/types';
+import { fetchBlocks } from '@/lib/graphql';
 import { formatHash } from '@/lib/utils';
+import { Header } from '@/types';
 
 import { Button } from '../ui/button';
 
@@ -33,8 +33,7 @@ function timeAgo(secondsAgo: number): string {
 }
 
 export default async function LatestBlocks() {
-  const { blocks } = (await serverFetchBlocks(1, 6)) as { blocks: Header[] };
-
+  const { blocks } = (await fetchBlocks(1, 6)) as { blocks: Header[] };
   const blocksWithAge = blocks.map((block, index) => {
     // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
     const ageInSeconds = 30 + index * 15;

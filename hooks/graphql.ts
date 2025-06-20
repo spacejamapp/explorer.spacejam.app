@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import {
   fetchBlock,
   fetchBlocks,
@@ -6,6 +7,7 @@ import {
   queryKeys,
 } from '@/lib/graphql';
 import {
+    Block,
   BlockDetails,
   GetBlocksVariables,
   Header,
@@ -34,4 +36,3 @@ export function useBlock(slot: number) {
     enabled: !!slot,
   });
 }
-
