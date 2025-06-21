@@ -16,34 +16,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { fetchBlocks } from '@/lib/graphql';
-import { formatHash } from '@/lib/utils';
+import { slotTime } from '@/lib/utils';
 import { Header } from '@/types';
 
 import { Button } from '../ui/button';
 
-// Helper function to format time ago
-function timeAgo(secondsAgo: number): string {
-  if (secondsAgo < 60) return `${secondsAgo} sec ago`;
-  const minutes = Math.floor(secondsAgo / 60);
-  if (minutes < 60) return `${minutes} min ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hr ago`;
-  const days = Math.floor(hours / 24);
-  return `${days} days ago`;
-}
-
 export default async function LatestBlocks() {
   const { headers } = (await fetchBlocks(1, 6)) as { headers: Header[] };
-  const blocksWithAge = headers.map((header, index) => {
-    // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
-    const ageInSeconds = 30 + index * 15;
-
-    return {
-      hash: formatHash(header.extrinsicHash),
-      age: ageInSeconds, // TODO: calculate age
-      ...header,
-    };
-  });
 
   return (
     <Card>
@@ -63,7 +42,7 @@ export default async function LatestBlocks() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {blocksWithAge.map((data) => (
+            {headers.map((data) => (
               <TableRow key={data.slot}>
                 <TableCell className="font-medium">
                   <Link
@@ -73,7 +52,7 @@ export default async function LatestBlocks() {
                     {data.slot}
                   </Link>
                 </TableCell>
-                <TableCell>{data.age ? timeAgo(data.age) : ''}</TableCell>
+                <TableCell>{slotTime(data.slot)}</TableCell>
                 <TableCell>
                   <Link
                     href={`/validator/${data.authorIndex}`}

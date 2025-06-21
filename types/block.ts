@@ -45,16 +45,6 @@ export interface TicketBody {
   ticket_id: string;
 }
 
-export interface BlockDetails {
-  slot: number;
-  raw: string;
-  header: Header & {
-    epoch_mark: EpochMark;
-    tickets_mark: TicketsMark;
-  };
-  extrinsic: Extrinsic;
-}
-
 export interface Spacejam {
   finalized: number;
   extrinsic: number;

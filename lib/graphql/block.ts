@@ -1,11 +1,20 @@
 import { query } from '@/lib/graphql';
-import { Header } from '@/types';
+import { Block, Header } from '@/types';
 
 export const fetchBlocks = (from: number, to: number) =>
   query<{ headers: Header[] }>(GET_BLOCKS_QUERY, { from, to });
 
 export const fetchBlock = (slot: number) =>
-  query<any>(GET_BLOCK_QUERY, { slot });
+  query<{ block: string }>(GET_BLOCK_QUERY, { slot }).then((data) => {
+    const rblock = JSON.parse(data.block);
+    const block = rblock as Block;
+    block.header.parentStateRoot = rblock.header.parent_state_root as string;
+    block.header.extrinsicHash = rblock.header.extrinsic_hash as string;
+    block.header.authorIndex = rblock.header.author_index as number;
+    block.header.entropySource = rblock.header.entropy_source as string;
+    block.header.offendersMark = rblock.header.offenders_mark as string[];
+    return block;
+  });
 
 export const GET_BLOCKS_QUERY = `
   query QueryBlocks($from: Int, $to: Int) {
@@ -24,88 +33,7 @@ export const GET_BLOCKS_QUERY = `
 `;
 
 export const GET_BLOCK_QUERY = `
-  query QueryRoot($slot: Int) {
-    block(slot: $slot) {
-      header {
-        slot
-        hash
-        parent
-        parent_state_root: parentStateRoot
-        extrinsic_hash: extrinsicHash
-        extrinsic_count: extrinsicWorks
-        author_index: authorIndex
-        entropy_source: entropySource
-        seal
-        offenders_mark: offendersMark
-        epochMark {
-          id
-          block
-          entropy
-          tickets_entropy: ticketsEntropy
-          validators
-          validators_bandersnatches: validatorsBandersnatches
-        }
-        ticketsMark {
-          id
-          block
-          ticket_id: ticketId
-          attempt
-        }
-      }
-      extrinsic {
-        tickets {
-          id
-          block
-          attempt
-          signature
-        }
-        preimages {
-          id
-          block
-          requester
-          hash
-          blob
-        }
-        guarantees {
-          id
-          block
-          report
-          slot
-          signatures
-        }
-        assurances {
-          id
-          block
-          anchor
-          bitfield
-          validator_index: validatorIndex
-          signature
-        }
-        disputes {
-          verdicts {
-            id
-            block
-            target
-            age
-            votes
-          }
-          culprits {
-            id
-            block
-            target
-            key
-            signature
-          }
-          faults {
-            id
-            block
-            target
-            vote
-            key
-            signature
-          }
-        }
-      }
-    }
+  query QueryBlock($slot: Int) {
+    block(slot: $slot)
   }
 `;

@@ -7,24 +7,8 @@ import BlockTabs from '@/components/block/block-tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { fetchBlock } from '@/lib/graphql';
-import { formatHash } from '@/lib/utils';
-import { BlockDetails } from '@/types';
-
-// Helper function to format time ago
-function timeAgo(secondsAgo: number): string {
-  if (secondsAgo < 60) return `${secondsAgo} sec ago`;
-  const minutes = Math.floor(secondsAgo / 60);
-  if (minutes < 60) return `${minutes} min ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hr ago`;
-  const days = Math.floor(hours / 24);
-  return `${days} days ago`;
-}
-
-// Generate a random age for the block (for demo purposes)
-function getRandomBlockAge(): number {
-  return Math.floor(Math.random() * 600) + 30; // Between 30 seconds and 10 minutes
-}
+import { formatHash, slotTime } from '@/lib/utils';
+import { Block } from '@/types';
 
 export default async function BlockPage({
   params,
@@ -37,34 +21,18 @@ export default async function BlockPage({
     notFound();
   }
 
-  const { block } = (await fetchBlock(slotId)) as { block: BlockDetails };
+  const block: Block = await fetchBlock(slotId);
   if (!block) {
     notFound();
   }
 
-  // TODO Calculate the block age
-  const blockAge = getRandomBlockAge();
-
-  // Extract data for display
-  const blockData = {
-    slot: block.header.slot,
-    extrinsicHash: formatHash(block.header.extrinsic_hash || ''),
-    parentHash: formatHash(block.header.parent || ''),
-    parentStateRoot: formatHash(block.header.parent_state_root || ''),
-    validator: block.header.author_index,
-    transactionCount:
-      block.extrinsic.tickets.length +
-      block.extrinsic.preimages.length +
-      block.extrinsic.guarantees.length +
-      block.extrinsic.assurances.length,
-    entropySource: formatHash(block.header.entropy_source || ''),
-  };
+  console.log(block);
 
   return (
     <main className="container mx-auto py-8">
       <section className="mb-4 flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          <div className="text-xl font-bold">Block {blockData.slot}</div>
+          <div className="text-xl font-bold">Block {block.header.slot}</div>
           <Link href={`/block/${Number(slotId) - 1}`}>
             <Button variant="outline" size="sm">
               <ArrowLeftIcon className="h-4 w-4" />
@@ -78,8 +46,8 @@ export default async function BlockPage({
         </div>
 
         <div className="text-sm text-gray-500">
-          {timeAgo(blockAge)} (
-          {new Date(Date.now() - blockAge * 1000).toLocaleString()})
+          {slotTime(block.header.slot)} (
+          {new Date(Date.now() - block.header.slot * 1000).toLocaleString()})
         </div>
       </section>
       <div className="grid grid-cols-1 gap-6">
@@ -94,7 +62,7 @@ export default async function BlockPage({
                     Extrinsic Hash
                   </div>
                   <div className="font-mono break-all text-sm">
-                    {block.header.extrinsic_hash}
+                    {block.header.extrinsicHash}
                   </div>
                 </div>
                 <div>
@@ -110,7 +78,7 @@ export default async function BlockPage({
                     Parent State Root
                   </div>
                   <div className="font-mono break-all text-sm">
-                    {block.header.parent_state_root}
+                    {block.header.parentStateRoot}
                   </div>
                 </div>
               </div>
@@ -119,14 +87,14 @@ export default async function BlockPage({
                   <div className="text-sm font-medium text-gray-500">
                     Validator
                   </div>
-                  <div className="text-sm">{block.header.author_index}</div>
+                  <div className="text-sm">{block.header.authorIndex}</div>
                 </div>
                 <div>
                   <div className="text-sm font-medium text-gray-500">
                     Entropy Source
                   </div>
                   <div className="font-mono break-all text-sm">
-                    {block.header.entropy_source}
+                    {block.header.entropySource}
                   </div>
                 </div>
               </div>
