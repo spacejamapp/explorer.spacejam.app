@@ -8,5 +8,5 @@ export const SLOT_PERIOD = 6;
 ///
 /// The beginning of the jam common era, 1200 UTC on Jan 1, 2025
 ///
-/// (1_735_689_600) after the unix epoch
-export const JAM_COMMON_ERA_AFTER_UNIX_EPOCH = 1_735_689_600;
+/// (1_735_732_800) after the unix epoch
+export const JAM_COMMON_ERA_AFTER_UNIX_EPOCH: number = 1_735_732_800;

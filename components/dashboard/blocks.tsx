@@ -18,14 +18,14 @@ function formatNumber(num: number): string {
 }
 
 interface BlocksProps {
-  blocks: Header[];
+  headers: Header[];
   currentPage: number;
   pageSize: number;
   startIndex: number;
 }
 
 export default function Blocks({
-  blocks,
+  headers,
   currentPage,
   pageSize,
   startIndex,
@@ -34,9 +34,9 @@ export default function Blocks({
   const totalPages = 100; // TODO Mock total pages
 
   // Calculate the first and last block numbers for the range
-  const firstBlockInView = blocks.length > 0 ? blocks[0].slot : 0;
+  const firstBlockInView = headers.length > 0 ? headers[0].slot : 0;
   const lastBlockInView =
-    blocks.length > 0 ? blocks[blocks.length - 1].slot : 0;
+    headers.length > 0 ? headers[headers.length - 1].slot : 0;
 
   return (
     <div className="rounded-lg shadow overflow-hidden">
@@ -75,29 +75,28 @@ export default function Blocks({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {blocks.map((block) => (
-              <TableRow key={block.slot}>
+            {headers.map((header) => (
+              <TableRow key={header.slot}>
                 <TableCell className="font-medium">
                   <Link
-                    href={`/block/${block.slot}`}
+                    href={`/block/${header.slot}`}
                     className="text-pink-300 hover:underline"
                   >
-                    {block.slot}
+                    {header.slot}
                   </Link>
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/block/${block.parent}`}
+                    href={`/block/${header.parent}`}
                     className="text-pink-300 hover:underline"
                   >
-                    {formatHash(block.parent)}
+                    {formatHash(header.parent)}
                   </Link>
                 </TableCell>
-                <TableCell>{formatHash(block.extrinsic_hash)}</TableCell>
-                <TableCell>{slotTime(block.slot)}</TableCell>
-                {/* <TableCell>{block.extrinsic.length}</TableCell> */}
-                <TableCell>{23}</TableCell>
-                <TableCell>{block.author_index}</TableCell>
+                <TableCell>{formatHash(header.extrinsicHash)}</TableCell>
+                <TableCell>{slotTime(header.slot)}</TableCell>
+                <TableCell>{header.extrinsicCount}</TableCell>
+                <TableCell>{header.authorIndex}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -48,7 +48,7 @@ export interface Header {
   parent: string;
   parent_state_root: string;
   extrinsic_hash: string;
-  extrinsic_works: number;
+  extrinsic_count: number;
   author_index: number;
   entropy_source: string;
   seal: string;

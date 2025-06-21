@@ -12,14 +12,15 @@ export interface Block {
 
 export interface Header {
   parent: string;
-  parent_state_root: string;
-  extrinsic_hash: string;
+  parentStateRoot: string;
+  extrinsicHash: string;
   slot: number;
-  epoch_mark?: EpochMark;
-  tickets_mark?: TicketsMark;
-  offeners_mark: string[];
-  author_index: number;
-  entropy_source: string;
+  epochMark?: EpochMark;
+  ticketsMark?: TicketsMark;
+  offendersMark: string[];
+  extrinsicCount: number;
+  authorIndex: number;
+  entropySource: string;
   seal: string;
 }
 

@@ -2,23 +2,23 @@ import { query } from '@/lib/graphql';
 import { Header } from '@/types';
 
 export const fetchBlocks = (from: number, to: number) =>
-  query<{ blocks: Header[] }>(GET_BLOCKS_QUERY, { from, to });
+  query<{ headers: Header[] }>(GET_BLOCKS_QUERY, { from, to });
 
 export const fetchBlock = (slot: number) =>
   query<any>(GET_BLOCK_QUERY, { slot });
 
 export const GET_BLOCKS_QUERY = `
   query QueryBlocks($from: Int, $to: Int) {
-    blocks(from: $from, to: $to) {
+    headers(from: $from, to: $to) {
       slot
       hash
       parent
-      parent_state_root: parentStateRoot
-      extrinsic_hash: extrinsicHash
-      extrinsic_works: extrinsicWorks
-      author_index: authorIndex
-      entropy_source: entropySource
-      offenders_mark: offendersMark
+      parentStateRoot
+      extrinsicHash
+      extrinsicCount
+      authorIndex
+      entropySource
+      offendersMark
     }
   }
 `;
@@ -32,7 +32,7 @@ export const GET_BLOCK_QUERY = `
         parent
         parent_state_root: parentStateRoot
         extrinsic_hash: extrinsicHash
-        extrinsic_works: extrinsicWorks
+        extrinsic_count: extrinsicWorks
         author_index: authorIndex
         entropy_source: entropySource
         seal

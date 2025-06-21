@@ -43,16 +43,10 @@ export function timeAgo(secondsAgo: number): string {
  * @returns Formatted time ago string based on slot time
  */
 export function slotTime(slot: number): string {
-  // Calculate the timestamp for this slot
-  const slotTimestamp = JAM_COMMON_ERA_AFTER_UNIX_EPOCH + slot * SLOT_PERIOD;
+  const slotTimestampUTC = JAM_COMMON_ERA_AFTER_UNIX_EPOCH + slot * SLOT_PERIOD;
+  const currentTimestampUTC = Math.floor(Date.now() / 1000);
+  const secondsAgo = currentTimestampUTC - slotTimestampUTC;
 
-  // Get current timestamp in seconds
-  const currentTimestamp = Math.floor(Date.now() / 1000);
-
-  // Calculate seconds ago (if slot is in the past) or seconds until (if in the future)
-  const secondsAgo = currentTimestamp - slotTimestamp;
-
-  // If slot is in the future, return a different format
   if (secondsAgo < 0) {
     return `in ${timeAgo(Math.abs(secondsAgo))}`;
   }

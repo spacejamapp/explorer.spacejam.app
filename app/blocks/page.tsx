@@ -23,16 +23,14 @@ export default async function BlocksPage({ searchParams }: BlocksPageProps) {
 
   try {
     // Server-side data fetching at page level
-    const { blocks } = (await fetchBlocks(startIndex, endIndex)) as {
-      blocks: Header[];
-    };
+    const { headers } = await fetchBlocks(startIndex, endIndex);
 
     return (
       <main className="container mx-auto py-8">
         <section className="mb-8 font-bold text-2xl">Blocks</section>
         <Suspense>
           <Blocks
-            blocks={blocks}
+            headers={headers}
             currentPage={currentPage}
             pageSize={pageSize}
             startIndex={startIndex}
