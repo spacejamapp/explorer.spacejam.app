@@ -33,15 +33,15 @@ function timeAgo(secondsAgo: number): string {
 }
 
 export default async function LatestBlocks() {
-  const { blocks } = (await fetchBlocks(1, 6)) as { blocks: Header[] };
-  const blocksWithAge = blocks.map((block, index) => {
+  const { headers } = (await fetchBlocks(1, 6)) as { headers: Header[] };
+  const blocksWithAge = headers.map((header, index) => {
     // Mock timestamps - the first block is 30 seconds old, each subsequent block is 15 seconds older
     const ageInSeconds = 30 + index * 15;
 
     return {
-      hash: formatHash(block.extrinsic_hash),
+      hash: formatHash(header.extrinsicHash),
       age: ageInSeconds, // TODO: calculate age
-      ...block,
+      ...header,
     };
   });
 
@@ -76,10 +76,10 @@ export default async function LatestBlocks() {
                 <TableCell>{data.age ? timeAgo(data.age) : ''}</TableCell>
                 <TableCell>
                   <Link
-                    href={`/validator/${data.author_index}`}
+                    href={`/validator/${data.authorIndex}`}
                     className="hover:underline text-pink-300"
                   >
-                    {data.author_index}
+                    {data.authorIndex}
                   </Link>
                 </TableCell>
               </TableRow>

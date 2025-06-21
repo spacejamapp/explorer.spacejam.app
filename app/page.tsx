@@ -16,7 +16,7 @@ import { Header, Spacejam } from '@/types';
 export default async function Home() {
   const stats = mockStatistics;
   const services = getMockServices(5);
-  const { blocks } = (await fetchBlocks(1, 21)) as { blocks: Header[] };
+  const { headers } = (await fetchBlocks(1, 21)) as { headers: Header[] };
   const { spacejam } = (await fetchSpacejam()) as { spacejam: Spacejam };
 
   return (
@@ -52,7 +52,7 @@ export default async function Home() {
             services: 42,
           }}
         />
-        <HistoryCard blocks={blocks} />
+        <HistoryCard headers={headers} />
       </section>
 
       <section>

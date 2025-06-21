@@ -19,27 +19,15 @@ function formatNumber(num: number): string {
   return num.toLocaleString();
 }
 
-// Calculate data from blocks
-function calculateBlockData(blocks: Header[]) {
-  return blocks.map((block) => ({
-    block: block.slot,
-    extrinsics: Math.floor(Math.random() * 1000), // TODO: calculate extrinsics
-    // block: block.header.slot,
-    // extrinsics:
-    //   block.extrinsic.tickets.length +
-    //   block.extrinsic.preimage.length +
-    //   block.extrinsic.guarantee.length +
-    //   block.extrinsic.assurance.length,
-  }));
-}
-
 interface HistoryCardProps {
-  blocks: Header[];
+  headers: Header[];
 }
 
-export default function HistoryCard({ blocks }: HistoryCardProps) {
-  // Calculate block data
-  const blockData = calculateBlockData(blocks);
+export default function HistoryCard({ headers }: HistoryCardProps) {
+  const blockData = headers.map((header) => ({
+    block: header.slot,
+    extrinsics: header.extrinsicCount,
+  }));
 
   return (
     <Card className="flex-1 min-w-[200px]">
