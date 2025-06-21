@@ -1,5 +1,6 @@
-import Services from "@/components/dashboard/services";
-import { Suspense } from "react";
+import { Suspense } from 'react';
+
+import Services from '@/components/dashboard/services';
 
 export default function ServicesPage() {
   return (

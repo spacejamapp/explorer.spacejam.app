@@ -1,16 +1,20 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { List } from "lucide-react";
+import { List } from 'lucide-react';
+
+import React, { useState } from 'react';
+
+import Link from 'next/link';
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import React, { useState } from "react";
-import { externalLinks, navSections } from "./index";
+} from '@/components/ui/accordion';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+
+import { externalLinks, navSections } from './index';
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);

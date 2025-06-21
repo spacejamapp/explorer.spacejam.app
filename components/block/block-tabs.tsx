@@ -1,18 +1,21 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import { Check, ChevronDown, ChevronRight, Copy } from 'lucide-react';
+
+import React, { useState } from 'react';
+
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Block } from "@/lib/types/block";
-import { Copy, Check, ChevronDown, ChevronRight } from "lucide-react";
-import ExtrinsicsList from "./extrinsics-list";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Block } from '@/types/block';
+
+import ExtrinsicsList from './extrinsics-list';
 
 interface BlockTabsProps {
   block: Block;
@@ -52,9 +55,9 @@ export default function BlockTabs({ block }: BlockTabsProps) {
               <ExtrinsicsList
                 extrinsics={{
                   ...block.extrinsic,
-                  preimage: [],
-                  guarantee: [],
-                  assurance: [],
+                  preimages: [],
+                  guarantees: [],
+                  assurances: [],
                 }}
               />
             </CardContent>
@@ -66,7 +69,7 @@ export default function BlockTabs({ block }: BlockTabsProps) {
             <CardHeader>
               <CardTitle>Preimages</CardTitle>
               <CardDescription>
-                {block.extrinsic.preimage.length} preimages in this block
+                {block.extrinsic.preimages.length} preimages in this block
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -74,8 +77,8 @@ export default function BlockTabs({ block }: BlockTabsProps) {
                 extrinsics={{
                   ...block.extrinsic,
                   tickets: [],
-                  guarantee: [],
-                  assurance: [],
+                  guarantees: [],
+                  assurances: [],
                 }}
               />
             </CardContent>
@@ -87,7 +90,7 @@ export default function BlockTabs({ block }: BlockTabsProps) {
             <CardHeader>
               <CardTitle>Guarantees</CardTitle>
               <CardDescription>
-                {block.extrinsic.guarantee.length} guarantees in this block
+                {block.extrinsic.guarantees.length} guarantees in this block
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -95,8 +98,8 @@ export default function BlockTabs({ block }: BlockTabsProps) {
                 extrinsics={{
                   ...block.extrinsic,
                   tickets: [],
-                  preimage: [],
-                  assurance: [],
+                  preimages: [],
+                  assurances: [],
                 }}
               />
             </CardContent>
@@ -108,7 +111,7 @@ export default function BlockTabs({ block }: BlockTabsProps) {
             <CardHeader>
               <CardTitle>Assurances</CardTitle>
               <CardDescription>
-                {block.extrinsic.assurance.length} assurances in this block
+                {block.extrinsic.assurances.length} assurances in this block
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -116,8 +119,8 @@ export default function BlockTabs({ block }: BlockTabsProps) {
                 extrinsics={{
                   ...block.extrinsic,
                   tickets: [],
-                  preimage: [],
-                  guarantee: [],
+                  preimages: [],
+                  guarantees: [],
                 }}
               />
             </CardContent>

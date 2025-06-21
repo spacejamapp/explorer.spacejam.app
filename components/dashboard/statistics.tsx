@@ -1,17 +1,19 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Statistics } from "@/lib/types/statistic";
-import ActivityDashboard from "./activity";
-import CoreDashboard from "./core";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import type { Statistics } from '@/types/statistic';
+
+import ActivityDashboard from './activity';
+import CoreDashboard from './core';
 
 // Mock data for statistics
 const mockStatistics: Statistics = {

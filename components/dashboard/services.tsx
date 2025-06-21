@@ -1,6 +1,32 @@
-"use client";
+'use client';
 
-import React, { useState, useMemo } from "react";
+import {
+  ArrowDownIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ChevronDownIcon,
+} from 'lucide-react';
+
+import React, { useMemo, useState } from 'react';
+
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -8,53 +34,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getMockServices } from "@/lib/mock/service";
-import { formatHash, formatBytes } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-  ChevronDownIcon,
-} from "lucide-react";
-import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/table';
+import { getMockServices } from '@/lib/mock/service';
+import { formatBytes, formatHash } from '@/lib/utils';
 
 // Helper function to format numbers with commas
 function formatNumber(num: number): string {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 // Sorting types
-type SortField = "service" | "balance" | "gasLimit" | "storage" | "items";
-type SortOrder = "asc" | "desc";
+type SortField = 'service' | 'balance' | 'gasLimit' | 'storage' | 'items';
+type SortOrder = 'asc' | 'desc';
 
 export default function Services() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get("page") || "1");
+  const currentPage = Number(searchParams.get('page') || '1');
   const [pageSize, setPageSize] = useState<number>(
-    Number(searchParams.get("rows") || "10")
+    Number(searchParams.get('rows') || '10')
   );
 
   // Sorting state
-  const [sortField, setSortField] = useState<SortField>("service");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const [sortField, setSortField] = useState<SortField>('service');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
   // Get all services from the mock data
   const allServices = getMockServices(40);
@@ -66,26 +69,26 @@ export default function Services() {
       let comparison = 0;
 
       switch (sortField) {
-        case "service":
+        case 'service':
           comparison = a.service - b.service;
           break;
-        case "balance":
+        case 'balance':
           comparison = a.data.service.balance - b.data.service.balance;
           break;
-        case "gasLimit":
+        case 'gasLimit':
           comparison = a.data.service.gas - b.data.service.gas;
           break;
-        case "storage":
+        case 'storage':
           comparison = a.data.service.total - b.data.service.total;
           break;
-        case "items":
+        case 'items':
           comparison = a.data.service.items - b.data.service.items;
           break;
         default:
           comparison = 0;
       }
 
-      return sortOrder === "asc" ? comparison : -comparison;
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
   }, [allServices, sortField, sortOrder]);
 
@@ -108,7 +111,7 @@ export default function Services() {
 
   // Toggle sort order
   const toggleSortOrder = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
   // Set sort field
@@ -117,7 +120,7 @@ export default function Services() {
       toggleSortOrder();
     } else {
       setSortField(field);
-      setSortOrder("asc");
+      setSortOrder('asc');
     }
   };
 
@@ -143,8 +146,8 @@ export default function Services() {
               Total of {formatNumber(totalServices)} services
             </h2>
             <p className="text-sm text-gray-600">
-              (Showing services {startIndex + 1} to{" "}
-              {Math.min(endIndex, sortedServices.length)} of{" "}
+              (Showing services {startIndex + 1} to{' '}
+              {Math.min(endIndex, sortedServices.length)} of{' '}
               {sortedServices.length})
             </p>
           </div>
@@ -163,28 +166,28 @@ export default function Services() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem
-                    onClick={() => handleSortFieldChange("service")}
+                    onClick={() => handleSortFieldChange('service')}
                   >
                     Service
                   </DropdownMenuItem>
                   <DropdownMenuItem>Code Hash</DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleSortFieldChange("balance")}
+                    onClick={() => handleSortFieldChange('balance')}
                   >
                     Balance
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleSortFieldChange("gasLimit")}
+                    onClick={() => handleSortFieldChange('gasLimit')}
                   >
                     Gas Limit
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleSortFieldChange("storage")}
+                    onClick={() => handleSortFieldChange('storage')}
                   >
                     Storage
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleSortFieldChange("items")}
+                    onClick={() => handleSortFieldChange('items')}
                   >
                     Items
                   </DropdownMenuItem>
@@ -197,7 +200,7 @@ export default function Services() {
                 onClick={toggleSortOrder}
                 className="flex items-center gap-1"
               >
-                {sortOrder === "asc" ? (
+                {sortOrder === 'asc' ? (
                   <>
                     <ArrowUpIcon className="h-4 w-4" /> Asc
                   </>
@@ -259,11 +262,11 @@ export default function Services() {
               <TableHead>
                 <div
                   className="flex items-center gap-1 cursor-pointer"
-                  onClick={() => handleSortFieldChange("service")}
+                  onClick={() => handleSortFieldChange('service')}
                 >
                   Service
-                  {sortField === "service" &&
-                    (sortOrder === "asc" ? (
+                  {sortField === 'service' &&
+                    (sortOrder === 'asc' ? (
                       <ArrowUpIcon className="h-3 w-3" />
                     ) : (
                       <ArrowDownIcon className="h-3 w-3" />
@@ -278,11 +281,11 @@ export default function Services() {
               <TableHead className="text-right">
                 <div
                   className="flex items-center gap-1 justify-end cursor-pointer"
-                  onClick={() => handleSortFieldChange("balance")}
+                  onClick={() => handleSortFieldChange('balance')}
                 >
                   Balance
-                  {sortField === "balance" &&
-                    (sortOrder === "asc" ? (
+                  {sortField === 'balance' &&
+                    (sortOrder === 'asc' ? (
                       <ArrowUpIcon className="h-3 w-3" />
                     ) : (
                       <ArrowDownIcon className="h-3 w-3" />
@@ -292,11 +295,11 @@ export default function Services() {
               <TableHead className="text-right">
                 <div
                   className="flex items-center gap-1 justify-end cursor-pointer"
-                  onClick={() => handleSortFieldChange("gasLimit")}
+                  onClick={() => handleSortFieldChange('gasLimit')}
                 >
                   Gas Limit
-                  {sortField === "gasLimit" &&
-                    (sortOrder === "asc" ? (
+                  {sortField === 'gasLimit' &&
+                    (sortOrder === 'asc' ? (
                       <ArrowUpIcon className="h-3 w-3" />
                     ) : (
                       <ArrowDownIcon className="h-3 w-3" />
@@ -306,11 +309,11 @@ export default function Services() {
               <TableHead className="text-right">
                 <div
                   className="flex items-center gap-1 justify-end cursor-pointer"
-                  onClick={() => handleSortFieldChange("storage")}
+                  onClick={() => handleSortFieldChange('storage')}
                 >
                   Storage
-                  {sortField === "storage" &&
-                    (sortOrder === "asc" ? (
+                  {sortField === 'storage' &&
+                    (sortOrder === 'asc' ? (
                       <ArrowUpIcon className="h-3 w-3" />
                     ) : (
                       <ArrowDownIcon className="h-3 w-3" />
@@ -320,11 +323,11 @@ export default function Services() {
               <TableHead className="text-right">
                 <div
                   className="flex items-center gap-1 justify-end cursor-pointer"
-                  onClick={() => handleSortFieldChange("items")}
+                  onClick={() => handleSortFieldChange('items')}
                 >
                   Items
-                  {sortField === "items" &&
-                    (sortOrder === "asc" ? (
+                  {sortField === 'items' &&
+                    (sortOrder === 'asc' ? (
                       <ArrowUpIcon className="h-3 w-3" />
                     ) : (
                       <ArrowDownIcon className="h-3 w-3" />

@@ -1,29 +1,31 @@
-"use client";
+'use client';
 
-import React from "react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+
+import React from 'react';
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { CoreActivityRecord } from "@/lib/types/statistic";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CoreActivityRecord } from '@/types/statistic';
 
 interface CoreTabsProps {
   coreId: number;
@@ -68,8 +70,8 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                 <XAxis
                   dataKey="index"
                   label={{
-                    value: "Data Point",
-                    position: "insideBottomRight",
+                    value: 'Data Point',
+                    position: 'insideBottomRight',
                     offset: -10,
                   }}
                 />
@@ -179,18 +181,18 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                 <YAxis
                   yAxisId="left"
                   label={{
-                    value: "Gas Used",
+                    value: 'Gas Used',
                     angle: -90,
-                    position: "insideLeft",
+                    position: 'insideLeft',
                   }}
                 />
                 <YAxis
                   yAxisId="right"
                   orientation="right"
                   label={{
-                    value: "DA Load",
+                    value: 'DA Load',
                     angle: 90,
-                    position: "insideRight",
+                    position: 'insideRight',
                   }}
                 />
                 <Tooltip />

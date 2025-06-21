@@ -1,6 +1,26 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+
+import { useState } from 'react';
+
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -8,25 +28,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import type { CoreActivityRecord } from "@/lib/types/statistic";
-import Link from "next/link";
+} from '@/components/ui/table';
+import type { CoreActivityRecord } from '@/types/statistic';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
@@ -35,13 +38,13 @@ function formatNumber(num: number): string {
 
 // Format bytes to readable format
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 Bytes";
+  if (bytes === 0) return '0 Bytes';
 
   const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
 export default function CoreDashboard({
@@ -114,7 +117,7 @@ export default function CoreDashboard({
                           {formatNumber(core.extrinsic_count)}
                         </TableCell>
                         <TableCell>
-                          {formatNumber(core.imports)} /{" "}
+                          {formatNumber(core.imports)} /{' '}
                           {formatNumber(core.exports)}
                         </TableCell>
                         <TableCell>{formatBytes(core.bundle_size)}</TableCell>

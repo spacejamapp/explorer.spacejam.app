@@ -1,10 +1,13 @@
-import React from "react";
-import { notFound } from "next/navigation";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { getMockValidatorActivity } from "@/lib/mock/validator-activity";
-import { mockValidators } from "@/lib/mock/validator";
-import ValidatorTabs from "./tabs";
+import React from 'react';
+
+import { notFound } from 'next/navigation';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { mockValidators } from '@/lib/mock/validator';
+import { getMockValidatorActivity } from '@/lib/mock/validator-activity';
+
+import ValidatorTabs from './tabs';
 
 interface PageProps {
   hash: string;
@@ -34,9 +37,9 @@ export default async function ValidatorDetailsPage({
   const getInitials = () => {
     if (validator.name) {
       return validator.name
-        .split(" ")
+        .split(' ')
         .map((part) => part[0])
-        .join("")
+        .join('')
         .toUpperCase();
     }
     return `V${validatorHash}`;
@@ -76,13 +79,13 @@ export default async function ValidatorDetailsPage({
 
           <div className="flex gap-2 flex-wrap justify-end">
             <div className="text-sm px-3 py-1 rounded-md bg-muted">
-              <span className="font-medium">Produced:</span>{" "}
-              {activityData.reduce((sum, record) => sum + record.blocks, 0)}{" "}
+              <span className="font-medium">Produced:</span>{' '}
+              {activityData.reduce((sum, record) => sum + record.blocks, 0)}{' '}
               blocks
             </div>
             <div className="text-sm px-3 py-1 rounded-md bg-muted">
-              <span className="font-medium">Processed:</span>{" "}
-              {activityData.reduce((sum, record) => sum + record.tickets, 0)}{" "}
+              <span className="font-medium">Processed:</span>{' '}
+              {activityData.reduce((sum, record) => sum + record.tickets, 0)}{' '}
               tickets
             </div>
           </div>

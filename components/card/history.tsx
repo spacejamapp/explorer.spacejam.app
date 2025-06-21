@@ -1,41 +1,33 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  LineChart,
   Line,
-  XAxis,
-  YAxis,
+  LineChart,
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
-} from "recharts";
-import type { Block } from "@/lib/types/block";
+  XAxis,
+  YAxis,
+} from 'recharts';
+
+import React from 'react';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Header } from '@/types/block';
 
 // Format large numbers with commas
 function formatNumber(num: number): string {
   return num.toLocaleString();
 }
 
-// Calculate data from blocks
-function calculateBlockData(blocks: Block[]) {
-  return blocks.map((block) => ({
-    block: block.header.slot,
-    extrinsics:
-      block.extrinsic.tickets.length +
-      block.extrinsic.preimage.length +
-      block.extrinsic.guarantee.length +
-      block.extrinsic.assurance.length,
-  }));
-}
-
 interface HistoryCardProps {
-  blocks: Block[];
+  headers: Header[];
 }
 
-export default function HistoryCard({ blocks }: HistoryCardProps) {
-  // Calculate block data
-  const blockData = calculateBlockData(blocks);
+export default function HistoryCard({ headers }: HistoryCardProps) {
+  const blockData = headers.map((header) => ({
+    block: header.slot,
+    extrinsics: header.extrinsicCount,
+  }));
 
   return (
     <Card className="flex-1 min-w-[200px]">
@@ -63,7 +55,7 @@ export default function HistoryCard({ blocks }: HistoryCardProps) {
                 axisLine={false}
                 tick={{ fontSize: 12 }}
                 tickFormatter={(value) =>
-                  value == 0 ? "" : formatNumber(value)
+                  value == 0 ? '' : formatNumber(value)
                 }
               />
               <RechartsTooltip
@@ -76,9 +68,9 @@ export default function HistoryCard({ blocks }: HistoryCardProps) {
                         <p className="text-sm">Block {block}</p>
                         <p className="text-sm font-medium">
                           Extrinsics:
-                          {typeof value === "number"
+                          {typeof value === 'number'
                             ? formatNumber(value)
-                            : value}{" "}
+                            : value}{' '}
                         </p>
                       </div>
                     );

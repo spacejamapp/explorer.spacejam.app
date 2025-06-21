@@ -1,21 +1,23 @@
 // The home page of the SpaceJam project.
+import Link from 'next/link';
 
-import LatestBlocks from "@/components/dashboard/latest-blocks";
-import TopServices from "@/components/dashboard/top-services";
-import Link from "next/link";
-import { getMockBlocks } from "@/lib/mock/block";
-import { mockStatistics } from "@/lib/mock/statistics";
-import { getMockServices } from "@/lib/mock/service";
-import EpochCard from "@/components/card/epoch";
-import HistoryCard from "@/components/card/history";
-import NetworkCard from "@/components/card/network";
-import ActiveCores from "@/components/dashboard/active-cores";
-import SearchComponent from "@/components/search";
+import EpochCard from '@/components/card/epoch';
+import HistoryCard from '@/components/card/history';
+import NetworkCard from '@/components/card/network';
+import ActiveCores from '@/components/dashboard/active-cores';
+import LatestBlocks from '@/components/dashboard/latest-blocks';
+import TopServices from '@/components/dashboard/top-services';
+import SearchComponent from '@/components/search';
+import { fetchBlocks, fetchSpacejam } from '@/lib/graphql';
+import { getMockServices } from '@/lib/mock/service';
+import { mockStatistics } from '@/lib/mock/statistics';
+import { Header, Spacejam } from '@/types';
 
-export default function Home() {
-  const blocks = getMockBlocks(20);
+export default async function Home() {
   const stats = mockStatistics;
   const services = getMockServices(5);
+  const { headers } = (await fetchBlocks(1, 21)) as { headers: Header[] };
+  const { spacejam } = (await fetchSpacejam()) as { spacejam: Spacejam };
 
   return (
     <main className="container mx-auto py-6 space-y-8">
@@ -31,7 +33,7 @@ export default function Home() {
             href="https://spacejam.app"
             className="font-bold text-foreground text-pink-300"
           >
-            {" "}
+            {' '}
             SpaceJam
           </Link>
         </div>
@@ -43,14 +45,8 @@ export default function Home() {
 
       <section className="flex gap-4">
         <EpochCard current={stats.vals_current} />
-        <NetworkCard
-          network={{
-            finalized: 12345678,
-            extrinsics: 123456788,
-            services: 42,
-          }}
-        />
-        <HistoryCard blocks={blocks} />
+        <NetworkCard spacejam={spacejam} />
+        <HistoryCard headers={headers} />
       </section>
 
       <section>

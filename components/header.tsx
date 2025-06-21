@@ -1,8 +1,10 @@
-import Link from "next/link";
-import WebNav from "./nav/web";
-import MobileNav from "./nav/mobile";
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+
+import Image from 'next/image';
+import Link from 'next/link';
+
+import MobileNav from './nav/mobile';
+import WebNav from './nav/web';
 
 export default function Header() {
   return (

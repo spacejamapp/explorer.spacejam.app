@@ -1,7 +1,10 @@
-import { CoreActivityRecord } from "@/lib/types/statistic";
+import { CoreActivityRecord } from '@/types/statistic';
 
 // Generate realistic random data for core activity
-export function generateCoreActivityMock(coreId: number, count: number = 30): CoreActivityRecord[] {
+export function generateCoreActivityMock(
+  coreId: number,
+  count: number = 30
+): CoreActivityRecord[] {
   const records: CoreActivityRecord[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -13,7 +16,7 @@ export function generateCoreActivityMock(coreId: number, count: number = 30): Co
       exports: Math.floor(Math.random() * 40) + 5,
       bundle_size: Math.floor(Math.random() * 500) + 100,
       da_load: Math.random() * 0.5 + 0.1, // 0.1 to 0.6 range
-      popularity: Math.random() * 100 // 0 to 100 range
+      popularity: Math.random() * 100, // 0 to 100 range
     });
   }
 
@@ -21,15 +24,18 @@ export function generateCoreActivityMock(coreId: number, count: number = 30): Co
 }
 
 // Get mock data for a specific core
-export function getMockCoreActivity(coreId: number, count: number = 30): CoreActivityRecord[] {
+export function getMockCoreActivity(
+  coreId: number,
+  count: number = 30
+): CoreActivityRecord[] {
   return generateCoreActivityMock(coreId, count);
 }
 
 // Get core details based on ID
 export function getMockCoreDetails(coreId: number) {
-  const coreTypes = ["Processing", "Consensus", "Storage", "Networking"];
-  const statusOptions = ["Active", "Inactive", "Pending", "Maintenance"];
-  
+  const coreTypes = ['Processing', 'Consensus', 'Storage', 'Networking'];
+  const statusOptions = ['Active', 'Inactive', 'Pending', 'Maintenance'];
+
   return {
     id: coreId,
     name: `Core ${coreId}`,
@@ -44,7 +50,7 @@ export function getMockCoresList(count: number = 20) {
   return Array.from({ length: count }, (_, i) => ({
     id: i + 1,
     name: `Core ${i + 1}`,
-    type: ["Processing", "Consensus", "Storage", "Networking"][i % 4],
-    status: i % 10 === 0 ? "Maintenance" : i % 15 === 0 ? "Inactive" : "Active", 
+    type: ['Processing', 'Consensus', 'Storage', 'Networking'][i % 4],
+    status: i % 10 === 0 ? 'Maintenance' : i % 15 === 0 ? 'Inactive' : 'Active',
   }));
 }

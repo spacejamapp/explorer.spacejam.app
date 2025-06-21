@@ -1,9 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
+import React, { useEffect, useState } from 'react';
+
+import Link from 'next/link';
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface ActiveCoresProps {
   title?: string;
@@ -11,7 +13,7 @@ interface ActiveCoresProps {
 }
 
 export default function ActiveCores({
-  title = "Active Cores",
+  title = 'Active Cores',
   className,
 }: ActiveCoresProps) {
   // Total number of cores to display
@@ -59,9 +61,9 @@ export default function ActiveCores({
       <Link href={`/core/${index}`} title={`Core #${index + 1}`} key={index}>
         <div
           className={cn(
-            "w-2 h-2 md:w-3 md:h-3 rounded-sm",
-            "text-gray-500 bg-current",
-            isHighlighted && "text-pink-500 transition-colors duration-1000"
+            'w-2 h-2 md:w-3 md:h-3 rounded-sm',
+            'text-gray-500 bg-current',
+            isHighlighted && 'text-pink-500 transition-colors duration-1000'
           )}
         />
       </Link>
@@ -83,7 +85,7 @@ export default function ActiveCores({
           className="grid gap-[8px]"
           style={{
             gridTemplateColumns: `repeat(auto-fill, minmax(8px, 1fr))`,
-            maxWidth: "100%",
+            maxWidth: '100%',
           }}
         >
           {cores}

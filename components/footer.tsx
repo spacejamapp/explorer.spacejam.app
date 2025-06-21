@@ -1,6 +1,7 @@
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub, faTelegramPlane } from "@fortawesome/free-brands-svg-icons";
+import { faGithub, faTelegramPlane } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import Link from 'next/link';
 
 export function Footer() {
   return (
