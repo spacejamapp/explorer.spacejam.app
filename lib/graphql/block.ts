@@ -5,8 +5,8 @@ export const fetchBlocks = (from: number, to: number) =>
   query<{ headers: Header[] }>(GET_BLOCKS_QUERY, { from, to });
 
 export const fetchBlock = (slot: number) =>
-  query<{ block: string }>(GET_BLOCK_QUERY, { slot }).then((data) => {
-    const rblock = JSON.parse(data.block);
+  query<{ blockRaw: string }>(GET_BLOCK_QUERY, { slot }).then((data) => {
+    const rblock = JSON.parse(data.blockRaw);
     const block = rblock as Block;
     block.header.parentStateRoot = rblock.header.parent_state_root as string;
     block.header.extrinsicHash = rblock.header.extrinsic_hash as string;
@@ -34,6 +34,6 @@ export const GET_BLOCKS_QUERY = `
 
 export const GET_BLOCK_QUERY = `
   query QueryBlock($slot: Int) {
-    block(slot: $slot)
+    blockRaw(slot: $slot)
   }
 `;

@@ -45,11 +45,6 @@ export interface TicketBody {
   ticket_id: string;
 }
 
-export interface Spacejam {
-  finalized: number;
-  extrinsic: number;
-}
-
 export interface GetBlockVariables {
   slot: number;
 }

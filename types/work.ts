@@ -41,7 +41,7 @@ export interface WorkResult {
   service_id: number;
   code_hash: string;
   payload_hash: string;
-  acccumulate_gas: number;
+  accumulate_gas: number;
   result: WorkExecResult;
   refine_load: RefineLoad;
 }

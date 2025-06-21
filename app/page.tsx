@@ -45,13 +45,7 @@ export default async function Home() {
 
       <section className="flex gap-4">
         <EpochCard current={stats.vals_current} />
-        <NetworkCard
-          network={{
-            finalized: spacejam.finalized,
-            extrinsics: spacejam.extrinsic,
-            services: 42,
-          }}
-        />
+        <NetworkCard spacejam={spacejam} />
         <HistoryCard headers={headers} />
       </section>
 

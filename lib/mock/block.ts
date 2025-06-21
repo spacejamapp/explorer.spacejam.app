@@ -65,7 +65,7 @@ export function createMockBlock(slot: number, parent: string): Block {
                 service_id: Math.floor(Math.random() * 100),
                 code_hash: generateRandomHash(),
                 payload_hash: generateRandomHash(),
-                acccumulate_gas: Math.floor(Math.random() * 1000),
+                accumulate_gas: Math.floor(Math.random() * 1000),
                 result: { ok: generateRandomHash() },
                 refine_load: {
                   gas_used: Math.floor(Math.random() * 1000),

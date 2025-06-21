@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 
 import Blocks from '@/components/dashboard/blocks';
+import { fetchSpacejam } from '@/lib/graphql';
 import { fetchBlocks } from '@/lib/graphql/block';
 import { Header } from '@/types';
 
@@ -24,6 +25,7 @@ export default async function BlocksPage({ searchParams }: BlocksPageProps) {
   try {
     // Server-side data fetching at page level
     const { headers } = await fetchBlocks(startIndex, endIndex);
+    const { spacejam } = await fetchSpacejam();
 
     return (
       <main className="container mx-auto py-8">
@@ -33,7 +35,8 @@ export default async function BlocksPage({ searchParams }: BlocksPageProps) {
             headers={headers}
             currentPage={currentPage}
             pageSize={pageSize}
-            startIndex={startIndex}
+            totalPages={Math.ceil(spacejam.blocks / pageSize)}
+            totalBlocks={spacejam.blocks}
           />
         </Suspense>
       </main>

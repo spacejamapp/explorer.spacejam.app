@@ -1,10 +1,10 @@
-export interface Network {
+export interface Spacejam {
   // The number of extrinsics in total.
   extrinsics: number;
   // The latest finalized slot
   finalized: number;
   // The number of services in total.
-  services: number;
+  blocks: number;
 }
 
 export interface Validator {

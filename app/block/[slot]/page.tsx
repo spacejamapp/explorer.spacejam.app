@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import BlockTabs from '@/components/block/block-tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { fetchBlock } from '@/lib/graphql';
+import { fetchBlock, fetchSpacejam } from '@/lib/graphql';
 import { formatHash, slotDate, slotTime } from '@/lib/utils';
 import { Block } from '@/types';
 
@@ -26,18 +26,30 @@ export default async function BlockPage({
     notFound();
   }
 
+  const { spacejam } = await fetchSpacejam();
+
   return (
     <main className="container mx-auto py-8">
       <section className="mb-4 flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-2">
           <div className="text-xl font-bold">Block {block.header.slot}</div>
           <Link href={`/block/${Number(slotId) - 1}`}>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={
+                Number(slotId) - 1 < spacejam.finalized - spacejam.blocks
+              }
+            >
               <ArrowLeftIcon className="h-4 w-4" />
             </Button>
           </Link>
           <Link href={`/block/${Number(slotId) + 1}`}>
-            <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={Number(slotId) + 1 > spacejam.finalized}
+            >
               <ArrowRightIcon className="h-4 w-4" />
             </Button>
           </Link>

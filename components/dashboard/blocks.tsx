@@ -21,18 +21,17 @@ interface BlocksProps {
   headers: Header[];
   currentPage: number;
   pageSize: number;
-  startIndex: number;
+  totalPages: number;
+  totalBlocks: number;
 }
 
 export default function Blocks({
   headers,
   currentPage,
   pageSize,
-  startIndex,
+  totalPages,
+  totalBlocks,
 }: BlocksProps) {
-  const totalBlocks = 22424442; // TODO Mock total blocks count
-  const totalPages = 100; // TODO Mock total pages
-
   // Calculate the first and last block numbers for the range
   const firstBlockInView = headers.length > 0 ? headers[0].slot : 0;
   const lastBlockInView =
