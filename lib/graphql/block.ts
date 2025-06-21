@@ -7,7 +7,6 @@ export const fetchBlocks = (from: number, to: number) =>
 export const fetchBlock = (slot: number) =>
   query<any>(GET_BLOCK_QUERY, { slot });
 
-
 export const GET_BLOCKS_QUERY = `
   query QueryBlocks($from: Int, $to: Int) {
     blocks(from: $from, to: $to) {
@@ -110,4 +109,3 @@ export const GET_BLOCK_QUERY = `
     }
   }
 `;
-

@@ -7,7 +7,7 @@ import {
   queryKeys,
 } from '@/lib/graphql';
 import {
-    Block,
+  Block,
   BlockDetails,
   GetBlocksVariables,
   Header,

@@ -1,20 +1,6 @@
-'use client';
-
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-
-import { useState } from 'react';
-
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import Pagination from '@/components/pagination';
 import {
   Table,
   TableBody,
@@ -23,50 +9,27 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useBlocks } from '@/hooks/graphql';
-import { formatHash } from '@/lib/utils';
-
-// Helper function to format time ago
-function timeAgo(secondsAgo: number): string {
-  if (secondsAgo < 60) return `${secondsAgo} sec ago`;
-  const minutes = Math.floor(secondsAgo / 60);
-  if (minutes < 60) return `${minutes} min ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hr ago`;
-  const days = Math.floor(hours / 24);
-  return `${days} days ago`;
-}
+import { formatHash, slotTime } from '@/lib/utils';
+import { Header } from '@/types';
 
 // Helper function to format numbers with commas
 function formatNumber(num: number): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-export default function BlocksPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get('page') || '1');
-  const [pageSize, setPageSize] = useState<number>(
-    Number(searchParams.get('rows') || '10')
-  );
+interface BlocksProps {
+  blocks: Header[];
+  currentPage: number;
+  pageSize: number;
+  startIndex: number;
+}
 
-  // Get current page of blocks
-  const startIndex = (currentPage - 1) * pageSize + 1;
-  const endIndex = startIndex + pageSize;
-
-  // Get all blocks from the mock data
-  const {
-    data: { blocks } = { blocks: [] },
-    isLoading,
-    error,
-  } = useBlocks({
-    from: startIndex,
-    to: endIndex,
-  });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
+export default function Blocks({
+  blocks,
+  currentPage,
+  pageSize,
+  startIndex,
+}: BlocksProps) {
   const totalBlocks = 22424442; // TODO Mock total blocks count
   const totalPages = 100; // TODO Mock total pages
 
@@ -74,48 +37,6 @@ export default function BlocksPage() {
   const firstBlockInView = blocks.length > 0 ? blocks[0].slot : 0;
   const lastBlockInView =
     blocks.length > 0 ? blocks[blocks.length - 1].slot : 0;
-
-  // Calculate age for display
-  const blocksWithAge = blocks.map((block, index) => {
-    // Mock timestamps - blocks get progressively older
-    const baseAge = 30 + startIndex * 15;
-    const ageInSeconds = baseAge + index * 15;
-
-    return {
-      ...block,
-      age: ageInSeconds, // TODO: calculate age
-      transactions: 23,
-      extrinsic_hash: formatHash(block.extrinsic_hash),
-      parent: formatHash(block.parent),
-      // transactions: // TODO: calculate transactions
-      //   block.extrinsic.assurance.length +
-      //   block.extrinsic.guarantee.length +
-      //   block.extrinsic.preimage.length +
-      //   block.extrinsic.tickets.length,
-    };
-  });
-
-  // Handle page size change
-  const handlePageSizeChange = (value: string) => {
-    const newSize = Number(value);
-    setPageSize(newSize);
-
-    // Navigate to first page with new page size
-    router.push(`/blocks?page=1&rows=${newSize}`);
-  };
-
-  // Navigation handlers
-  const goToFirstPage = () => router.push(`/blocks?page=1&rows=${pageSize}`);
-  const goToPrevPage = () =>
-    router.push(
-      `/blocks?page=${Math.max(1, currentPage - 1)}&rows=${pageSize}`
-    );
-  const goToNextPage = () =>
-    router.push(
-      `/blocks?page=${Math.min(totalPages, currentPage + 1)}&rows=${pageSize}`
-    );
-  const goToLastPage = () =>
-    router.push(`/blocks?page=${totalPages}&rows=${pageSize}`);
 
   return (
     <div className="rounded-lg shadow overflow-hidden">
@@ -131,47 +52,12 @@ export default function BlocksPage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={goToFirstPage}
-                disabled={currentPage === 1}
-                className="px-3"
-              >
-                First
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={goToPrevPage}
-                disabled={currentPage === 1}
-                className="p-0 w-8 h-8"
-              >
-                <ArrowLeftIcon />
-              </Button>
-              <span className="text-sm">
-                Page {currentPage} of {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={goToNextPage}
-                disabled={currentPage === totalPages}
-                className="p-0 w-8 h-8"
-              >
-                <ArrowRightIcon />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={goToLastPage}
-                disabled={currentPage === totalPages}
-                className="px-3"
-              >
-                Last
-              </Button>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              showPageSize={false}
+            />
           </div>
         </div>
       </div>
@@ -189,28 +75,29 @@ export default function BlocksPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {blocksWithAge.map((data) => (
-              <TableRow key={data.slot}>
+            {blocks.map((block) => (
+              <TableRow key={block.slot}>
                 <TableCell className="font-medium">
                   <Link
-                    href={`/block/${data.slot}`}
+                    href={`/block/${block.slot}`}
                     className="text-pink-300 hover:underline"
                   >
-                    {data.slot}
+                    {block.slot}
                   </Link>
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/block/${data.parent}`}
+                    href={`/block/${block.parent}`}
                     className="text-pink-300 hover:underline"
                   >
-                    {data.parent}
+                    {formatHash(block.parent)}
                   </Link>
                 </TableCell>
-                <TableCell>{data.extrinsic_hash}</TableCell>
-                <TableCell>{timeAgo(data.age)}</TableCell>
-                <TableCell>{data.transactions}</TableCell>
-                <TableCell>{data.author_index}</TableCell>
+                <TableCell>{formatHash(block.extrinsic_hash)}</TableCell>
+                <TableCell>{slotTime(block.slot)}</TableCell>
+                {/* <TableCell>{block.extrinsic.length}</TableCell> */}
+                <TableCell>{23}</TableCell>
+                <TableCell>{block.author_index}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -218,62 +105,19 @@ export default function BlocksPage() {
       </div>
 
       <div className="p-4 border-t flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600">Show rows:</span>
-          <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
-            <SelectTrigger className="w-20">
-              <SelectValue placeholder="10" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          showPageSize={true}
+        />
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToFirstPage}
-            disabled={currentPage === 1}
-            className="px-3"
-          >
-            First
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToPrevPage}
-            disabled={currentPage === 1}
-            className="px-3"
-          >
-            <ArrowLeftIcon />
-          </Button>
-          <span className="text-sm">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToNextPage}
-            disabled={currentPage === totalPages}
-            className="px-3"
-          >
-            <ArrowRightIcon />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToLastPage}
-            disabled={currentPage === totalPages}
-            className="px-3"
-          >
-            Last
-          </Button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          showPageSize={false}
+        />
       </div>
     </div>
   );
