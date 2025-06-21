@@ -53,3 +53,14 @@ export function slotTime(slot: number): string {
 
   return timeAgo(secondsAgo);
 }
+
+/**
+ * Calculate slot date and format as local date string
+ * @param slot The slot number to calculate date for
+ * @returns Formatted local date string based on slot time
+ */
+export function slotDate(slot: number): string {
+  const slotTimestampUTC = JAM_COMMON_ERA_AFTER_UNIX_EPOCH + slot * SLOT_PERIOD;
+  const slotDate = new Date(slotTimestampUTC * 1000);
+  return slotDate.toLocaleString();
+}

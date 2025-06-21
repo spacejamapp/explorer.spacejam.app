@@ -7,7 +7,7 @@ import BlockTabs from '@/components/block/block-tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { fetchBlock } from '@/lib/graphql';
-import { formatHash, slotTime } from '@/lib/utils';
+import { formatHash, slotDate, slotTime } from '@/lib/utils';
 import { Block } from '@/types';
 
 export default async function BlockPage({
@@ -25,8 +25,6 @@ export default async function BlockPage({
   if (!block) {
     notFound();
   }
-
-  console.log(block);
 
   return (
     <main className="container mx-auto py-8">
@@ -46,8 +44,7 @@ export default async function BlockPage({
         </div>
 
         <div className="text-sm text-gray-500">
-          {slotTime(block.header.slot)} (
-          {new Date(Date.now() - block.header.slot * 1000).toLocaleString()})
+          {slotTime(block.header.slot)} ({slotDate(block.header.slot)})
         </div>
       </section>
       <div className="grid grid-cols-1 gap-6">
