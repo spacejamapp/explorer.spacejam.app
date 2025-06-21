@@ -14,3 +14,5 @@ export const GET_SPACEJAM_QUERY = `
 
 // Query functions
 export const fetchSpacejam = () => query<{ spacejam: Spacejam }>(GET_SPACEJAM_QUERY);
+
+

@@ -1,10 +1,24 @@
 import { type ClassValue, clsx } from 'clsx';
+import { notFound } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
 import { JAM_COMMON_ERA_AFTER_UNIX_EPOCH, SLOT_PERIOD } from '@/lib/params';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+/**
+ * Wraps an async operation and converts any errors to notFound() calls
+ * This prevents server errors from crashing the page and provides graceful error handling
+ */
+export async function withNotFound<T>(operation: Promise<T>): Promise<T> {
+  try {
+    return await operation;
+  } catch (error) {
+    console.error(error);
+    notFound();
+  }
 }
 
 export function formatHash(hash: string) {

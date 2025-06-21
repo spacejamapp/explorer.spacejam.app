@@ -7,26 +7,15 @@ import BlockTabs from '@/components/block/block-tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { fetchBlock, fetchSpacejam } from '@/lib/graphql';
-import { formatHash, slotDate, slotTime } from '@/lib/utils';
-import { Block } from '@/types';
+import { slotDate, slotTime, withNotFound } from '@/lib/utils';
 
 export default async function BlockPage({
   params,
 }: {
   params: Promise<{ slot: string }>;
 }) {
-  // Server-side data fetching
   const slotId = Number((await params).slot);
-  if (slotId == undefined || isNaN(slotId)) {
-    notFound();
-  }
-
-  const block: Block = await fetchBlock(slotId);
-  if (!block) {
-    notFound();
-  }
-
-  const { spacejam } = await fetchSpacejam();
+  const { block, spacejam } = await getBlockPageData(slotId);
 
   return (
     <main className="container mx-auto py-8">
@@ -116,4 +105,21 @@ export default async function BlockPage({
       </div>
     </main>
   );
+}
+
+// Server data fetching function (similar to getServerSideProps concept)
+async function getBlockPageData(slotId: number) {
+  const [block, { spacejam }] = await Promise.all([
+    withNotFound(fetchBlock(slotId)),
+    withNotFound(fetchSpacejam()),
+  ]);
+
+  if (!block) {
+    notFound();
+  }
+
+  return {
+    block,
+    spacejam,
+  };
 }

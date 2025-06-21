@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "fmt": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "fmt:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "fmt:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "fix": "next lint --fix && prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",

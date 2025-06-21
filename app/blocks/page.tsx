@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import Blocks from '@/components/dashboard/blocks';
 import { fetchSpacejam } from '@/lib/graphql';
 import { fetchBlocks } from '@/lib/graphql/block';
-import { Header } from '@/types';
 
 interface BlocksPageProps {
   searchParams?: Promise<{
