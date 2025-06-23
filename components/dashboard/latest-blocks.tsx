@@ -17,12 +17,12 @@ import {
 } from '@/components/ui/table';
 import { fetchBlocks } from '@/lib/graphql';
 import { slotTime } from '@/lib/utils';
-import { Header } from '@/types';
 
 import { Button } from '../ui/button';
 
 export default async function LatestBlocks() {
-  const { headers } = (await fetchBlocks(1, 6)) as { headers: Header[] };
+  const { headers } = await fetchBlocks(6);
+  const blocks = headers.nodes;
 
   return (
     <Card>
@@ -42,7 +42,7 @@ export default async function LatestBlocks() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {headers.map((data) => (
+            {blocks.map((data) => (
               <TableRow key={data.slot}>
                 <TableCell className="font-medium">
                   <Link

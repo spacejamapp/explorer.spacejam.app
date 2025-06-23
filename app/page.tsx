@@ -11,12 +11,12 @@ import SearchComponent from '@/components/search';
 import { fetchBlocks, fetchSpacejam } from '@/lib/graphql';
 import { getMockServices } from '@/lib/mock/service';
 import { mockStatistics } from '@/lib/mock/statistics';
-import { Header, Spacejam } from '@/types';
+import { Spacejam } from '@/types';
 
 export default async function Home() {
   const stats = mockStatistics;
   const services = getMockServices(5);
-  const { headers } = (await fetchBlocks(1, 21)) as { headers: Header[] };
+  const { headers } = await fetchBlocks(21);
   const { spacejam } = (await fetchSpacejam()) as { spacejam: Spacejam };
 
   return (
@@ -46,7 +46,7 @@ export default async function Home() {
       <section className="flex gap-4">
         <EpochCard current={stats.vals_current} />
         <NetworkCard spacejam={spacejam} />
-        <HistoryCard headers={headers} />
+        <HistoryCard headers={headers.nodes} />
       </section>
 
       <section>

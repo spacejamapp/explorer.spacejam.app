@@ -11,14 +11,15 @@ import { Extrinsic } from '@/types/extrinsic';
 export function createMockBlock(slot: number, parent: string): Block {
   const header: Header = {
     parent,
-    parent_state_root: generateRandomHash(),
-    extrinsic_hash: generateRandomHash(),
+    parentStateRoot: generateRandomHash(),
+    extrinsicHash: generateRandomHash(),
     slot,
-    epoch_mark: createMockEpochMark(),
-    tickets_mark: createMockTicketsMark(),
-    offeners_mark: [generateRandomHash(), generateRandomHash()],
-    author_index: Math.floor(Math.random() * 100),
-    entropy_source: generateRandomHash(),
+    epochMark: createMockEpochMark(),
+    ticketsMark: createMockTicketsMark(),
+    offendersMark: [generateRandomHash(), generateRandomHash()],
+    extrinsicCount: Math.floor(Math.random() * 50) + 1,
+    authorIndex: Math.floor(Math.random() * 100),
+    entropySource: generateRandomHash(),
     seal: generateRandomHash(),
   };
 
