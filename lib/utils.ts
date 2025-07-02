@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
-import { notFound } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
+
+import { notFound } from 'next/navigation';
 
 import { JAM_COMMON_ERA_AFTER_UNIX_EPOCH, SLOT_PERIOD } from '@/lib/params';
 

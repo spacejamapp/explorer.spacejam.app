@@ -27,14 +27,22 @@ export function createMockBlock(slot: number, parent: string): Block {
     tickets: Array.from(
       { length: Math.floor(Math.random() * 5) + 1 },
       (_, i) => ({
+        id: i,
+        block: slot,
         attempt: i + 1,
         signature: generateRandomHash(),
       })
     ),
-    preimage: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => ({
-      requester: Math.floor(Math.random() * 100),
-      blob: generateRandomHash(),
-    })),
+    preimages: Array.from(
+      { length: Math.floor(Math.random() * 3) + 1 },
+      (_, i) => ({
+        id: i,
+        block: slot,
+        requester: Math.floor(Math.random() * 100),
+        hash: generateRandomHash(),
+        blob: generateRandomHash(),
+      })
+    ),
     guarantee: Array.from(
       { length: Math.floor(Math.random() * 3) + 1 },
       () => ({

@@ -35,54 +35,45 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getMockServices } from '@/lib/mock/service';
+import { useServices } from '@/hooks/graphql';
 import { formatBytes, formatHash } from '@/lib/utils';
 
-// Helper function to format numbers with commas
-function formatNumber(num: number): string {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
 // Sorting types
-type SortField = 'service' | 'balance' | 'gasLimit' | 'storage' | 'items';
+type SortField = 'id' | 'balance' | 'total' | 'items';
 type SortOrder = 'asc' | 'desc';
 
 export default function Services() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get('page') || '1');
+  const after = searchParams.get('after');
   const [pageSize, setPageSize] = useState<number>(
     Number(searchParams.get('rows') || '10')
   );
 
-  // Sorting state
-  const [sortField, setSortField] = useState<SortField>('service');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [sortField, setSortField] = useState<SortField>('id');
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
-  // Get all services from the mock data
-  const allServices = getMockServices(40);
-  const totalServices = 42; // Mock total services count
+  // Fetch services data
+  const { data, error, isLoading } = useServices(pageSize, after || undefined);
 
   // Sort services
   const sortedServices = useMemo(() => {
-    return [...allServices].sort((a, b) => {
+    if (!data?.services?.nodes) return [];
+    return [...data.services.nodes].sort((a, b) => {
       let comparison = 0;
 
-      switch (sortField) {
-        case 'service':
-          comparison = a.service - b.service;
+      switch (sortField as SortField) {
+        case 'id':
+          comparison = a.id - b.id;
           break;
         case 'balance':
-          comparison = a.data.service.balance - b.data.service.balance;
+          comparison = a.balance - b.balance;
           break;
-        case 'gasLimit':
-          comparison = a.data.service.gas - b.data.service.gas;
-          break;
-        case 'storage':
-          comparison = a.data.service.total - b.data.service.total;
+        case 'total':
+          comparison = a.total - b.total;
           break;
         case 'items':
-          comparison = a.data.service.items - b.data.service.items;
+          comparison = a.items - b.items;
           break;
         default:
           comparison = 0;
@@ -90,15 +81,7 @@ export default function Services() {
 
       return sortOrder === 'asc' ? comparison : -comparison;
     });
-  }, [allServices, sortField, sortOrder]);
-
-  // Calculate total pages
-  const totalPages = Math.ceil(sortedServices.length / pageSize);
-
-  // Get current page of services
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const currentServices = sortedServices.slice(startIndex, endIndex);
+  }, [data, sortField, sortOrder]);
 
   // Handle page size change
   const handlePageSizeChange = (value: string) => {
@@ -106,7 +89,7 @@ export default function Services() {
     setPageSize(newSize);
 
     // Navigate to first page with new page size
-    router.push(`/services?page=1&rows=${newSize}`);
+    router.push(`/services?rows=${newSize}`);
   };
 
   // Toggle sort order
@@ -124,32 +107,26 @@ export default function Services() {
     }
   };
 
-  // Navigation handlers
-  const goToFirstPage = () => router.push(`/services?page=1&rows=${pageSize}`);
-  const goToPrevPage = () =>
+  const goToPrevPage = () => {
     router.push(
-      `/services?page=${Math.max(1, currentPage - 1)}&rows=${pageSize}`
+      `/services?after=${data?.services.pageInfo.startCursor}&rows=${pageSize}`
     );
-  const goToNextPage = () =>
+  };
+  const goToNextPage = () => {
     router.push(
-      `/services?page=${Math.min(totalPages, currentPage + 1)}&rows=${pageSize}`
+      `/services?after=${data?.services.pageInfo.endCursor}&rows=${pageSize}`
     );
-  const goToLastPage = () =>
-    router.push(`/services?page=${totalPages}&rows=${pageSize}`);
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading services</div>;
 
   return (
     <div className="rounded-lg shadow overflow-hidden">
       <div className="p-4 border border-b-0 rounded-t-lg">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-medium">
-              Total of {formatNumber(totalServices)} services
-            </h2>
-            <p className="text-sm text-gray-600">
-              (Showing services {startIndex + 1} to{' '}
-              {Math.min(endIndex, sortedServices.length)} of{' '}
-              {sortedServices.length})
-            </p>
+            <h2 className="text-sm font-medium">Services</h2>
           </div>
 
           <div className="flex items-center gap-4">
@@ -165,9 +142,7 @@ export default function Services() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => handleSortFieldChange('service')}
-                  >
+                  <DropdownMenuItem onClick={() => handleSortFieldChange('id')}>
                     Service
                   </DropdownMenuItem>
                   <DropdownMenuItem>Code Hash</DropdownMenuItem>
@@ -177,12 +152,7 @@ export default function Services() {
                     Balance
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleSortFieldChange('gasLimit')}
-                  >
-                    Gas Limit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleSortFieldChange('storage')}
+                    onClick={() => handleSortFieldChange('total')}
                   >
                     Storage
                   </DropdownMenuItem>
@@ -214,41 +184,20 @@ export default function Services() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={goToFirstPage}
-                disabled={currentPage === 1}
-                className="px-3"
-              >
-                First
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
                 onClick={goToPrevPage}
-                disabled={currentPage === 1}
+                disabled={!data?.services.pageInfo.hasPreviousPage}
                 className="p-0 w-8 h-8"
               >
                 <ArrowLeftIcon />
               </Button>
-              <span className="text-sm">
-                Page {currentPage} of {totalPages}
-              </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={goToNextPage}
-                disabled={currentPage === totalPages}
+                disabled={!data?.services.pageInfo.hasNextPage}
                 className="p-0 w-8 h-8"
               >
                 <ArrowRightIcon />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={goToLastPage}
-                disabled={currentPage === totalPages}
-                className="px-3"
-              >
-                Last
               </Button>
             </div>
           </div>
@@ -262,10 +211,10 @@ export default function Services() {
               <TableHead>
                 <div
                   className="flex items-center gap-1 cursor-pointer"
-                  onClick={() => handleSortFieldChange('service')}
+                  onClick={() => handleSortFieldChange('id')}
                 >
                   Service
-                  {sortField === 'service' &&
+                  {sortField === 'id' &&
                     (sortOrder === 'asc' ? (
                       <ArrowUpIcon className="h-3 w-3" />
                     ) : (
@@ -295,24 +244,10 @@ export default function Services() {
               <TableHead className="text-right">
                 <div
                   className="flex items-center gap-1 justify-end cursor-pointer"
-                  onClick={() => handleSortFieldChange('gasLimit')}
-                >
-                  Gas Limit
-                  {sortField === 'gasLimit' &&
-                    (sortOrder === 'asc' ? (
-                      <ArrowUpIcon className="h-3 w-3" />
-                    ) : (
-                      <ArrowDownIcon className="h-3 w-3" />
-                    ))}
-                </div>
-              </TableHead>
-              <TableHead className="text-right">
-                <div
-                  className="flex items-center gap-1 justify-end cursor-pointer"
-                  onClick={() => handleSortFieldChange('storage')}
+                  onClick={() => handleSortFieldChange('total')}
                 >
                   Storage
-                  {sortField === 'storage' &&
+                  {sortField === 'total' &&
                     (sortOrder === 'asc' ? (
                       <ArrowUpIcon className="h-3 w-3" />
                     ) : (
@@ -337,31 +272,26 @@ export default function Services() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentServices.map((serviceItem, i) => (
+            {sortedServices.map((service, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <Link
-                    href={`/service/${serviceItem.service}`}
+                    href={`/service/${service.id}`}
                     className="text-pink-300 hover:underline"
                   >
-                    {serviceItem.service}
+                    {service.id}
                   </Link>
                 </TableCell>
                 <TableCell className="font-mono text-xs">
-                  {formatHash(serviceItem.data.service.code)}
+                  {formatHash(service.code)}
                 </TableCell>
                 <TableCell className="text-right">
-                  {serviceItem.data.service.balance.toLocaleString()}
+                  {service.balance.toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
-                  {serviceItem.data.service.gas.toLocaleString()}
+                  {formatBytes(service.total)}
                 </TableCell>
-                <TableCell className="text-right">
-                  {formatBytes(serviceItem.data.service.total)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {serviceItem.data.service.items}
-                </TableCell>
+                <TableCell className="text-right">{service.items}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -388,41 +318,20 @@ export default function Services() {
           <Button
             variant="outline"
             size="sm"
-            onClick={goToFirstPage}
-            disabled={currentPage === 1}
-            className="px-3"
-          >
-            First
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
             onClick={goToPrevPage}
-            disabled={currentPage === 1}
+            disabled={!data?.services.pageInfo.hasPreviousPage}
             className="px-3"
           >
             <ArrowLeftIcon />
           </Button>
-          <span className="text-sm">
-            Page {currentPage} of {totalPages}
-          </span>
           <Button
             variant="outline"
             size="sm"
             onClick={goToNextPage}
-            disabled={currentPage === totalPages}
+            disabled={!data?.services.pageInfo.hasNextPage}
             className="px-3"
           >
             <ArrowRightIcon />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={goToLastPage}
-            disabled={currentPage === totalPages}
-            className="px-3"
-          >
-            Last
           </Button>
         </div>
       </div>

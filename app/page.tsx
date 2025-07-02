@@ -8,14 +8,13 @@ import ActiveCores from '@/components/dashboard/active-cores';
 import LatestBlocks from '@/components/dashboard/latest-blocks';
 import TopServices from '@/components/dashboard/top-services';
 import SearchComponent from '@/components/search';
-import { fetchBlocks, fetchSpacejam } from '@/lib/graphql';
-import { getMockServices } from '@/lib/mock/service';
+import { fetchBlocks, fetchServices, fetchSpacejam } from '@/lib/graphql';
 import { mockStatistics } from '@/lib/mock/statistics';
 import { Spacejam } from '@/types';
 
 export default async function Home() {
   const stats = mockStatistics;
-  const services = getMockServices(5);
+  const { services } = await fetchServices(5);
   const { headers } = await fetchBlocks(21);
   const { spacejam } = (await fetchSpacejam()) as { spacejam: Spacejam };
 
@@ -55,7 +54,7 @@ export default async function Home() {
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <LatestBlocks />
-        <TopServices services={services} />
+        <TopServices services={services.nodes} />
       </section>
     </main>
   );

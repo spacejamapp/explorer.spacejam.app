@@ -25,8 +25,16 @@ interface ValidatorConnection {
   nodes: Validator[];
 }
 
-export const fetchValidator = (index: number, first: number = 10, after?: string) =>
-  query<{ validator: ValidatorConnection }>(GET_VALIDATOR_QUERY, { index, first, after });
+export const fetchValidator = (
+  index: number,
+  first: number = 10,
+  after?: string
+) =>
+  query<{ validator: ValidatorConnection }>(GET_VALIDATOR_QUERY, {
+    index,
+    first,
+    after,
+  });
 
 export const GET_VALIDATOR_QUERY = `
   query QueryValidator($index: Int!, $first: Int = 10, $after: String) {

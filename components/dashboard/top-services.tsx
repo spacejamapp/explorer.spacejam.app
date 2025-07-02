@@ -20,11 +20,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatBytes } from '@/lib/utils';
-import { ServiceItem } from '@/types/service';
+import { Service } from '@/lib/graphql';
 
 interface TopServicesProps {
-  services: ServiceItem[];
+  services: Service[];
 }
 
 export default function TopServices({ services }: TopServicesProps) {
@@ -42,34 +41,28 @@ export default function TopServices({ services }: TopServicesProps) {
             <TableRow>
               <TableHead>Service</TableHead>
               <TableHead className="text-right">Balance</TableHead>
-              <TableHead className="text-right">Gas Limit</TableHead>
               <TableHead className="text-right">Storage</TableHead>
               <TableHead className="text-right">Items</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {services.map((serviceItem, i) => (
+            {services.map((service, i) => (
               <TableRow key={i}>
                 <TableCell className="">
                   <Link
-                    href={`/service/${serviceItem.service}`}
+                    href={`/service/${service.id}`}
                     className="text-pink-300 hover:underline"
                   >
-                    {serviceItem.service}
+                    {service.id}
                   </Link>
                 </TableCell>
                 <TableCell className="text-right">
-                  {serviceItem.data.service.balance.toLocaleString()}
+                  {service.balance.toLocaleString()}
                 </TableCell>
                 <TableCell className="text-right">
-                  {serviceItem.data.service.gas.toLocaleString()}
+                  {service.total.toLocaleString()}
                 </TableCell>
-                <TableCell className="text-right">
-                  {formatBytes(serviceItem.data.service.total)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {serviceItem.data.service.items}
-                </TableCell>
+                <TableCell className="text-right">{service.items}</TableCell>
               </TableRow>
             ))}
           </TableBody>
