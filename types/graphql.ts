@@ -32,6 +32,7 @@ export interface Spacejam {
   finalized: number;
   services: number;
   extrinsics: number;
+  epoch: number;
 }
 
 // Block Types

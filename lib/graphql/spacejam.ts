@@ -16,6 +16,7 @@ export const GET_SPACEJAM_QUERY = `
       finalized
       services
       extrinsics
+      epoch
     }
   }
 `;
