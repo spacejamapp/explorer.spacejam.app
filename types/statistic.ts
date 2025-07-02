@@ -3,6 +3,7 @@
  */
 
 export interface ActivityRecord {
+  id?: number;
   blocks: number;
   tickets: number;
   preimages: number;

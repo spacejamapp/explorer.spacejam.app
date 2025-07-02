@@ -103,13 +103,12 @@ export default function CoreDashboard({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentCores.map((core, index) => {
-                    const coreIndex = startIndex + index;
+                  {currentCores.map((core) => {
                     return (
-                      <TableRow key={coreIndex}>
+                      <TableRow key={core.id}>
                         <TableCell className="font-medium text-pink-300 hover:underline">
-                          <Link href={`/core/${coreIndex + 1}`}>
-                            {coreIndex + 1}
+                          <Link href={`/core/${core.id}`}>
+                            {core.id}
                           </Link>
                         </TableCell>
                         <TableCell>{formatNumber(core.gas_used)}</TableCell>

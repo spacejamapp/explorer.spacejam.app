@@ -97,28 +97,22 @@ export default function ActivityDashboard({
                   <TableHead>Blocks</TableHead>
                   <TableHead>Tickets</TableHead>
                   <TableHead>Preimages</TableHead>
-                  <TableHead>Preimage Size</TableHead>
                   <TableHead>Guarantees</TableHead>
                   <TableHead>Assurances</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentValidators.map((validator, index) => {
-                  const validatorIndex = startIndex + index;
-
+                {currentValidators.map((validator) => {
                   return (
-                    <TableRow key={validatorIndex}>
+                    <TableRow key={validator.id}>
                       <TableCell className="font-medium text-pink-300 hover:underline">
-                        <Link href={`/validator/${validatorIndex + 1}`}>
-                          {validatorIndex + 1}
+                        <Link href={`/validator/${validator.id}`}>
+                          {validator.id}
                         </Link>
                       </TableCell>
                       <TableCell>{formatNumber(validator.blocks)}</TableCell>
                       <TableCell>{formatNumber(validator.tickets)}</TableCell>
                       <TableCell>{formatNumber(validator.preimages)}</TableCell>
-                      <TableCell>
-                        {formatBytes(validator.preimages_size)}
-                      </TableCell>
                       <TableCell>
                         {formatNumber(validator.guarantees)}
                       </TableCell>
