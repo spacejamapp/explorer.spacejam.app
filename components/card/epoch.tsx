@@ -57,9 +57,10 @@ function calculateEpochInfo(blocks: number) {
 
 interface EpochCardProps {
   current: ActivityRecord[];
+  epochNumber?: number;
 }
 
-export default function EpochCard({ current }: EpochCardProps) {
+export default function EpochCard({ current, epochNumber }: EpochCardProps) {
   // Calculate aggregate metrics for current epoch
   const currentAggregate = current.reduce(
     (acc, record) => ({
@@ -86,18 +87,23 @@ export default function EpochCard({ current }: EpochCardProps) {
     currentAggregate.guarantees +
     currentAggregate.assurances;
 
-  const { epochNumber, progress, remainingTime } = calculateEpochInfo(
+  // Use the provided epochNumber if available, otherwise calculate from blocks
+  const epochNum =
+    epochNumber !== undefined
+      ? epochNumber
+      : calculateEpochInfo(currentAggregate.blocks).epochNumber;
+  const { progress, remainingTime } = calculateEpochInfo(
     currentAggregate.blocks
   );
 
   return (
     <Card className="w-fit border-pink-300/30">
-      <Link href={`/epoch/${epochNumber}`}>
+      <Link href={`/epoch/${epochNum}`}>
         <CardHeader className="py-3">
           <CardTitle className="flex flex-row items-end justify-between">
             <div className="text-lg flex flex-row items-end justify-between gap-2">
               <div className="">Epoch </div>
-              {epochNumber}
+              {epochNum}
             </div>
             <div className="text-sm text-gray-500 text-center">
               remaining: {formatTimeRemaining(remainingTime)}

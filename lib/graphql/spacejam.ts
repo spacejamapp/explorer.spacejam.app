@@ -5,14 +5,22 @@ import { Spacejam } from '@/types';
 export const GET_SPACEJAM_QUERY = `
   query Spacejam {
     spacejam {
+      tickets
+      preimages
+      guarantees
+      assurances
+      disputesVerdicts
+      disputesCulprits
+      disputesFaults
       blocks
       finalized
+      services
       extrinsics
+      epoch
     }
   }
 `;
 
 // Query functions
-export const fetchSpacejam = () => query<{ spacejam: Spacejam }>(GET_SPACEJAM_QUERY);
-
-
+export const fetchSpacejam = () =>
+  query<{ spacejam: Spacejam }>(GET_SPACEJAM_QUERY);

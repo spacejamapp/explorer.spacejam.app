@@ -21,8 +21,18 @@ export interface GetBlockVariables {
 
 // Spacejam Types
 export interface Spacejam {
+  tickets: number;
+  preimages: number;
+  guarantees: number;
+  assurances: number;
+  disputesVerdicts: number;
+  disputesCulprits: number;
+  disputesFaults: number;
+  blocks: number;
   finalized: number;
-  extrinsic: number;
+  services: number;
+  extrinsics: number;
+  epoch: number;
 }
 
 // Block Types

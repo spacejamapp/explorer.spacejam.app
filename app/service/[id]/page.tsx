@@ -1,10 +1,4 @@
-import {
-  ClockIcon,
-  CoinsIcon,
-  DatabaseIcon,
-  FlameIcon,
-  LayersIcon,
-} from 'lucide-react';
+import { ClockIcon, CoinsIcon, DatabaseIcon, LayersIcon } from 'lucide-react';
 
 import { notFound } from 'next/navigation';
 
@@ -25,7 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { getMockServices } from '@/lib/mock/service';
+import { fetchService } from '@/lib/graphql';
 import { formatBytes } from '@/lib/utils';
 
 interface ServicePageProps {
@@ -40,23 +34,21 @@ export default async function ServicePage({
   const serviceId = parseInt((await params).id, 10);
 
   // Get the service data from our mock services
-  const allServices = getMockServices(40);
-  const serviceItem = allServices.find((item) => item.service === serviceId);
+  const { service } = await fetchService(serviceId);
 
   // If service not found, show 404
-  if (!serviceItem) {
+  if (!service) {
     notFound();
   }
 
-  const { data } = serviceItem;
-  const { service, preimages } = data;
+  const { preimages } = service;
 
   return (
     <main className="container mx-auto py-8">
       <div className="mb-8">
         <div className="flex flex-row items-center justify-between">
           <h1 className="text-2xl font-bold mb-2">Service #{serviceId}</h1>
-          <p className="break-all p-3 rounded-md">0x{service.code}</p>
+          <p className="break-all p-3 rounded-md">{service.code}</p>
         </div>
 
         <p className="text-muted-foreground mb-2">
@@ -82,20 +74,6 @@ export default async function ServicePage({
 
           <Card>
             <CardContent className="p-4 flex flex-row items-center gap-4">
-              <div className="bg-red-100 dark:bg-red-950 p-3 rounded-lg">
-                <FlameIcon className="h-6 w-6 text-red-500" />
-              </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Gas Limit</div>
-                <div className="text-2xl font-bold">
-                  {service.gas.toLocaleString()}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4 flex flex-row items-center gap-4">
               <div className="bg-blue-100 dark:bg-blue-950 p-3 rounded-lg">
                 <DatabaseIcon className="h-6 w-6 text-blue-500" />
               </div>
@@ -112,7 +90,7 @@ export default async function ServicePage({
         <Tabs defaultValue="preimages">
           <TabsList>
             <TabsTrigger value="preimages">
-              Preimages ({preimages.length})
+              Preimages ({preimages.nodes.length})
             </TabsTrigger>
             <TabsTrigger value="storage">Storage</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
@@ -131,7 +109,7 @@ export default async function ServicePage({
                 </div>
               </CardHeader>
               <CardContent>
-                {preimages.length > 0 ? (
+                {preimages.nodes.length > 0 ? (
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -145,11 +123,11 @@ export default async function ServicePage({
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {preimages.map((hash, index) => (
+                      {preimages.nodes.map((preimage, index) => (
                         <TableRow key={index}>
                           <TableCell>{index + 1}</TableCell>
                           <TableCell className="font-mono text-xs break-all">
-                            {hash}
+                            {preimage.hash}
                           </TableCell>
                           <TableCell className="text-right">
                             <Badge variant="outline">Active</Badge>

@@ -36,17 +36,6 @@ function formatNumber(num: number): string {
   return num.toLocaleString();
 }
 
-// Format bytes to readable format
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
-
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
 // Activity Records comparison component
 export default function ActivityDashboard({
   current,
@@ -97,28 +86,22 @@ export default function ActivityDashboard({
                   <TableHead>Blocks</TableHead>
                   <TableHead>Tickets</TableHead>
                   <TableHead>Preimages</TableHead>
-                  <TableHead>Preimage Size</TableHead>
                   <TableHead>Guarantees</TableHead>
                   <TableHead>Assurances</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {currentValidators.map((validator, index) => {
-                  const validatorIndex = startIndex + index;
-
+                {currentValidators.map((validator) => {
                   return (
-                    <TableRow key={validatorIndex}>
+                    <TableRow key={validator.id}>
                       <TableCell className="font-medium text-pink-300 hover:underline">
-                        <Link href={`/validator/${validatorIndex + 1}`}>
-                          {validatorIndex + 1}
+                        <Link href={`/validator/${validator.id}`}>
+                          {validator.id}
                         </Link>
                       </TableCell>
                       <TableCell>{formatNumber(validator.blocks)}</TableCell>
                       <TableCell>{formatNumber(validator.tickets)}</TableCell>
                       <TableCell>{formatNumber(validator.preimages)}</TableCell>
-                      <TableCell>
-                        {formatBytes(validator.preimages_size)}
-                      </TableCell>
                       <TableCell>
                         {formatNumber(validator.guarantees)}
                       </TableCell>

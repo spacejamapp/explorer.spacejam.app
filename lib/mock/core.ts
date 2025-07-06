@@ -10,6 +10,7 @@ export function generateCoreActivityMock(
   for (let i = 0; i < count; i++) {
     // Generate realistic values with some random fluctuation
     records.push({
+      id: coreId,
       gas_used: Math.floor(Math.random() * 5000) + 20000,
       imports: Math.floor(Math.random() * 50) + 10,
       extrinsic_count: Math.floor(Math.random() * 100) + 50,

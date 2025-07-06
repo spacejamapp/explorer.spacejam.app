@@ -29,7 +29,7 @@ export interface EpochMark {
   block: number;
   entropy: string;
   tickets_entropy: string;
-  validators: string[];
+  validators: EpochValidator[];
   validators_bandersnatches: string[];
 }
 

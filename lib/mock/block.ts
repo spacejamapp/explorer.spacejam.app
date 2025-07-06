@@ -11,14 +11,15 @@ import { Extrinsic } from '@/types/extrinsic';
 export function createMockBlock(slot: number, parent: string): Block {
   const header: Header = {
     parent,
-    parent_state_root: generateRandomHash(),
-    extrinsic_hash: generateRandomHash(),
+    parentStateRoot: generateRandomHash(),
+    extrinsicHash: generateRandomHash(),
     slot,
-    epoch_mark: createMockEpochMark(),
-    tickets_mark: createMockTicketsMark(),
-    offeners_mark: [generateRandomHash(), generateRandomHash()],
-    author_index: Math.floor(Math.random() * 100),
-    entropy_source: generateRandomHash(),
+    epochMark: createMockEpochMark(),
+    ticketsMark: createMockTicketsMark(),
+    offendersMark: [generateRandomHash(), generateRandomHash()],
+    extrinsicCount: Math.floor(Math.random() * 50) + 1,
+    authorIndex: Math.floor(Math.random() * 100),
+    entropySource: generateRandomHash(),
     seal: generateRandomHash(),
   };
 
@@ -26,83 +27,53 @@ export function createMockBlock(slot: number, parent: string): Block {
     tickets: Array.from(
       { length: Math.floor(Math.random() * 5) + 1 },
       (_, i) => ({
+        id: i,
+        block: slot,
         attempt: i + 1,
         signature: generateRandomHash(),
       })
     ),
-    preimage: Array.from({ length: Math.floor(Math.random() * 3) + 1 }, () => ({
-      requester: Math.floor(Math.random() * 100),
-      blob: generateRandomHash(),
-    })),
-    guarantee: Array.from(
+    preimages: Array.from(
       { length: Math.floor(Math.random() * 3) + 1 },
-      () => ({
-        report: {
-          spec: {
-            hash: generateRandomHash(),
-            length: Math.floor(Math.random() * 1000),
-            erasure_root: generateRandomHash(),
-            exports_root: generateRandomHash(),
-            exports_count: Math.floor(Math.random() * 10),
-          },
-          context: {
-            anchor: generateRandomHash(),
-            state_root: generateRandomHash(),
-            beefy_root: generateRandomHash(),
-            loookup_anchor: generateRandomHash(),
-            lookup_anchor_slot: Math.floor(Math.random() * 1000),
-            prerequisites: [generateRandomHash()],
-            authorizer_hash: generateRandomHash(),
-            auth_output: generateRandomHash(),
-            lookup: [
-              {
-                hash: generateRandomHash(),
-                exports_root: generateRandomHash(),
-              },
-            ],
-            results: [
-              {
-                service_id: Math.floor(Math.random() * 100),
-                code_hash: generateRandomHash(),
-                payload_hash: generateRandomHash(),
-                accumulate_gas: Math.floor(Math.random() * 1000),
-                result: { ok: generateRandomHash() },
-                refine_load: {
-                  gas_used: Math.floor(Math.random() * 1000),
-                  imports: [Math.floor(Math.random() * 100)],
-                  extrinsic_count: Math.floor(Math.random() * 10),
-                  extrinsic_size: Math.floor(Math.random() * 1000),
-                  exports: Math.floor(Math.random() * 10),
-                },
-              },
-            ],
-            auth_gas_used: Math.floor(Math.random() * 1000),
-          },
-          core_index: Math.floor(Math.random() * 10),
-          authorizer_hash: generateRandomHash(),
-          auth_output: generateRandomHash(),
-        },
+      (_, i) => ({
+        id: i,
+        block: slot,
+        requester: Math.floor(Math.random() * 100),
+        hash: generateRandomHash(),
+        blob: generateRandomHash(),
+      })
+    ),
+    guarantees: Array.from(
+      { length: Math.floor(Math.random() * 3) + 1 },
+      (_, i) => ({
+        id: i,
+        block: slot,
+        report: generateRandomHash(),
         slot: Math.floor(Math.random() * 1000),
         signatures: Array.from(
           { length: Math.floor(Math.random() * 3) + 1 },
-          () => ({
-            validator_index: Math.floor(Math.random() * 100),
-            signature: generateRandomHash(),
-          })
+          () => generateRandomHash()
         ),
       })
     ),
-    assurance: Array.from(
+    assurances: Array.from(
       { length: Math.floor(Math.random() * 3) + 1 },
-      () => ({
+      (_, i) => ({
+        id: i,
+        block: slot,
         anchor: generateRandomHash(),
         bitfield: Array.from({ length: 8 }, () =>
           Math.floor(Math.random() * 2)
-        ),
+        ).join(''),
         validator_index: Math.floor(Math.random() * 100),
         signature: generateRandomHash(),
       })
     ),
+    disputes: {
+      verdicts: [],
+      culprits: [],
+      faults: [],
+    },
   };
 
   return {
@@ -139,9 +110,12 @@ function generateRandomHash(): string {
 
 function createMockEpochMark(): EpochMark {
   return {
+    id: Math.floor(Math.random() * 1000),
+    block: Math.floor(Math.random() * 1000),
     entropy: generateRandomHash(),
     tickets_entropy: generateRandomHash(),
     validators: Array.from({ length: 5 }, () => createMockValidator()),
+    validators_bandersnatches: Array.from({ length: 5 }, () => generateRandomHash()),
   };
 }
 
@@ -152,9 +126,13 @@ function createMockValidator(): EpochValidator {
   };
 }
 
+
+
 function createMockTicketsMark(): TicketsMark {
   return Array.from({ length: 3 }, (_, i) => ({
     id: generateRandomHash(),
     attempt: i + 1,
+    block: Math.floor(Math.random() * 1000),
+    ticket_id: generateRandomHash(),
   }));
 }

@@ -109,7 +109,7 @@ export default async function BlockPage({
 
 // Server data fetching function (similar to getServerSideProps concept)
 async function getBlockPageData(slotId: number) {
-  const [block, { spacejam }] = await Promise.all([
+  const [{ block }, { spacejam }] = await Promise.all([
     withNotFound(fetchBlock(slotId)),
     withNotFound(fetchSpacejam()),
   ]);

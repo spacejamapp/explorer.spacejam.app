@@ -39,6 +39,7 @@ const mockStatistics: Statistics = {
   ],
   cores: [
     {
+      id: 1,
       gas_used: 45678901,
       imports: 1234,
       extrinsic_count: 5678,
@@ -48,6 +49,7 @@ const mockStatistics: Statistics = {
       popularity: 92,
     },
     {
+      id: 2,
       gas_used: 33456789,
       imports: 987,
       extrinsic_count: 4567,
@@ -57,6 +59,7 @@ const mockStatistics: Statistics = {
       popularity: 88,
     },
     {
+      id: 3,
       gas_used: 28976543,
       imports: 876,
       extrinsic_count: 3456,

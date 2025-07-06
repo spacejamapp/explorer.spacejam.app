@@ -3,6 +3,7 @@
  */
 
 export interface ActivityRecord {
+  id?: number;
   blocks: number;
   tickets: number;
   preimages: number;
@@ -12,6 +13,7 @@ export interface ActivityRecord {
 }
 
 export interface CoreActivityRecord {
+  id: number;
   gas_used: number;
   imports: number;
   extrinsic_count: number;
