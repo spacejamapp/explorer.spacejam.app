@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: 'The unlimited rust implementation of the JAM protocol.',
 };
 
+export const revalidate = 30;
+
 export default function RootLayout({
   children,
 }: {

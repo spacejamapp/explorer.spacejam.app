@@ -5,3 +5,4 @@ node_modules
 .yarnrc.yml
 .tool-versions
 .env
+.vercel
