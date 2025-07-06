@@ -88,10 +88,13 @@ export default function EpochCard({ current, epochNumber }: EpochCardProps) {
     currentAggregate.assurances;
 
   // Use the provided epochNumber if available, otherwise calculate from blocks
-  const epochNum = epochNumber !== undefined
-    ? epochNumber
-    : calculateEpochInfo(currentAggregate.blocks).epochNumber;
-  const { progress, remainingTime } = calculateEpochInfo(currentAggregate.blocks);
+  const epochNum =
+    epochNumber !== undefined
+      ? epochNumber
+      : calculateEpochInfo(currentAggregate.blocks).epochNumber;
+  const { progress, remainingTime } = calculateEpochInfo(
+    currentAggregate.blocks
+  );
 
   return (
     <Card className="w-fit border-pink-300/30">

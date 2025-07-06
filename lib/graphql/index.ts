@@ -1,6 +1,6 @@
 import { GraphQLResponse } from '@/types/graphql';
 
-const ENDPOINT = 'http://localhost:3000';
+const ENDPOINT = process.env.GRAPHQL_SCHEMA_URL || 'http://localhost:3000';
 
 // Query key factories
 export const queryKeys = {

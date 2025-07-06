@@ -107,9 +107,7 @@ export default function CoreDashboard({
                     return (
                       <TableRow key={core.id}>
                         <TableCell className="font-medium text-pink-300 hover:underline">
-                          <Link href={`/core/${core.id}`}>
-                            {core.id}
-                          </Link>
+                          <Link href={`/core/${core.id}`}>{core.id}</Link>
                         </TableCell>
                         <TableCell>{formatNumber(core.gas_used)}</TableCell>
                         <TableCell>

@@ -8,7 +8,12 @@ import ActiveCores from '@/components/dashboard/active-cores';
 import LatestBlocks from '@/components/dashboard/latest-blocks';
 import TopServices from '@/components/dashboard/top-services';
 import SearchComponent from '@/components/search';
-import { fetchBlocks, fetchServices, fetchSpacejam, fetchEpoch } from '@/lib/graphql';
+import {
+  fetchBlocks,
+  fetchEpoch,
+  fetchServices,
+  fetchSpacejam,
+} from '@/lib/graphql';
 import { mockStatistics } from '@/lib/mock/statistics';
 import { Spacejam } from '@/types/graphql';
 
@@ -20,18 +25,20 @@ export default async function Home() {
 
   let vals_current;
   if (currentEpoch === 0) {
-    vals_current = [{
-      blocks: 0,
-      tickets: 0,
-      preimages: 0,
-      preimages_size: 0,
-      guarantees: 0,
-      assurances: 0,
-    }];
+    vals_current = [
+      {
+        blocks: 0,
+        tickets: 0,
+        preimages: 0,
+        preimages_size: 0,
+        guarantees: 0,
+        assurances: 0,
+      },
+    ];
   } else {
     const { epoch } = await fetchEpoch(currentEpoch);
     vals_current = epoch
-      ? epoch.validators.nodes.map(val => ({
+      ? epoch.validators.nodes.map((val) => ({
           blocks: val.blocks,
           tickets: val.tickets,
           preimages: val.preimages,
@@ -39,14 +46,16 @@ export default async function Home() {
           guarantees: val.guarantees,
           assurances: val.assurances,
         }))
-      : [{
-          blocks: 0,
-          tickets: 0,
-          preimages: 0,
-          preimages_size: 0,
-          guarantees: 0,
-          assurances: 0,
-        }];
+      : [
+          {
+            blocks: 0,
+            tickets: 0,
+            preimages: 0,
+            preimages_size: 0,
+            guarantees: 0,
+            assurances: 0,
+          },
+        ];
   }
 
   return (

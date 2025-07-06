@@ -16,9 +16,9 @@ import CoreDashboard from '@/components/dashboard/core';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { fetchEpoch } from '@/lib/graphql';
 import { mockStatistics } from '@/lib/mock/statistics';
 import { formatBytes } from '@/lib/utils';
-import { fetchEpoch } from '@/lib/graphql';
 
 export default async function EpochPage({
   params,
@@ -28,23 +28,27 @@ export default async function EpochPage({
   const { id } = await params;
 
   // Default zero values for validators and cores
-  const defaultVals = [{
-    blocks: 0,
-    tickets: 0,
-    preimages: 0,
-    preimages_size: 0,
-    guarantees: 0,
-    assurances: 0,
-  }];
-  const defaultCores = [{
-    gas_used: 0,
-    imports: 0,
-    extrinsic_count: 0,
-    exports: 0,
-    bundle_size: 0,
-    da_load: 0,
-    popularity: 0,
-  }];
+  const defaultVals = [
+    {
+      blocks: 0,
+      tickets: 0,
+      preimages: 0,
+      preimages_size: 0,
+      guarantees: 0,
+      assurances: 0,
+    },
+  ];
+  const defaultCores = [
+    {
+      gas_used: 0,
+      imports: 0,
+      extrinsic_count: 0,
+      exports: 0,
+      bundle_size: 0,
+      da_load: 0,
+      popularity: 0,
+    },
+  ];
 
   const { epoch } = await fetchEpoch(Number(id));
   if (!epoch) {
@@ -96,8 +100,14 @@ export default async function EpochPage({
   }));
 
   // Calculate some stats from the GraphQL data
-  const totalBlocks = vals_current.reduce((sum: number, val: any) => sum + val.blocks, 0);
-  const totalGasUsed = cores.reduce((sum: number, core: any) => sum + core.gas_used, 0);
+  const totalBlocks = vals_current.reduce(
+    (sum: number, val: any) => sum + val.blocks,
+    0
+  );
+  const totalGasUsed = cores.reduce(
+    (sum: number, core: any) => sum + core.gas_used,
+    0
+  );
   const totalExtrinsics = cores.reduce(
     (sum: number, core: any) => sum + core.extrinsic_count,
     0
