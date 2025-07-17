@@ -5,8 +5,6 @@ export interface Epoch {
   block: number;
   entropy: string;
   ticketsEntropy: string;
-  validatorsEd25519: string[];
-  validatorsBandersnatches: string[];
   blocks: number;
   tickets: number;
   preimages: number;
@@ -83,8 +81,6 @@ export const GET_EPOCH_QUERY = `
       block
       entropy
       ticketsEntropy
-      validatorsEd25519
-      validatorsBandersnatches
       blocks
       tickets
       preimages
