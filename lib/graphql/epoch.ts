@@ -5,8 +5,6 @@ export interface Epoch {
   block: number;
   entropy: string;
   ticketsEntropy: string;
-  validatorsEd25519: string[];
-  validatorsBandersnatches: string[];
   blocks: number;
   tickets: number;
   preimages: number;
@@ -17,7 +15,7 @@ export interface Epoch {
 
 export interface Validator {
   id: number;
-  epoch: number;
+  epochId: number;
   vindex: number;
   blocks: number;
   tickets: number;
@@ -28,7 +26,7 @@ export interface Validator {
 
 export interface Core {
   id: number;
-  epoch: number;
+  epochId: number;
   vindex: number;
   gasUsed: number;
   imports: number;
@@ -83,8 +81,6 @@ export const GET_EPOCH_QUERY = `
       block
       entropy
       ticketsEntropy
-      validatorsEd25519
-      validatorsBandersnatches
       blocks
       tickets
       preimages
@@ -101,7 +97,7 @@ export const GET_EPOCH_QUERY = `
         edges {
           node {
             id
-            epoch
+            epochId
             vindex
             blocks
             tickets
@@ -113,7 +109,7 @@ export const GET_EPOCH_QUERY = `
         }
         nodes {
           id
-          epoch
+          epochId
           vindex
           blocks
           tickets
@@ -132,7 +128,7 @@ export const GET_EPOCH_QUERY = `
         edges {
           node {
             id
-            epoch
+            epochId
             vindex
             gasUsed
             imports
@@ -147,7 +143,7 @@ export const GET_EPOCH_QUERY = `
         }
         nodes {
           id
-          epoch
+          epochId
           vindex
           gasUsed
           imports

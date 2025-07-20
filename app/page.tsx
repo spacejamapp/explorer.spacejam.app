@@ -35,7 +35,8 @@ export default async function Home() {
       },
     ];
   } else {
-    const { epoch } = await fetchEpoch(currentEpoch);
+    const result = await fetchEpoch(currentEpoch);
+    const epoch = result.epoch;
     vals_current = epoch
       ? epoch.validators.nodes.map((val) => ({
           blocks: val.blocks,

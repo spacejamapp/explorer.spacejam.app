@@ -1,5 +1,5 @@
 import { query } from '@/lib/graphql';
-import { Spacejam } from '@/types';
+import { Spacejam } from '@/types/graphql';
 
 // Query definitions (converted from GraphQL gql tagged templates)
 export const GET_SPACEJAM_QUERY = `

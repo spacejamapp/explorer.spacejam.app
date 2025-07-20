@@ -54,14 +54,17 @@ export default function ValidatorTabs({
     '#82ca9d',
   ];
 
-  // Prepare data for pie chart
-  const pieData = [
+  // Prepare data for pie chart - filter out items with 0 values
+  const allPieData = [
     { name: 'Blocks', value: activityData[0]?.blocks || 0 },
     { name: 'Tickets', value: activityData[0]?.tickets || 0 },
     { name: 'Preimages', value: activityData[0]?.preimages || 0 },
     { name: 'Guarantees', value: activityData[0]?.guarantees || 0 },
     { name: 'Assurances', value: activityData[0]?.assurances || 0 },
   ];
+  
+  // Filter out items with 0 values to avoid visual clutter
+  const pieData = allPieData.filter(item => item.value > 0);
 
   // Format large numbers with commas
   const formatNumber = (num: number): string => {
@@ -95,31 +98,49 @@ export default function ValidatorTabs({
             </CardDescription>
           </CardHeader>
           <CardContent className="h-96">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={true}
-                  label={({ name, percent }) =>
-                    `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
-                  outerRadius={130}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => formatNumber(value as number)} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            {pieData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={true}
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(0)}%`
+                    }
+                    outerRadius={130}
+                    fill="#8884d8"
+                    dataKey="value"
+                    style={{ outline: 'none' }}
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                        style={{ outline: 'none' }}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => formatNumber(value as number)} />
+                  <Legend 
+                    payload={allPieData.map((entry, index) => ({
+                      value: `${entry.name}: ${formatNumber(entry.value)}`,
+                      type: 'rect',
+                      color: COLORS[index % COLORS.length],
+                      id: `legend-${index}`
+                    }))}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                <div className="text-center">
+                  <div className="text-lg font-medium">No Activity Data</div>
+                  <div className="text-sm">This validator has no recorded activity yet</div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 

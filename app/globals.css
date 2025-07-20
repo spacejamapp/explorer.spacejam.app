@@ -241,3 +241,16 @@ code {
 .animated-shadow {
   animation: colorShadow 8s infinite;
 }
+
+/* Remove focus outline from chart elements */
+.recharts-wrapper svg,
+.recharts-wrapper svg *,
+.recharts-pie-sector,
+.recharts-cell {
+  outline: none !important;
+}
+
+/* Ensure charts are not focusable by default */
+.recharts-wrapper svg {
+  pointer-events: auto;
+}

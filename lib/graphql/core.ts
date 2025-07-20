@@ -2,7 +2,7 @@ import { query } from '@/lib/graphql';
 
 export interface Core {
   id: number;
-  epoch: number;
+  epochId: number;
   vindex: number;
   gasUsed: number;
   imports: number;
@@ -43,7 +43,7 @@ export const GET_CORE_QUERY = `
       edges {
         node {
           id
-          epoch
+          epochId
           vindex
           gasUsed
           imports
@@ -58,7 +58,7 @@ export const GET_CORE_QUERY = `
       }
       nodes {
         id
-        epoch
+        epochId
         vindex
         gasUsed
         imports
