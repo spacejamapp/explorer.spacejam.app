@@ -18,6 +18,11 @@ export default async function CoreDetailsPage({
   const { id } = await params;
   const coreIndex = parseInt(id, 10);
 
+  // Validate core index
+  if (isNaN(coreIndex) || coreIndex < 0) {
+    notFound();
+  }
+
   try {
     // Try to fetch core data from GraphQL API
     let coreData = null;
@@ -32,7 +37,7 @@ export default async function CoreDetailsPage({
 
     if (coreData && coreData.nodes.length > 0) {
       // Use real GraphQL data - map to match CoreActivityRecord interface
-      activityData = coreData.nodes.map((core) => ({
+      activityData = coreData.nodes.map((core, index) => ({
         id: core.id,
         gas_used: core.gasUsed,
         imports: core.imports,
@@ -41,6 +46,8 @@ export default async function CoreDetailsPage({
         bundle_size: core.bundleSize,
         da_load: core.daLoad,
         popularity: core.popularity,
+        epoch: core.epoch.id,
+        index: index + 1,
       }));
     } else {
       // Fallback to mock data if no real data available

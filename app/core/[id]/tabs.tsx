@@ -15,7 +15,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Card,
@@ -25,6 +25,15 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { CoreActivityRecord } from '@/types/statistic';
 
 interface CoreTabsProps {
@@ -33,10 +42,20 @@ interface CoreTabsProps {
 }
 
 export default function CoreTabs({ activityData }: CoreTabsProps) {
-  // Add index to each record for consistent x-axis
+  // State for epoch history view toggle
+  const [historyView, setHistoryView] = useState<'table' | 'chart'>('table');
+
+  // Format large numbers with commas
+  const formatNumber = (num: number): string => {
+    return num.toLocaleString();
+  };
+
+  // Add index to each record for consistent x-axis, prefer epoch number if available
   const chartData = activityData.map((record, index) => ({
     ...record,
-    index: index + 1, // Starting from 1 for better readability
+    displayIndex: record.epoch || record.index || index + 1,
+    epochLabel: record.epoch ? `Epoch ${record.epoch}` : `Entry ${index + 1}`,
+    index: index + 1, // Keep original index for backward compatibility
   }));
 
   return (
@@ -44,6 +63,7 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="performance">Performance</TabsTrigger>
+        <TabsTrigger value="history">Epoch History</TabsTrigger>
         <TabsTrigger value="dataflow">Data Flow</TabsTrigger>
       </TabsList>
 
@@ -68,16 +88,18 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
-                  dataKey="index"
+                  dataKey="displayIndex"
                   label={{
-                    value: 'Data Point',
+                    value: 'Epoch',
                     position: 'insideBottomRight',
                     offset: -10,
                   }}
                 />
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
-                <Tooltip />
+                <Tooltip 
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                 <Legend />
                 <Line
                   yAxisId="left"
@@ -116,9 +138,11 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                   }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="index" />
+                  <XAxis dataKey="displayIndex" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip 
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                   <Area
                     type="monotone"
                     dataKey="bundle_size"
@@ -147,9 +171,11 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                   }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="index" />
+                  <XAxis dataKey="displayIndex" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip 
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                   <Legend />
                   <Bar dataKey="popularity" name="Popularity" fill="#82ca9d" />
                 </BarChart>
@@ -177,7 +203,7 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="index" />
+                <XAxis dataKey="displayIndex" />
                 <YAxis
                   yAxisId="left"
                   label={{
@@ -195,7 +221,9 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                     position: 'insideRight',
                   }}
                 />
-                <Tooltip />
+                <Tooltip 
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                 <Legend />
                 <Line
                   yAxisId="left"
@@ -236,9 +264,11 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="index" />
+                <XAxis dataKey="displayIndex" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip 
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                 <Legend />
                 <Bar
                   dataKey="extrinsic_count"
@@ -247,6 +277,123 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                 />
               </BarChart>
             </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </TabsContent>
+      
+      <TabsContent value="history" className="space-y-4">
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle>Epoch History</CardTitle>
+                <CardDescription>
+                  Historical performance data across epochs
+                </CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant={historyView === 'table' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setHistoryView('table')}
+                >
+                  Table
+                </Button>
+                <Button
+                  variant={historyView === 'chart' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setHistoryView('chart')}
+                >
+                  Chart
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {historyView === 'table' ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Epoch</TableHead>
+                    <TableHead className="text-right">Gas Used</TableHead>
+                    <TableHead className="text-right">Imports</TableHead>
+                    <TableHead className="text-right">Exports</TableHead>
+                    <TableHead className="text-right">Extrinsics</TableHead>
+                    <TableHead className="text-right">Bundle Size</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {chartData.length > 0 ? (
+                    chartData.map((record, index) => (
+                      <TableRow key={record.epoch || index}>
+                        <TableCell className="font-medium">
+                          {record.epoch ? `Epoch ${record.epoch}` : `Entry ${index + 1}`}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.gas_used)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.imports)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.exports)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.extrinsic_count)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.bundle_size)}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center text-muted-foreground">
+                        No historical data available
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="h-96">
+                {chartData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={chartData}
+                      margin={{
+                        top: 20,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="displayIndex" 
+                        label={{ value: 'Epoch', position: 'insideBottom', offset: -5 }}
+                      />
+                      <YAxis />
+                      <Tooltip 
+                        labelFormatter={(label) => `Epoch ${label}`}
+                      />
+                      <Legend />
+                      <Bar dataKey="gas_used" name="Gas Used" fill="#8884d8" />
+                      <Bar dataKey="imports" name="Imports" fill="#00C49F" />
+                      <Bar dataKey="exports" name="Exports" fill="#FFBB28" />
+                      <Bar dataKey="extrinsic_count" name="Extrinsics" fill="#FF8042" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    <div className="text-center">
+                      <div className="text-lg font-medium">No Historical Data</div>
+                      <div className="text-sm">This core has no recorded historical data yet</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       </TabsContent>
@@ -269,9 +416,11 @@ export default function CoreTabs({ activityData }: CoreTabsProps) {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="index" />
+                <XAxis dataKey="displayIndex" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip 
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                 <Legend />
                 <Line
                   type="monotone"

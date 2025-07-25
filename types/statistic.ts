@@ -21,6 +21,8 @@ export interface CoreActivityRecord {
   bundle_size: number;
   da_load: number;
   popularity: number;
+  epoch?: number;
+  index?: number;
 }
 
 export interface Statistics {
