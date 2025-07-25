@@ -1,19 +1,10 @@
 import { query } from '@/lib/graphql';
 
-export interface ValidatorDetail {
-  id: number;
-  ed25519?: string;
-  bandersnatch?: string;
-  name?: string;
-  details?: string;
-  software?: string;
-  ip?: string;
-  website?: string;
-  scores?: number;
-}
-
 export interface ValidatorEpoch {
   id: number;
+  epoch: {
+    id: number;
+  };
   vindex: number;
   blocks: number;
   tickets: number;
@@ -22,7 +13,7 @@ export interface ValidatorEpoch {
   assurances: number;
 }
 
-interface ValidatorEpochConnection {
+export interface ValidatorConnection {
   pageInfo: {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
@@ -36,12 +27,16 @@ interface ValidatorEpochConnection {
   nodes: ValidatorEpoch[];
 }
 
-export interface ValidatorWithEpochs extends ValidatorDetail {
-  epochs: ValidatorEpochConnection;
+export interface ValidatorDetail {
+  id: number;
+  ip?: string;
+  website?: string;
+  scores?: number;
+  epochs: ValidatorConnection;
 }
 
 export const fetchValidator = (id: number, first: number = 10, after?: string) =>
-  query<{ validator: ValidatorWithEpochs | null }>(GET_VALIDATOR_QUERY, {
+  query<{ validator: ValidatorDetail | null }>(GET_VALIDATOR_QUERY, {
     id,
     first,
     after,
@@ -51,11 +46,6 @@ export const GET_VALIDATOR_QUERY = `
   query QueryValidator($id: Int!, $first: Int = 10, $after: String) {
     validator(id: $id) {
       id
-      ed25519
-      bandersnatch
-      name
-      details
-      software
       ip
       website
       scores
@@ -69,6 +59,9 @@ export const GET_VALIDATOR_QUERY = `
         edges {
           node {
             id
+            epoch {
+              id
+            }
             vindex
             blocks
             tickets
@@ -80,6 +73,9 @@ export const GET_VALIDATOR_QUERY = `
         }
         nodes {
           id
+          epoch {
+            id
+          }
           vindex
           blocks
           tickets

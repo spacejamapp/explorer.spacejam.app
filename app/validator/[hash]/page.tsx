@@ -36,23 +36,25 @@ export default async function ValidatorDetailsPage({
 
     if (validatorData) {
       // Use direct validator API data
-      activityData = validatorData.epochs.nodes.map((epoch) => ({
+      activityData = validatorData.epochs.nodes.map((epoch, index) => ({
         blocks: epoch.blocks,
         tickets: epoch.tickets,
         preimages: epoch.preimages,
         preimages_size: 0,
         guarantees: epoch.guarantees,
         assurances: epoch.assurances,
+        epoch: epoch.epoch.id,
+        index: index + 1,
       }));
 
       totalBlocks = validatorData.epochs.nodes.reduce((sum, epoch) => sum + epoch.blocks, 0);
       totalTickets = validatorData.epochs.nodes.reduce((sum, epoch) => sum + epoch.tickets, 0);
 
       validatorDisplay = {
-        bandersnatch: typeof validatorData.bandersnatch === 'number' ? validatorData.bandersnatch : validatorIndex,
-        node: validatorData.details || `validator-${validatorIndex}.jam.network`,
+        bandersnatch: validatorIndex,
+        node: `validator-${validatorIndex}.jam.network`,
         ip: validatorData.ip || 'N/A',
-        name: validatorData.name || `Validator ${validatorIndex}`,
+        name: `Validator ${validatorIndex}`,
         pfp: undefined,
         website: validatorData.website,
       };
@@ -82,6 +84,8 @@ export default async function ValidatorDetailsPage({
           preimages_size: 0,
           guarantees: validatorInEpoch.guarantees,
           assurances: validatorInEpoch.assurances,
+          epoch: currentEpoch,
+          index: 1,
         }];
 
         totalBlocks = validatorInEpoch.blocks;
