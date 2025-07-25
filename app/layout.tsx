@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { JetBrains_Mono } from 'next/font/google';
 
 import { Footer } from '@/components/footer';
 import Header from '@/components/header';
@@ -6,6 +7,12 @@ import QueryProvider from '@/components/query-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 
 import './globals.css';
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jetbrains-mono',
+});
 
 export const metadata: Metadata = {
   title: 'Jamscan - Explore the JAM network',
@@ -19,7 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className={`min-h-screen bg-background font-sans antialiased ${jetbrainsMono.variable}`}>
         <QueryProvider>
           <ThemeProvider
             attribute="class"
