@@ -1,10 +1,11 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 
-import { fetchCore } from '@/lib/graphql';
-import { getMockCoreActivity } from '@/lib/mock/core';
+import { getCorePageData, type CoreDataResult } from '@/lib/core-utils';
+import { NoDataError } from '@/components/ui/no-data';
 
 import CoreTabs from './tabs';
+import ToastHandler from './toast-handler';
 
 interface PageProps {
   id: string;
@@ -23,58 +24,33 @@ export default async function CoreDetailsPage({
     notFound();
   }
 
-  try {
-    // Try to fetch core data from GraphQL API
-    let coreData = null;
-    let activityData = [];
+  // Fetch and transform core data using dedicated utility function
+  const result: CoreDataResult = await getCorePageData(coreIndex, 50);
 
-    try {
-      const { core } = await fetchCore(coreIndex, 50);
-      coreData = core;
-    } catch (error) {
-      console.warn('Core API not available, using fallback mock data:', error);
-    }
-
-    if (coreData && coreData.nodes.length > 0) {
-      // Use real GraphQL data - map to match CoreActivityRecord interface
-      activityData = coreData.nodes.map((core, index) => ({
-        id: core.id,
-        gas_used: core.gasUsed,
-        imports: core.imports,
-        extrinsic_count: core.extrinsicCount,
-        exports: core.exports,
-        bundle_size: core.bundleSize,
-        da_load: core.daLoad,
-        popularity: core.popularity,
-        epoch: core.epoch.id,
-        index: index + 1,
-      }));
-    } else {
-      // Fallback to mock data if no real data available
-      activityData = getMockCoreActivity(coreIndex, 30);
-    }
-
-    // If no data at all, show not found
-    if (activityData.length === 0) {
-      notFound();
-    }
-
-    return (
-      <div className="container mx-auto py-6">
-        <div className="flex flex-col space-y-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold tracking-tight">Core {coreIndex}</h1>
+  return (
+    <div className="container mx-auto py-6">
+      <div className="flex flex-col space-y-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold tracking-tight">Core {coreIndex}</h1>
+          {result.success && (
             <div className="text-sm text-muted-foreground">
-              {coreData ? `${activityData.length} epoch${activityData.length !== 1 ? 's' : ''} of data` : 'Mock data'}
+              {result.epochCount} epoch{result.epochCount !== 1 ? 's' : ''} of data
             </div>
-          </div>
-
-          <CoreTabs coreId={coreIndex} activityData={activityData} />
+          )}
         </div>
+
+        {result.success ? (
+          <CoreTabs coreId={coreIndex} activityData={result.activityData} />
+        ) : (
+          <>
+            <NoDataError
+              title={`No data available for Core ${coreIndex}`}
+              description={result.error}
+            />
+            <ToastHandler error={result.error} />
+          </>
+        )}
       </div>
-    );
-  } catch (error) {
-    console.error('Error fetching core data:', error);
-    notFound();
-  }
+    </div>
+  );
 }

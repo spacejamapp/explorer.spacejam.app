@@ -1,4 +1,5 @@
 import { query } from '@/lib/graphql';
+import { safeAsync, type Result } from '@/lib/result';
 
 export interface ValidatorEpoch {
   id: number;
@@ -35,12 +36,87 @@ export interface ValidatorDetail {
   epochs: ValidatorConnection;
 }
 
+// Legacy version for backward compatibility
 export const fetchValidator = (id: number, first: number = 10, after?: string) =>
   query<{ validator: ValidatorDetail | null }>(GET_VALIDATOR_QUERY, {
     id,
     first,
     after,
   });
+
+// New Result-based version
+export const fetchValidatorSafe = async (
+  id: number, 
+  first: number = 10, 
+  after?: string
+): Promise<Result<{ validator: ValidatorDetail | null }>> => {
+  return safeAsync(() => 
+    query<{ validator: ValidatorDetail | null }>(GET_VALIDATOR_QUERY, { id, first, after })
+  );
+};
+
+// Add safe versions for dependencies  
+export const fetchEpochSafe = async (id: number): Promise<Result<any>> => {
+  return safeAsync(() => 
+    query(`
+      query QueryEpoch($id: Int!) {
+        epoch(id: $id) {
+          id
+          block
+          entropy
+          ticketsEntropy
+          blocks
+          tickets
+          preimages
+          preimagesSize
+          guarantees
+          assurances
+          validators(first: 50) {
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+            nodes {
+              id
+              epochId
+              vindex
+              blocks
+              tickets
+              preimages
+              guarantees
+              assurances
+            }
+          }
+        }
+      }
+    `, { id })
+  );
+};
+
+export const fetchSpacejamSafe = async (): Promise<Result<any>> => {
+  return safeAsync(() => 
+    query(`
+      query Spacejam {
+        spacejam {
+          tickets
+          preimages
+          guarantees
+          assurances
+          disputesVerdicts
+          disputesCulprits
+          disputesFaults
+          blocks
+          finalized
+          services
+          extrinsics
+          epoch
+        }
+      }
+    `)
+  );
+};
 
 export const GET_VALIDATOR_QUERY = `
   query QueryValidator($id: Int!, $first: Int = 10, $after: String) {
