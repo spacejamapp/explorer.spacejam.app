@@ -22,25 +22,15 @@ export const AuroraBackground = ({
       {...props}
     >
       <div className="absolute inset-0 overflow-hidden">
+        {/* Aurora background using Tailwind custom utilities */}
         <div
           className={cn(
-            `
-            [--white-gradient:repeating-linear-gradient(100deg,rgba(255,255,255,0.03)_0%,rgba(255,255,255,0.03)_7%,transparent_10%,transparent_12%,rgba(255,255,255,0.03)_16%)]
-            [--dark-gradient:repeating-linear-gradient(100deg,rgba(0,0,0,0.03)_0%,rgba(0,0,0,0.03)_7%,transparent_10%,transparent_12%,rgba(0,0,0,0.03)_16%)]
-            [--aurora:repeating-linear-gradient(100deg,rgba(236,72,153,0.3)_10%,rgba(168,85,247,0.3)_15%,rgba(34,211,238,0.3)_20%,rgba(168,85,247,0.2)_25%,rgba(236,72,153,0.3)_30%)]
-            [background-image:var(--white-gradient),var(--aurora)]
-            dark:[background-image:var(--dark-gradient),var(--aurora)]
-            [background-size:300%,_200%]
-            [background-position:50%_50%,50%_50%]
-            after:content-[""] after:absolute after:inset-0 after:[background-image:var(--white-gradient),var(--aurora)] 
-            after:dark:[background-image:var(--dark-gradient),var(--aurora)]
-            after:[background-size:200%,_100%] 
-            after:animate-aurora after:mix-blend-difference
-            pointer-events-none
-            absolute -inset-[10px] opacity-40 will-change-transform`,
-
-            showRadialGradient &&
-              `[mask-image:radial-gradient(ellipse_at_center_top,black_10%,transparent_70%)]`
+            // Base layout and effects
+            "absolute -inset-[10px] opacity-40 will-change-transform pointer-events-none",
+            // Aurora gradients and styling
+            "aurora-gradients aurora-base dark:aurora-dark aurora-after dark:aurora-after-dark",
+            // Optional mask
+            showRadialGradient && "aurora-mask"
           )}
         ></div>
       </div>
