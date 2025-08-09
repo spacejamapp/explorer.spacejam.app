@@ -1,5 +1,29 @@
 import { query } from '@/lib/graphql';
 import { safeAsync, type Result } from '@/lib/result';
+import { type Epoch } from './epoch';
+import { type Spacejam } from '@/types/graphql';
+
+// Re-define EpochWithConnections locally since it's not exported from epoch.ts
+interface EpochWithConnections extends Epoch {
+  validators: {
+    pageInfo: {
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+      startCursor?: string;
+      endCursor?: string;
+    };
+    nodes: Array<{
+      id: number;
+      epoch: { id: number };
+      vindex: number;
+      blocks: number;
+      tickets: number;
+      preimages: number;
+      guarantees: number;
+      assurances: number;
+    }>;
+  };
+}
 
 export interface ValidatorEpoch {
   id: number;
@@ -56,7 +80,7 @@ export const fetchValidatorSafe = async (
 };
 
 // Add safe versions for dependencies  
-export const fetchEpochSafe = async (id: number): Promise<Result<any>> => {
+export const fetchEpochSafe = async (id: number): Promise<Result<{ epoch: EpochWithConnections }>> => {
   return safeAsync(() => 
     query(`
       query QueryEpoch($id: Int!) {
@@ -80,7 +104,7 @@ export const fetchEpochSafe = async (id: number): Promise<Result<any>> => {
             }
             nodes {
               id
-              epochId
+              epoch { id }
               vindex
               blocks
               tickets
@@ -95,7 +119,7 @@ export const fetchEpochSafe = async (id: number): Promise<Result<any>> => {
   );
 };
 
-export const fetchSpacejamSafe = async (): Promise<Result<any>> => {
+export const fetchSpacejamSafe = async (): Promise<Result<{ spacejam: Spacejam }>> => {
   return safeAsync(() => 
     query(`
       query Spacejam {
