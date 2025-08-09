@@ -128,8 +128,6 @@ export async function getValidatorPageData(validatorIndex: number, limit: number
     preimages_size: 0,
     guarantees: validatorInEpoch.guarantees,
     assurances: validatorInEpoch.assurances,
-    epoch: currentEpoch,
-    index: 1,
   }];
 
   const validatorDisplay: ValidatorDisplay = {
