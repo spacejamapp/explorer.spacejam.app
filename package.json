@@ -36,6 +36,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "framer-motion": "^12.23.9",
     "graphql": "^16.11.0",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
@@ -53,7 +54,7 @@
     "rehype-highlight": "^7.0.2",
     "rehype-prism-plus": "^2.0.0",
     "remark-gfm": "^4.0.1",
-    "tailwind-merge": "^3.0.1",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {

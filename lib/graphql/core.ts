@@ -1,8 +1,11 @@
 import { query } from '@/lib/graphql';
+import { safeAsync, type Result } from '@/lib/result';
 
 export interface Core {
   id: number;
-  epoch: number;
+  epoch: {
+    id: number;
+  };
   vindex: number;
   gasUsed: number;
   imports: number;
@@ -28,8 +31,20 @@ interface CoreConnection {
   nodes: Core[];
 }
 
+// Legacy version for backward compatibility
 export const fetchCore = (index: number, first: number = 10, after?: string) =>
   query<{ core: CoreConnection }>(GET_CORE_QUERY, { index, first, after });
+
+// New Result-based version
+export const fetchCoreSafe = async (
+  index: number, 
+  first: number = 10, 
+  after?: string
+): Promise<Result<{ core: CoreConnection }>> => {
+  return safeAsync(() => 
+    query<{ core: CoreConnection }>(GET_CORE_QUERY, { index, first, after })
+  );
+};
 
 export const GET_CORE_QUERY = `
   query QueryCore($index: Int!, $first: Int = 10, $after: String) {
@@ -43,7 +58,9 @@ export const GET_CORE_QUERY = `
       edges {
         node {
           id
-          epoch
+          epoch {
+            id
+          }
           vindex
           gasUsed
           imports
@@ -58,7 +75,9 @@ export const GET_CORE_QUERY = `
       }
       nodes {
         id
-        epoch
+        epoch {
+          id
+        }
         vindex
         gasUsed
         imports

@@ -92,8 +92,6 @@ export const GET_BLOCK_QUERY = `
           block
           entropy
           ticketsEntropy
-          validatorsEd25519
-          validatorsBandersnatches
           blocks
           tickets
           preimages

@@ -5,3 +5,8 @@ node_modules
 .yarnrc.yml
 .tool-versions
 .env
+.env.local
+CLAUDE.*
+
+# TypeScript incremental build cache
+*.tsbuildinfo

@@ -16,7 +16,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Card,
@@ -26,47 +26,99 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { 
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { Validator } from '@/types/network';
 import { ActivityRecord } from '@/types/statistic';
 
 interface ValidatorTabsProps {
   validator: Validator;
-  activityData: ActivityRecord[];
+  activityData: (ActivityRecord & { epoch?: number; index?: number })[];
 }
 
 export default function ValidatorTabs({
   validator,
   activityData,
 }: ValidatorTabsProps) {
-  // Add index to each record for consistent x-axis
+  // State for epoch history view toggle
+  const [historyView, setHistoryView] = useState<'table' | 'chart'>('table');
+
+  // Add index to each record for consistent x-axis, prefer epoch number if available
   const chartData = activityData.map((record, index) => ({
     ...record,
-    index: index + 1, // Starting from 1 for better readability
+    displayIndex: record.epoch || record.index || index + 1,
+    epochLabel: record.epoch ? `Epoch ${record.epoch}` : `Entry ${index + 1}`,
   }));
 
-  // Colors for pie chart
+  // Colors for pie chart (including one for "Others")
   const COLORS = [
     '#0088FE',
-    '#00C49F',
+    '#00C49F', 
     '#FFBB28',
     '#FF8042',
     '#8884d8',
     '#82ca9d',
+    '#D0D0D0', // Gray for "Others"
   ];
 
-  // Prepare data for pie chart
-  const pieData = [
-    { name: 'Blocks', value: activityData[0]?.blocks || 0 },
-    { name: 'Tickets', value: activityData[0]?.tickets || 0 },
-    { name: 'Preimages', value: activityData[0]?.preimages || 0 },
-    { name: 'Guarantees', value: activityData[0]?.guarantees || 0 },
-    { name: 'Assurances', value: activityData[0]?.assurances || 0 },
-  ];
+  // Prepare data for pie chart - get totals across all epochs for better representation
+  const totalsByType = activityData.reduce((acc, record) => ({
+    blocks: acc.blocks + record.blocks,
+    tickets: acc.tickets + record.tickets,
+    preimages: acc.preimages + record.preimages,
+    guarantees: acc.guarantees + record.guarantees,
+    assurances: acc.assurances + record.assurances,
+  }), { blocks: 0, tickets: 0, preimages: 0, guarantees: 0, assurances: 0 });
 
-  // Format large numbers with commas
+  const allPieData = [
+    { name: 'Blocks', value: totalsByType.blocks },
+    { name: 'Tickets', value: totalsByType.tickets },
+    { name: 'Preimages', value: totalsByType.preimages },   
+    { name: 'Guarantees', value: totalsByType.guarantees },
+    { name: 'Assurances', value: totalsByType.assurances },
+  ];
+  
+  // Format large numbers with commas - define early to avoid hoisting issues
   const formatNumber = (num: number): string => {
     return num.toLocaleString();
   };
+
+  // Calculate total first to determine percentages
+  const totalValue = allPieData.reduce((sum, item) => sum + item.value, 0);
+  
+  // For the pie chart visual: only show items that are at least 1% to avoid overlap
+  const visualPieData = allPieData.filter(item => {
+    const percentage = (item.value / totalValue) * 100;
+    return item.value > 0 && percentage >= 1;
+  });
+  
+  // Group small items for visual display
+  const smallItems = allPieData.filter(item => {
+    const percentage = (item.value / totalValue) * 100;
+    return item.value > 0 && percentage < 1;
+  });
+  
+  // Create final pie data for visual rendering
+  const finalPieData = [...visualPieData];
+  if (smallItems.length > 0) {
+    const othersValue = smallItems.reduce((sum, item) => sum + item.value, 0);
+    finalPieData.push({ name: 'Others', value: othersValue });
+  }
+  
+  // For the legend: show ALL items including 0% ones
+  const legendData = allPieData.map((entry, index) => ({
+    value: `${entry.name}: ${formatNumber(entry.value)} (${((entry.value / totalValue) * 100).toFixed(1)}%)`,
+    type: 'rect' as const,
+    color: COLORS[index % COLORS.length],
+    id: `legend-${index}`
+  }));
 
   // Format bytes to readable format
   const formatBytes = (bytes: number): string => {
@@ -82,6 +134,7 @@ export default function ValidatorTabs({
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="activity">Activity</TabsTrigger>
+        <TabsTrigger value="history">Epoch History</TabsTrigger>
         <TabsTrigger value="stats">Statistics</TabsTrigger>
       </TabsList>
 
@@ -95,31 +148,52 @@ export default function ValidatorTabs({
             </CardDescription>
           </CardHeader>
           <CardContent className="h-96">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={true}
-                  label={({ name, percent }) =>
-                    `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
-                  outerRadius={130}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value) => formatNumber(value as number)} />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+            {finalPieData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={finalPieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={true}
+                    label={({ name, percent }) =>
+                      `${name}: ${(percent * 100).toFixed(1)}%`
+                    }
+                    outerRadius={130}
+                    fill="#8884d8"
+                    dataKey="value"
+                    style={{ outline: 'none' }}
+                  >
+                    {finalPieData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                        style={{ outline: 'none' }}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    formatter={(value, name) => {
+                      if (name === 'Others') {
+                        const othersDetail = smallItems.map(item => `${item.name}: ${formatNumber(item.value)}`).join(', ');
+                        return [`${formatNumber(value as number)} (${othersDetail})`, name];
+                      }
+                      return formatNumber(value as number);
+                    }}
+                  />
+                  <Legend 
+                    payload={legendData}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                <div className="text-center">
+                  <div className="text-lg font-medium">No Activity Data</div>
+                  <div className="text-sm">This validator has no recorded activity yet</div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -184,10 +258,16 @@ export default function ValidatorTabs({
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="index" />
+                <XAxis 
+                  dataKey="displayIndex" 
+                  label={{ value: 'Epoch', position: 'insideBottom', offset: -5 }}
+                />
                 <YAxis yAxisId="left" />
                 <YAxis yAxisId="right" orientation="right" />
-                <Tooltip formatter={(value) => formatNumber(value as number)} />
+                <Tooltip 
+                  formatter={(value) => formatNumber(value as number)}
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                 <Legend />
                 <Line
                   yAxisId="left"
@@ -226,7 +306,10 @@ export default function ValidatorTabs({
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="index" />
+                <XAxis 
+                  dataKey="displayIndex" 
+                  label={{ value: 'Epoch', position: 'insideBottom', offset: -5 }}
+                />
                 <YAxis
                   yAxisId="left"
                   label={{
@@ -274,6 +357,125 @@ export default function ValidatorTabs({
         </Card>
       </TabsContent>
 
+      <TabsContent value="history" className="space-y-4">
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle>Epoch History</CardTitle>
+                <CardDescription>
+                  Historical performance data across epochs
+                </CardDescription>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant={historyView === 'table' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setHistoryView('table')}
+                >
+                  Table
+                </Button>
+                <Button
+                  variant={historyView === 'chart' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setHistoryView('chart')}
+                >
+                  Chart
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {historyView === 'table' ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Epoch</TableHead>
+                    <TableHead className="text-right">Blocks</TableHead>
+                    <TableHead className="text-right">Tickets</TableHead>
+                    <TableHead className="text-right">Preimages</TableHead>
+                    <TableHead className="text-right">Guarantees</TableHead>
+                    <TableHead className="text-right">Assurances</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {chartData.length > 0 ? (
+                    chartData.map((record, index) => (
+                      <TableRow key={record.epoch || index}>
+                        <TableCell className="font-medium">
+                          {record.epoch ? `Epoch ${record.epoch}` : `Entry ${index + 1}`}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.blocks)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.tickets)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.preimages)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.guarantees)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {formatNumber(record.assurances)}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center text-muted-foreground">
+                        No historical data available
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            ) : (
+              <div className="h-96">
+                {chartData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={chartData}
+                      margin={{
+                        top: 20,
+                        right: 30,
+                        left: 20,
+                        bottom: 5,
+                      }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="displayIndex" 
+                        label={{ value: 'Epoch', position: 'insideBottom', offset: -5 }}
+                      />
+                      <YAxis />
+                      <Tooltip 
+                        formatter={(value) => formatNumber(value as number)}
+                        labelFormatter={(label) => `Epoch ${label}`}
+                      />
+                      <Legend />
+                      <Bar dataKey="blocks" name="Blocks" fill={COLORS[0]} />
+                      <Bar dataKey="tickets" name="Tickets" fill={COLORS[1]} />
+                      <Bar dataKey="preimages" name="Preimages" fill={COLORS[2]} />
+                      <Bar dataKey="guarantees" name="Guarantees" fill={COLORS[3]} />
+                      <Bar dataKey="assurances" name="Assurances" fill={COLORS[4]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    <div className="text-center">
+                      <div className="text-lg font-medium">No Historical Data</div>
+                      <div className="text-sm">This validator has no recorded historical data yet</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </TabsContent>
+
       <TabsContent value="stats" className="space-y-4">
         <Card>
           <CardHeader>
@@ -294,9 +496,15 @@ export default function ValidatorTabs({
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="index" />
+                <XAxis 
+                  dataKey="displayIndex" 
+                  label={{ value: 'Epoch', position: 'insideBottom', offset: -5 }}
+                />
                 <YAxis />
-                <Tooltip formatter={(value) => formatNumber(value as number)} />
+                <Tooltip 
+                  formatter={(value) => formatNumber(value as number)}
+                  labelFormatter={(label) => `Epoch ${label}`}
+                />
                 <Legend />
                 <Bar dataKey="guarantees" name="Guarantees" fill="#8884d8" />
                 <Bar dataKey="assurances" name="Assurances" fill="#82ca9d" />
