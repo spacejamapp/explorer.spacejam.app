@@ -176,7 +176,7 @@ const config = {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     require('@tailwindcss/typography'),
     // Custom plugin for aurora background utilities
-    function({ addUtilities }) {
+    function({ addUtilities }: { addUtilities: (utilities: Record<string, Record<string, string | Record<string, string>>>) => void }) {
       const newUtilities = {
         '.aurora-gradients': {
           '--white-gradient': 'repeating-linear-gradient(100deg,rgba(255,255,255,0.03) 0%,rgba(255,255,255,0.03) 7%,transparent 10%,transparent 12%,rgba(255,255,255,0.03) 16%)',
