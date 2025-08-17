@@ -11,6 +11,7 @@ import { Extrinsic } from '@/types/extrinsic';
 export function createMockBlock(slot: number, parent: string): Block {
   const header: Header = {
     parent,
+    hash: generateRandomHash(),
     parentStateRoot: generateRandomHash(),
     extrinsicHash: generateRandomHash(),
     slot,

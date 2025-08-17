@@ -34,7 +34,7 @@ export type ValidatorDataResult = ValidatorDataSuccess | ValidatorDataError;
  * Handles fetching and transforming validator data with epoch fallback
  * Returns error message when data is not available instead of fallback mock data
  */
-export async function getValidatorPageData(validatorIndex: number, limit: number = 50): Promise<ValidatorDataResult> {
+export async function getValidatorPageData(validatorIndex: number): Promise<ValidatorDataResult> {
   // Try to fetch validator data from GraphQL API using Result pattern
   const { data: validatorData, error: validatorError } = await fetchValidatorSafe(validatorIndex);
   

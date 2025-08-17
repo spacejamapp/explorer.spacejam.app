@@ -26,7 +26,7 @@ export default async function ValidatorDetailsPage({
   }
 
   // Fetch and transform validator data using dedicated utility function
-  const result: ValidatorDataResult = await getValidatorPageData(validatorIndex, 50);
+  const result: ValidatorDataResult = await getValidatorPageData(validatorIndex);
 
   if (!result.success) {
     return (
