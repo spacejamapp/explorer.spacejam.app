@@ -11,10 +11,11 @@ export interface Block {
 }
 
 export interface Header {
+  slot: number;
+  hash: string;
   parent: string;
   parentStateRoot: string;
   extrinsicHash: string;
-  slot: number;
   epochMark?: EpochMark;
   ticketsMark?: TicketsMark;
   offendersMark: string[];

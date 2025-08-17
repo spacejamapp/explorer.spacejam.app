@@ -15,7 +15,7 @@ export interface Epoch {
 
 export interface Validator {
   id: number;
-  epochId: number;
+  epoch: number;
   vindex: number;
   blocks: number;
   tickets: number;
@@ -26,7 +26,7 @@ export interface Validator {
 
 export interface Core {
   id: number;
-  epochId: number;
+  epoch: number;
   vindex: number;
   gasUsed: number;
   imports: number;
@@ -97,7 +97,7 @@ export const GET_EPOCH_QUERY = `
         edges {
           node {
             id
-            epochId
+            epoch
             vindex
             blocks
             tickets
@@ -109,7 +109,7 @@ export const GET_EPOCH_QUERY = `
         }
         nodes {
           id
-          epochId
+          epoch
           vindex
           blocks
           tickets
@@ -128,7 +128,7 @@ export const GET_EPOCH_QUERY = `
         edges {
           node {
             id
-            epochId
+            epoch
             vindex
             gasUsed
             imports
@@ -143,7 +143,7 @@ export const GET_EPOCH_QUERY = `
         }
         nodes {
           id
-          epochId
+          epoch
           vindex
           gasUsed
           imports

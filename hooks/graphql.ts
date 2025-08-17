@@ -56,14 +56,10 @@ export function useService(id: number) {
   });
 }
 
-export function useValidator(
-  index: number,
-  first: number = 10,
-  after?: string
-) {
+export function useValidator(index: number) {
   return useQuery({
-    queryKey: queryKeys.validator(index, first, after),
-    queryFn: () => fetchValidator(index, first, after),
+    queryKey: queryKeys.validator(index, 10), // Keep queryKey structure for cache compatibility
+    queryFn: () => fetchValidator(index),
   });
 }
 

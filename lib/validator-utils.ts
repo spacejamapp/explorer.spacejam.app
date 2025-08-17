@@ -36,44 +36,45 @@ export type ValidatorDataResult = ValidatorDataSuccess | ValidatorDataError;
  */
 export async function getValidatorPageData(validatorIndex: number, limit: number = 50): Promise<ValidatorDataResult> {
   // Try to fetch validator data from GraphQL API using Result pattern
-  const { data: validatorData, error: validatorError } = await fetchValidatorSafe(validatorIndex, limit);
+  const { data: validatorData, error: validatorError } = await fetchValidatorSafe(validatorIndex);
   
-  if (!validatorError && validatorData?.validator) {
+  if (!validatorError && validatorData?.validator && validatorData.validator.nodes) {
     // Successfully got validator data
     const validator = validatorData.validator;
     
-    const activityData: ActivityRecord[] = validator.epochs.nodes.map((epoch, index) => ({
-      blocks: epoch.blocks,
-      tickets: epoch.tickets,
-      preimages: epoch.preimages,
+    const activityData: ActivityRecord[] = validator.nodes.map((epochData, index) => ({
+      blocks: epochData.blocks,
+      tickets: epochData.tickets,
+      preimages: epochData.preimages,
       preimages_size: 0, // Not available in current schema
-      guarantees: epoch.guarantees,
-      assurances: epoch.assurances,
-      epoch: epoch.epoch.id,
+      guarantees: epochData.guarantees,
+      assurances: epochData.assurances,
+      epoch: epochData.epoch,
       index: index + 1,
     }));
 
-    const totalBlocks = validator.epochs.nodes.reduce((sum, epoch) => sum + epoch.blocks, 0);
-    const totalTickets = validator.epochs.nodes.reduce((sum, epoch) => sum + epoch.tickets, 0);
+    const totalBlocks = validator.nodes.reduce((sum, epochData) => sum + epochData.blocks, 0);
+    const totalTickets = validator.nodes.reduce((sum, epochData) => sum + epochData.tickets, 0);
 
     const validatorDisplay: ValidatorDisplay = {
       bandersnatch: validatorIndex,
       node: `validator-${validatorIndex}.jam.network`,
-      ip: validator.ip || 'N/A',
+      ip:  'N/A', // TODO: confirm Not available in new API structure
       name: `Validator ${validatorIndex}`,
       pfp: undefined,
-      website: validator.website,
+      website: 'N/A', // TODO: confirm available in new API structure
     };
 
     return {
       success: true,
       activityData,
-      validatorDisplay,
+      validatorDisplay, // TODO: Remove this
       totalBlocks,
       totalTickets,
     };
   }
 
+  // TODO: REMOVE FALLBACK FAKE DATA
   // Fallback: try to find validator in current epoch
   console.warn('Direct validator API not available, trying epoch fallback');
   
@@ -104,15 +105,49 @@ export async function getValidatorPageData(validatorIndex: number, limit: number
     };
   }
 
+  // Check epochData structure step by step to avoid null access errors
+  if (!epochData) {
+    return {
+      success: false,
+      error: `No epoch data received for epoch ${currentEpoch}`,
+      activityData: [],
+      validatorDisplay: null,
+      totalBlocks: 0,
+      totalTickets: 0,
+    };
+  }
+
+  if (!epochData.epoch) {
+    return {
+      success: false,
+      error: `Epoch ${currentEpoch} not found`,
+      activityData: [],
+      validatorDisplay: null,
+      totalBlocks: 0,
+      totalTickets: 0,
+    };
+  }
+
+  if (!epochData.epoch.validators || !epochData.epoch.validators.nodes) {
+    return {
+      success: false,
+      error: `No validator data available in epoch ${currentEpoch}`,
+      activityData: [],
+      validatorDisplay: null,
+      totalBlocks: 0,
+      totalTickets: 0,
+    };
+  }
+
   // Look for the validator in current epoch by vindex
-  const validatorInEpoch = epochData.epoch?.validators.nodes.find(
+  const validatorInEpoch = epochData.epoch.validators.nodes.find(
     (v) => v.vindex === validatorIndex
   );
   
   if (!validatorInEpoch) {
     return {
       success: false,
-      error: `Validator ${validatorIndex} not found in current epoch ${currentEpoch}`,
+      error: `Validator ${validatorIndex} not found in current epoch ${currentEpoch}. Available validators: ${epochData.epoch.validators.nodes.map(v => v.vindex).join(', ')}`,
       activityData: [],
       validatorDisplay: null,
       totalBlocks: 0,

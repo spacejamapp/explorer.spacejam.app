@@ -30,7 +30,7 @@ export default function HistoryCard({ headers }: HistoryCardProps) {
   }));
 
   return (
-    <Card className="flex-1 min-w-[200px]">
+    <Card className="flex-1 min-w-[200px] border-pink-300/30">
       <CardHeader className="py-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Extrinsic History</CardTitle>
