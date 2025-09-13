@@ -52,17 +52,52 @@ export interface ValidatorConnection {
   nodes: ValidatorEpoch[];
 }
 
-export interface ValidatorDetail {
-  nodes: Array<{
+export interface EpochValidator {
+  id: number;
+  epochId: number;
+  validatorId: number;
+  vindex: number;
+  blocks: number;
+  tickets: number;
+  preimages: number;
+  guarantees: number;
+  assurances: number;
+  epoch: {
     id: number;
-    epoch: number;
-    vindex: number;
-    blocks: number;
-    tickets: number;
-    preimages: number;
-    guarantees: number;
-    assurances: number;
+  };
+  validator: {
+    id: number;
+  };
+}
+
+export interface EpochValidatorConnection {
+  pageInfo: {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor?: string;
+    endCursor?: string;
+  };
+  edges: Array<{
+    node: EpochValidator;
+    cursor: string;
   }>;
+  nodes: EpochValidator[];
+}
+
+export interface ValidatorDetail {
+  id: number;
+  ed25519: string;
+  bandersnatch: string;
+  name: string;
+  details: string;
+  software: string;
+  ip: string;
+  website: string;
+  scores: number;
+  totalBlocks: number;
+  totalEpochs: number;
+  totalTickets: number;
+  epochs: EpochValidatorConnection;
 }
 
 // Legacy version for backward compatibility
@@ -145,16 +180,33 @@ export const fetchSpacejamSafe = async (): Promise<Result<{ spacejam: Spacejam }
 
 export const GET_VALIDATOR_QUERY = `
   query QueryValidator($index: Int!) {
-    validator(index: $index) {
-      nodes {
-        id
-        epoch
-        vindex
-        blocks
-        tickets
-        preimages
-        guarantees
-        assurances
+    validator(id: $index) {
+      id
+      ed25519
+      bandersnatch
+      name
+      details
+      software
+      ip
+      website
+      scores
+      totalBlocks
+      totalEpochs
+      totalTickets
+      epochs(first: 50) {
+        nodes {
+          id
+          epochId
+          vindex
+          blocks
+          tickets
+          preimages
+          guarantees
+          assurances
+          epoch {
+            id
+          }
+        }
       }
     }
   }

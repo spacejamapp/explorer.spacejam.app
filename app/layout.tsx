@@ -3,6 +3,7 @@ import { JetBrains_Mono } from 'next/font/google';
 
 import { Footer } from '@/components/footer';
 import Header from '@/components/header';
+import ProgressBar from '@/components/progress-bar';
 import QueryProvider from '@/components/query-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 
@@ -34,6 +35,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <ProgressBar />
             <div className="relative flex min-h-screen flex-col">
               <Header />
               <div className="flex-1 pb-20">{children}</div>

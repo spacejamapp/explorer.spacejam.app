@@ -16,16 +16,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { fetchBlocks } from '@/lib/graphql';
-import { slotTime } from '@/lib/utils';
+import { slotTime, truncateString } from '@/lib/utils';
 
 import { Button } from '../ui/button';
 
-// Utility function to truncate hash for display
-function truncateHash(hash: string): string {
-  if (!hash) return '';
-  if (hash.length <= 12) return hash;
-  return `${hash.slice(0, 8)}...${hash.slice(-4)}`;
-}
 
 export default async function LatestBlocks() {
   const { headers } = await fetchBlocks(6);
@@ -69,15 +63,16 @@ export default async function LatestBlocks() {
                     className="font-mono text-sm hover:underline text-pink-300 transition-colors"
                     title={data.hash}
                   >
-                    {truncateHash(data.hash)}
+                    {truncateString(data.hash, 8, 4)}
                   </Link>
                 </TableCell>
                 <TableCell>
                   <Link
-                    href={`/validator/${data.authorIndex}`}
-                    className="hover:underline text-pink-300 transition-colors"
+                    href={`/validator/${data.author.ed25519}`}
+                    className="hover:underline text-pink-300 transition-colors font-mono text-sm"
+                    title={data.author.ed25519}
                   >
-                    {data.authorIndex}
+                    {truncateString(data.author.ed25519)}
                   </Link>
                 </TableCell>
               </TableRow>

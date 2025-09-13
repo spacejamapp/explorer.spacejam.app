@@ -21,6 +21,9 @@ export interface Header {
   offendersMark: string[];
   extrinsicCount: number;
   authorIndex: number;
+  author: {
+    ed25519: string;
+  };
   entropySource: string;
   seal: string;
 }
@@ -37,6 +40,21 @@ export interface EpochMark {
 export interface EpochValidator {
   bandersnatch: string;
   ed25519: string;
+}
+
+export interface Validator {
+  id: number;
+  ed25519: string;
+  bandersnatch: string;
+  name: string;
+  details: string;
+  software: string;
+  ip: string;
+  website: string;
+  scores: number;
+  totalBlocks: number;
+  totalEpochs: number;
+  totalTickets: number;
 }
 
 export interface TicketBody {

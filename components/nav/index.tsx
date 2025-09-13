@@ -50,11 +50,6 @@ export const navSections: NavSection[] = [
         description: 'Join our Telegram channel',
         target: '_blank',
       },
-      {
-        title: 'Jobs',
-        href: 'jobs',
-        description: 'Work with us',
-      },
     ],
   },
 ];

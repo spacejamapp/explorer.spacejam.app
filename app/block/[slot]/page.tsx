@@ -85,7 +85,7 @@ export default async function BlockPage({
                   <div className="text-sm font-medium text-gray-500">
                     Validator
                   </div>
-                  <div className="text-sm">{block.header.authorIndex}</div>
+                  <div className="font-mono break-all text-sm">{block.header.author.ed25519}</div>
                 </div>
                 <div>
                   <div className="text-sm font-medium text-gray-500">

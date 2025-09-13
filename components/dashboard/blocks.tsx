@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatHash, slotTime } from '@/lib/utils';
+import { formatHash, slotTime, truncateString } from '@/lib/utils';
 import { Header } from '@/types';
 
 // Helper function to format numbers with commas
@@ -139,10 +139,11 @@ export default function Blocks({ headerConnection, totalBlocks }: BlocksProps) {
                 <TableCell>{header.extrinsicCount}</TableCell>
                 <TableCell>
                   <Link
-                    href={`/validator/${header.authorIndex}`}
-                    className="text-pink-300 hover:underline"
+                    href={`/validator/${header.author.ed25519}`}
+                    className="text-pink-300 hover:underline font-mono text-sm"
+                    title={header.author.ed25519}
                   >
-                    {header.authorIndex}
+                    {truncateString(header.author.ed25519)}
                   </Link>
                 </TableCell>
               </TableRow>

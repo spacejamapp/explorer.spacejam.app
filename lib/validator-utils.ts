@@ -16,6 +16,7 @@ interface ValidatorDataSuccess {
   validatorDisplay: ValidatorDisplay;
   totalBlocks: number;
   totalTickets: number;
+  totalEpochs: number;
 }
 
 interface ValidatorDataError {
@@ -25,6 +26,7 @@ interface ValidatorDataError {
   validatorDisplay: null;
   totalBlocks: 0;
   totalTickets: 0;
+  totalEpochs: 0;
 }
 
 export type ValidatorDataResult = ValidatorDataSuccess | ValidatorDataError;
@@ -38,39 +40,37 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
   // Try to fetch validator data from GraphQL API using Result pattern
   const { data: validatorData, error: validatorError } = await fetchValidatorSafe(validatorIndex);
   
-  if (!validatorError && validatorData?.validator && validatorData.validator.nodes) {
-    // Successfully got validator data
+  if (!validatorError && validatorData?.validator) {
+    // Successfully got validator data with new API fields
     const validator = validatorData.validator;
     
-    const activityData: ActivityRecord[] = validator.nodes.map((epochData, index) => ({
+    const activityData: ActivityRecord[] = validator.epochs.nodes.map((epochData, index) => ({
       blocks: epochData.blocks,
       tickets: epochData.tickets,
       preimages: epochData.preimages,
       preimages_size: 0, // Not available in current schema
       guarantees: epochData.guarantees,
       assurances: epochData.assurances,
-      epoch: epochData.epoch,
+      epoch: epochData.epoch.id,
       index: index + 1,
     }));
 
-    const totalBlocks = validator.nodes.reduce((sum, epochData) => sum + epochData.blocks, 0);
-    const totalTickets = validator.nodes.reduce((sum, epochData) => sum + epochData.tickets, 0);
-
     const validatorDisplay: ValidatorDisplay = {
       bandersnatch: validatorIndex,
-      node: `validator-${validatorIndex}.jam.network`,
-      ip:  'N/A', // TODO: confirm Not available in new API structure
-      name: `Validator ${validatorIndex}`,
+      node: validator.ip || `validator-${validatorIndex}.jam.network`,
+      ip: validator.ip || 'N/A',
+      name: validator.name || `Validator ${validatorIndex}`,
       pfp: undefined,
-      website: 'N/A', // TODO: confirm available in new API structure
+      website: validator.website || undefined,
     };
 
     return {
       success: true,
       activityData,
-      validatorDisplay, // TODO: Remove this
-      totalBlocks,
-      totalTickets,
+      validatorDisplay,
+      totalBlocks: validator.totalBlocks,
+      totalTickets: validator.totalTickets,
+      totalEpochs: validator.totalEpochs,
     };
   }
 
@@ -88,6 +88,7 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
       validatorDisplay: null,
       totalBlocks: 0,
       totalTickets: 0,
+      totalEpochs: 0,
     };
   }
 
@@ -102,6 +103,7 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
       validatorDisplay: null,
       totalBlocks: 0,
       totalTickets: 0,
+      totalEpochs: 0,
     };
   }
 
@@ -114,6 +116,7 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
       validatorDisplay: null,
       totalBlocks: 0,
       totalTickets: 0,
+      totalEpochs: 0,
     };
   }
 
@@ -125,6 +128,7 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
       validatorDisplay: null,
       totalBlocks: 0,
       totalTickets: 0,
+      totalEpochs: 0,
     };
   }
 
@@ -136,6 +140,7 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
       validatorDisplay: null,
       totalBlocks: 0,
       totalTickets: 0,
+      totalEpochs: 0,
     };
   }
 
@@ -152,6 +157,7 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
       validatorDisplay: null,
       totalBlocks: 0,
       totalTickets: 0,
+      totalEpochs: 0,
     };
   }
 
@@ -180,5 +186,6 @@ export async function getValidatorPageData(validatorIndex: number): Promise<Vali
     validatorDisplay,
     totalBlocks: validatorInEpoch.blocks,
     totalTickets: validatorInEpoch.tickets,
+    totalEpochs: 1, // Fallback case - only current epoch data available
   };
 }

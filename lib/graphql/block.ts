@@ -51,6 +51,9 @@ export const GET_BLOCKS_QUERY = `
           extrinsicHash
           extrinsicCount
           authorIndex
+          author {
+            ed25519
+          }
           entropySource
           offendersMark
           currentEpoch
@@ -65,6 +68,9 @@ export const GET_BLOCKS_QUERY = `
         extrinsicHash
         extrinsicCount
         authorIndex
+        author {
+          ed25519
+        }
         entropySource
         offendersMark
         currentEpoch
@@ -84,6 +90,9 @@ export const GET_BLOCK_QUERY = `
         extrinsicHash
         extrinsicCount
         authorIndex
+        author {
+          ed25519
+        }
         entropySource
         seal
         offendersMark

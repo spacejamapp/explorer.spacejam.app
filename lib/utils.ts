@@ -22,10 +22,27 @@ export async function withNotFound<T>(operation: Promise<T>): Promise<T> {
   }
 }
 
+/**
+ * Truncate a string with customizable start and end lengths
+ * @param str String to truncate
+ * @param startLength Number of characters to keep at the start
+ * @param endLength Number of characters to keep at the end
+ * @param separator Separator string to use between start and end
+ * @returns Truncated string or original if short enough
+ */
+export function truncateString(
+  str: string, 
+  startLength: number = 8, 
+  endLength: number = 4, 
+  separator: string = '...'
+): string {
+  if (!str) return '';
+  if (str.length <= startLength + endLength) return str;
+  return `${str.slice(0, startLength)}${separator}${str.slice(-endLength)}`;
+}
+
 export function formatHash(hash: string) {
-  return (
-    hash.substring(0, 10) + '...' + hash.substring(hash.length - 8, hash.length)
-  );
+  return truncateString(hash, 10, 8);
 }
 
 /**
