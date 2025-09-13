@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { JetBrains_Mono } from 'next/font/google';
 
+import ErrorBoundary from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import Header from '@/components/header';
 import ProgressBar from '@/components/progress-bar';
@@ -38,7 +39,9 @@ export default function RootLayout({
             <ProgressBar />
             <div className="relative flex min-h-screen flex-col">
               <Header />
-              <div className="flex-1 pb-20">{children}</div>
+              <ErrorBoundary>
+                <div className="flex-1 pb-20">{children}</div>
+              </ErrorBoundary>
               <Footer />
             </div>
           </ThemeProvider>

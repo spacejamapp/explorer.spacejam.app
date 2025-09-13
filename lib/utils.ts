@@ -3,21 +3,71 @@ import { twMerge } from 'tailwind-merge';
 
 import { notFound } from 'next/navigation';
 
-import { JAM_COMMON_ERA_AFTER_UNIX_EPOCH, SLOT_PERIOD } from '@/lib/params';
+import { JAM_COMMON_ERA_AFTER_UNIX_EPOCH, SLOT_PERIOD, EPOCH_LENGTH } from '@/lib/params';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 /**
- * Wraps an async operation and converts any errors to notFound() calls
- * This prevents server errors from crashing the page and provides graceful error handling
+ * Custom error class for network-related issues
+ */
+export class NetworkError extends Error {
+  constructor(message: string, public originalError?: unknown) {
+    super(message);
+    this.name = 'NetworkError';
+  }
+}
+
+/**
+ * Check if error is a network/connectivity issue
+ */
+function isNetworkError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  
+  const err = error as Record<string, unknown>;
+  
+  // Check for common network error patterns
+  const networkErrorCodes = ['ECONNREFUSED', 'ENOTFOUND', 'ETIMEDOUT', 'ECONNRESET'];
+  const networkErrorMessages = ['fetch failed', 'network error', 'connection refused'];
+  
+  // Check error code
+  if (typeof err.code === 'string' && networkErrorCodes.includes(err.code)) {
+    return true;
+  }
+  
+  // Check error message
+  if (typeof err.message === 'string') {
+    const message = err.message.toLowerCase();
+    if (networkErrorMessages.some(msg => message.includes(msg))) {
+      return true;
+    }
+  }
+  
+  // Check error cause (for nested errors)
+  if (err.cause && isNetworkError(err.cause)) {
+    return true;
+  }
+  
+  return false;
+}
+
+/**
+ * Wraps an async operation and handles errors gracefully
+ * Network errors throw NetworkError, other errors trigger notFound()
  */
 export async function withNotFound<T>(operation: Promise<T>): Promise<T> {
   try {
     return await operation;
   } catch (error) {
     console.error(error);
+    
+    // If it's a network error, throw NetworkError for ErrorBoundary to catch
+    if (isNetworkError(error)) {
+      throw new NetworkError('Service temporarily unavailable', error);
+    }
+    
+    // For other errors (like actual 404s), use notFound()
     notFound();
   }
 }
@@ -95,4 +145,17 @@ export function slotDate(slot: number): string {
   const slotTimestampUTC = JAM_COMMON_ERA_AFTER_UNIX_EPOCH + slot * SLOT_PERIOD;
   const slotDate = new Date(slotTimestampUTC * 1000);
   return slotDate.toLocaleString();
+}
+
+/**
+ * Calculate the epoch number for a given slot
+ * @param slot The slot number to calculate epoch for
+ * @returns The epoch number
+ */
+export function calculateEpoch(slot: number): number {
+  if (slot % EPOCH_LENGTH === 0) {
+    return slot / EPOCH_LENGTH + 1;
+  } else {
+    return Math.floor(slot / EPOCH_LENGTH) + 1;
+  }
 }
