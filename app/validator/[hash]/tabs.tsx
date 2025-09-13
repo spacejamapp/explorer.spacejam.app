@@ -35,11 +35,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Validator } from '@/types/network';
+import { NetworkValidator } from '@/types/network';
 import { ActivityRecord } from '@/types/statistic';
 
 interface ValidatorTabsProps {
-  validator: Validator;
+  validator: NetworkValidator;
   activityData: (ActivityRecord & { epoch?: number; index?: number })[];
 }
 
