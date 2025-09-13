@@ -1,52 +1,41 @@
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import BlockField from '@/components/block/block-field';
+import BlockNavigation from '@/components/block/block-navigation';
 import BlockTabs from '@/components/block/block-tabs';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { fetchBlock, fetchSpacejam } from '@/lib/graphql';
-import { slotDate, slotTime, withNotFound } from '@/lib/utils';
+import { calculateEpoch, slotDate, slotTime, withNotFound } from '@/lib/utils';
 
 export default async function BlockPage({
   params,
 }: {
   params: Promise<{ slot: string }>;
 }) {
-  const slotId = Number((await params).slot);
+  const slotParam = (await params).slot;
+  const slotId = Number(slotParam);
+  
   const { block, spacejam } = await getBlockPageData(slotId);
+
+  // Calculate values once for reuse
+  const minSlot = spacejam.finalized - spacejam.blocks;
+  const maxSlot = spacejam.finalized;
+  const timestamp = `${slotTime(block.header.slot)} (${slotDate(block.header.slot)})`;
 
   return (
     <main className="container mx-auto py-8">
-      <section className="mb-4 flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-2">
+      <section className="mb-4 flex flex-row items-start justify-between">
+        <div className="flex flex-col gap-2">
           <div className="text-xl font-bold">Block {block.header.slot}</div>
-          <Link href={`/block/${Number(slotId) - 1}`}>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={
-                Number(slotId) - 1 < spacejam.finalized - spacejam.blocks
-              }
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-            </Button>
-          </Link>
-          <Link href={`/block/${Number(slotId) + 1}`}>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={Number(slotId) + 1 > spacejam.finalized}
-            >
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="text-lg text-gray-600">Epoch {calculateEpoch(block.header.slot)}</div>
         </div>
 
-        <div className="text-sm text-gray-500">
-          {slotTime(block.header.slot)} ({slotDate(block.header.slot)})
-        </div>
+        <BlockNavigation
+          currentSlot={slotId}
+          minSlot={minSlot}
+          maxSlot={maxSlot}
+          timestamp={timestamp}
+        />
       </section>
       <div className="grid grid-cols-1 gap-6">
         {/* Block Header Information */}
@@ -55,46 +44,19 @@ export default async function BlockPage({
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <div>
-                  <div className="text-sm font-medium text-gray-500">
-                    Extrinsic Hash
-                  </div>
-                  <div className="font-mono break-all text-sm">
-                    {block.header.extrinsicHash}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-500">
-                    Parent Hash
-                  </div>
-                  <div className="font-mono break-all text-sm">
-                    {block.header.parent}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-500">
-                    Parent State Root
-                  </div>
-                  <div className="font-mono break-all text-sm">
-                    {block.header.parentStateRoot}
-                  </div>
-                </div>
+                <BlockField label="Block Hash" value={block.header.hash} />
+                <BlockField label="Extrinsic Hash" value={block.header.extrinsicHash} />
+                <BlockField label="Parent Hash" value={block.header.parent} />
+                <BlockField label="Parent State Root" value={block.header.parentStateRoot} />
               </div>
               <div className="space-y-2">
-                <div>
-                  <div className="text-sm font-medium text-gray-500">
-                    Validator
-                  </div>
-                  <div className="font-mono break-all text-sm">{block.header.author.ed25519}</div>
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-500">
-                    Entropy Source
-                  </div>
-                  <div className="font-mono break-all text-sm">
-                    {block.header.entropySource}
-                  </div>
-                </div>
+                <BlockField 
+                  label="Validator" 
+                  value={block.header.author.ed25519}
+                  isLink={true}
+                  href={`/validator/${block.header.author.ed25519}`}
+                />
+                <BlockField label="Entropy Source" value={block.header.entropySource} />
               </div>
             </div>
           </CardContent>

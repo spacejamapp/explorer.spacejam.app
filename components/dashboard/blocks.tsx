@@ -127,12 +127,9 @@ export default function Blocks({ headerConnection, totalBlocks }: BlocksProps) {
                   </Link>
                 </TableCell>
                 <TableCell>
-                  <Link
-                    href={`/block/${header.parent}`}
-                    className="text-pink-300 hover:underline"
-                  >
+                  <span className="text-gray-600">
                     {formatHash(header.parent)}
-                  </Link>
+                  </span>
                 </TableCell>
                 <TableCell>{formatHash(header.extrinsicHash)}</TableCell>
                 <TableCell>{slotTime(header.slot)}</TableCell>
