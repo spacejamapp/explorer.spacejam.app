@@ -18,15 +18,20 @@ export default async function ValidatorDetailsPage({
 }: {
   params: Promise<PageProps>;
 }) {
-  const validatorIndex = parseInt((await params).hash, 10);
-
-  // Validate validator index
+  const hashParam = (await params).hash;
+  
+  // Try to parse as numeric index first (backward compatibility)
+  const validatorIndex = parseInt(hashParam, 10);
+  
+  // If it's not a valid number, treat it as an ed25519 string
   if (isNaN(validatorIndex) || validatorIndex < 0) {
+    // For now, we'll still need the numeric ID to fetch validator data
+    // TODO: Update API to support fetching by ed25519 string
     notFound();
   }
 
   // Fetch and transform validator data using dedicated utility function
-  const result: ValidatorDataResult = await getValidatorPageData(validatorIndex, 50);
+  const result: ValidatorDataResult = await getValidatorPageData(validatorIndex);
 
   if (!result.success) {
     return (
@@ -46,7 +51,7 @@ export default async function ValidatorDetailsPage({
     );
   }
 
-  const { activityData, validatorDisplay, totalBlocks, totalTickets } = result;
+  const { activityData, validatorDisplay, totalBlocks, totalTickets, totalEpochs } = result;
 
   // Get validator initials for the avatar fallback
   const getInitials = () => {
@@ -79,7 +84,7 @@ export default async function ValidatorDetailsPage({
                   Index: {validatorDisplay.bandersnatch}
                 </Badge>
                 <Badge variant="secondary" className="text-xs">
-                  {activityData.length} Epoch{activityData.length !== 1 ? 's' : ''}
+                  {totalEpochs} Epoch{totalEpochs !== 1 ? 's' : ''}
                 </Badge>
               </div>
             </div>
@@ -93,6 +98,10 @@ export default async function ValidatorDetailsPage({
             <div className="text-sm px-3 py-1 rounded-md bg-muted">
               <span className="font-medium">Total Tickets:</span>{' '}
               {totalTickets.toLocaleString()}
+            </div>
+            <div className="text-sm px-3 py-1 rounded-md bg-muted">
+              <span className="font-medium">Total Epochs:</span>{' '}
+              {totalEpochs.toLocaleString()}
             </div>
           </div>
         </div>

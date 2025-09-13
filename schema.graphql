@@ -529,6 +529,9 @@ type Validator {
 	ip: String!
 	website: String!
 	scores: Int!
+	totalBlocks: Int!
+	totalEpochs: Int!
+	totalTickets: Int!
 	"""
 	List this validator's all epochs data (DESC)
 	"""

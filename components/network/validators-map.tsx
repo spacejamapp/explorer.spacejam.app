@@ -11,13 +11,13 @@ import {
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { validatorCoordinates } from '@/lib/mock/validator';
-import type { Validator } from '@/types/network';
+import type { NetworkValidator } from '@/types/network';
 
 // World map GeoJSON
 const geoUrl = 'https://unpkg.com/world-atlas@2.0.2/countries-110m.json';
 
 interface ValidatorsMapProps {
-  validators?: Validator[];
+  validators?: NetworkValidator[];
 }
 
 interface MapPosition {

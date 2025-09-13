@@ -257,3 +257,67 @@ code {
 .recharts-wrapper svg {
   pointer-events: auto;
 }
+
+/* NProgress Progress Bar - Performance Optimized */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: #f9a8d4; /* pink-300 */
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  
+  /* Hardware acceleration for smooth animation */
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Gradient effect matching logo theme */
+  background: linear-gradient(
+    90deg, 
+    #f9a8d4 0%,     /* pink-300 */
+    #a855f7 50%,    /* purple-500 */
+    #22d3ee 100%    /* cyan-400 */
+  );
+  
+  /* Subtle glow effect */
+  box-shadow: 0 0 8px rgba(249, 168, 212, 0.4);
+}
+
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #f9a8d4, 0 0 5px #f9a8d4;
+  opacity: 1.0;
+  
+  /* Performance optimization */
+  will-change: transform;
+  transform: rotate(3deg) translate(0px, -4px);
+  
+  /* Smooth animation */
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hide spinner for cleaner look */
+#nprogress .spinner {
+  display: none;
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+  #nprogress .bar {
+    box-shadow: 0 0 8px rgba(249, 168, 212, 0.6);
+  }
+  
+  #nprogress .peg {
+    box-shadow: 0 0 10px #f9a8d4, 0 0 5px #f9a8d4;
+  }
+}

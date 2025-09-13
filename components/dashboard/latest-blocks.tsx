@@ -16,9 +16,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { fetchBlocks } from '@/lib/graphql';
-import { slotTime } from '@/lib/utils';
+import { slotTime, truncateString } from '@/lib/utils';
 
 import { Button } from '../ui/button';
+
 
 export default async function LatestBlocks() {
   const { headers } = await fetchBlocks(6);
@@ -36,37 +37,50 @@ export default async function LatestBlocks() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Slot</TableHead>
-              <TableHead>Age</TableHead>
-              <TableHead>Validator</TableHead>
+              <TableHead className="w-[100px]">Slot</TableHead>
+              <TableHead className="w-[120px]">Age</TableHead>
+              <TableHead className="w-[200px]">Block Hash</TableHead>
+              <TableHead className="w-[120px]">Validator</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {blocks.map((data) => (
-              <TableRow key={data.slot}>
+              <TableRow key={data.slot} className="hover:bg-muted/50 transition-colors">
                 <TableCell className="font-medium">
                   <Link
                     href={`/block/${data.slot}`}
-                    className="hover:underline text-pink-300"
+                    className="hover:underline text-pink-300 transition-colors"
                   >
                     {data.slot}
                   </Link>
                 </TableCell>
-                <TableCell>{slotTime(data.slot)}</TableCell>
+                <TableCell className="text-muted-foreground">
+                  {slotTime(data.slot)}
+                </TableCell>
                 <TableCell>
                   <Link
-                    href={`/validator/${data.authorIndex}`}
-                    className="hover:underline text-pink-300"
+                    href={`/block/${data.slot}`}
+                    className="font-mono text-sm hover:underline text-pink-300 transition-colors"
+                    title={data.hash}
                   >
-                    {data.authorIndex}
+                    {truncateString(data.hash, 8, 4)}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link
+                    href={`/validator/${data.author.ed25519}`}
+                    className="hover:underline text-pink-300 transition-colors font-mono text-sm"
+                    title={data.author.ed25519}
+                  >
+                    {truncateString(data.author.ed25519)}
                   </Link>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        <div className="mt-4 text-right">
-          <Button variant="link">
+        <div className="mt-6 text-right">
+          <Button variant="link" className="text-pink-300 hover:text-pink-200">
             <Link href="/blocks">View all blocks →</Link>
           </Button>
         </div>

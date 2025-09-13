@@ -6,20 +6,21 @@ import HistoryCard from '@/components/card/history';
 import NetworkCard from '@/components/card/network';
 import ActiveCores from '@/components/dashboard/active-cores';
 import LatestBlocks from '@/components/dashboard/latest-blocks';
-import TopServices from '@/components/dashboard/top-services';
+// import TopServices from '@/components/dashboard/top-services';
 import SearchComponent from '@/components/search';
 import { AuroraBackground } from '@/components/ui/aurora-background';
 import {
   fetchBlocks,
   fetchEpoch,
-  fetchServices,
+  // fetchServices,
   fetchSpacejam,
 } from '@/lib/graphql';
 import { Spacejam } from '@/types/graphql';
 
 export default async function Home() {
-  const { services } = await fetchServices(5);
-  const { headers } = await fetchBlocks(21);
+  // const { services } = await fetchServices(5);
+  const result = await fetchBlocks(21);
+  const headers = result?.headers || { nodes: [] };
   const { spacejam } = (await fetchSpacejam()) as { spacejam: Spacejam };
   const currentEpoch = spacejam.epoch;
 
@@ -37,7 +38,7 @@ export default async function Home() {
     ];
   } else {
     const result = await fetchEpoch(currentEpoch);
-    const epoch = result.epoch;
+    const epoch = result?.epoch;
     vals_current = epoch
       ? epoch.validators.nodes.map((val) => ({
           blocks: val.blocks,
@@ -94,9 +95,8 @@ export default async function Home() {
           <ActiveCores />
         </section>
 
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <section>
           <LatestBlocks />
-          <TopServices services={services.nodes} />
         </section>
       </main>
     </AuroraBackground>

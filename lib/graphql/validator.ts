@@ -52,30 +52,66 @@ export interface ValidatorConnection {
   nodes: ValidatorEpoch[];
 }
 
+export interface EpochValidator {
+  id: number;
+  epochId: number;
+  validatorId: number;
+  vindex: number;
+  blocks: number;
+  tickets: number;
+  preimages: number;
+  guarantees: number;
+  assurances: number;
+  epoch: {
+    id: number;
+  };
+  validator: {
+    id: number;
+  };
+}
+
+export interface EpochValidatorConnection {
+  pageInfo: {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor?: string;
+    endCursor?: string;
+  };
+  edges: Array<{
+    node: EpochValidator;
+    cursor: string;
+  }>;
+  nodes: EpochValidator[];
+}
+
 export interface ValidatorDetail {
   id: number;
-  ip?: string;
-  website?: string;
-  scores?: number;
-  epochs: ValidatorConnection;
+  ed25519: string;
+  bandersnatch: string;
+  name: string;
+  details: string;
+  software: string;
+  ip: string;
+  website: string;
+  scores: number;
+  totalBlocks: number;
+  totalEpochs: number;
+  totalTickets: number;
+  epochs: EpochValidatorConnection;
 }
 
 // Legacy version for backward compatibility
-export const fetchValidator = (id: number, first: number = 10, after?: string) =>
+export const fetchValidator = (index: number) =>
   query<{ validator: ValidatorDetail | null }>(GET_VALIDATOR_QUERY, {
-    id,
-    first,
-    after,
+    index,
   });
 
 // New Result-based version
 export const fetchValidatorSafe = async (
-  id: number, 
-  first: number = 10, 
-  after?: string
+  index: number
 ): Promise<Result<{ validator: ValidatorDetail | null }>> => {
   return safeAsync(() => 
-    query<{ validator: ValidatorDetail | null }>(GET_VALIDATOR_QUERY, { id, first, after })
+    query<{ validator: ValidatorDetail | null }>(GET_VALIDATOR_QUERY, { index })
   );
 };
 
@@ -143,45 +179,33 @@ export const fetchSpacejamSafe = async (): Promise<Result<{ spacejam: Spacejam }
 };
 
 export const GET_VALIDATOR_QUERY = `
-  query QueryValidator($id: Int!, $first: Int = 10, $after: String) {
-    validator(id: $id) {
+  query QueryValidator($index: Int!) {
+    validator(id: $index) {
       id
+      ed25519
+      bandersnatch
+      name
+      details
+      software
       ip
       website
       scores
-      epochs(first: $first, after: $after) {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-          startCursor
-          endCursor
-        }
-        edges {
-          node {
-            id
-            epoch {
-              id
-            }
-            vindex
-            blocks
-            tickets
-            preimages
-            guarantees
-            assurances
-          }
-          cursor
-        }
+      totalBlocks
+      totalEpochs
+      totalTickets
+      epochs(first: 50) {
         nodes {
           id
-          epoch {
-            id
-          }
+          epochId
           vindex
           blocks
           tickets
           preimages
           guarantees
           assurances
+          epoch {
+            id
+          }
         }
       }
     }

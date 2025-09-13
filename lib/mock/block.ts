@@ -11,6 +11,7 @@ import { Extrinsic } from '@/types/extrinsic';
 export function createMockBlock(slot: number, parent: string): Block {
   const header: Header = {
     parent,
+    hash: generateRandomHash(),
     parentStateRoot: generateRandomHash(),
     extrinsicHash: generateRandomHash(),
     slot,
@@ -19,6 +20,9 @@ export function createMockBlock(slot: number, parent: string): Block {
     offendersMark: [generateRandomHash(), generateRandomHash()],
     extrinsicCount: Math.floor(Math.random() * 50) + 1,
     authorIndex: Math.floor(Math.random() * 100),
+    author: {
+      ed25519: generateRandomHash(),
+    },
     entropySource: generateRandomHash(),
     seal: generateRandomHash(),
   };

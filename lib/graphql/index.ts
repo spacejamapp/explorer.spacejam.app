@@ -43,10 +43,10 @@ export async function query<T>(
   const result: GraphQLResponse<T> = await response.json();
 
   if (result.errors) {
-    throw new Error(result.errors[0]?.message || 'GraphQL error');
+    console.warn('GraphQL errors:', result.errors);
   }
 
-  return result.data;
+  return result.data ?? {} as T;
 }
 
 export * from './block';
