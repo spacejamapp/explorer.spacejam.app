@@ -1,4 +1,4 @@
-import { Validator } from '../../types/network';
+import { NetworkValidator } from '../../types/network';
 
 // Sample coordinates for validators
 export const validatorCoordinates: Record<number, [number, number]> = {
@@ -17,7 +17,7 @@ export const validatorCoordinates: Record<number, [number, number]> = {
 };
 
 // Mock validators conforming to the Validator interface
-export const mockValidators: Validator[] = Array.from(
+export const mockValidators: NetworkValidator[] = Array.from(
   { length: 12 },
   (_, i) => ({
     bandersnatch: i + 1,

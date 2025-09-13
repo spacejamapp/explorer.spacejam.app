@@ -7,7 +7,7 @@ export interface Spacejam {
   blocks: number;
 }
 
-export interface Validator {
+export interface NetworkValidator {
   bandersnatch: number;
   node: string;
   ip: string;
